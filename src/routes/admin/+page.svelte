@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { trip } from '$lib/config';
+	import { signupFormUrl, trip } from '$lib/config';
 	import { formatTimestamp, isoToLocalInput } from '$lib/format';
+	import { formColumnsFor } from '$lib/formTable';
 	import { subscribeToTripData, type RealtimeState } from '$lib/realtime';
 	import { statusLabel, type Participant } from '$lib/types';
 	import type { ActionData, PageData } from './$types';
@@ -55,6 +56,10 @@
 		};
 	}
 
+	// Arrangørene ser alle kolonner, kontaktopplysninger inkludert.
+	const answerColumns = $derived(formColumnsFor(all, true, d?.syncState?.columns));
+	const fromForm = $derived(all.filter((p) => p.form_answers));
+
 	const preference = (p: Participant) =>
 		p.accommodation_preference ? ` (ønsker: ${p.accommodation_preference})` : '';
 </script>
@@ -99,6 +104,56 @@
 	{#if form && 'error' in form && form.error}
 		<p class="notice error">{form.error}</p>
 	{/if}
+	{#if form && 'syncMessage' in form && form.syncMessage}
+		<p class="notice success">{form.syncMessage}</p>
+	{/if}
+
+	<section class="card">
+		<div class="section-head">
+			<h2>Skjemasvar</h2>
+			<form method="POST" action="?/syncForm" use:enhance>
+				<button type="submit" class="secondary small">Hent svar nå</button>
+			</form>
+		</div>
+		<p class="small muted" style="margin: 0 0 0.5rem">
+			Påmelding skjer i <a href={signupFormUrl} target="_blank" rel="noopener">Google-skjemaet</a>.
+			Svarene hentes automatisk hvert minutt.
+			{#if d.syncState?.last_synced_at}
+				Sist hentet {formatTimestamp(d.syncState.last_synced_at)}{d.syncState.last_row_count !==
+				null
+					? ` (${d.syncState.last_row_count} svar)`
+					: ''}.
+			{:else}
+				Ingen henting registrert ennå.
+			{/if}
+		</p>
+		{#if d.syncState?.last_error}
+			<p class="notice error">Siste henting feilet: {d.syncState.last_error}</p>
+		{/if}
+
+		{#if fromForm.length > 0}
+			<div class="table-scroll">
+				<table>
+					<thead>
+						<tr>
+							{#each answerColumns as column (column)}
+								<th>{column}</th>
+							{/each}
+						</tr>
+					</thead>
+					<tbody>
+						{#each fromForm as p (p.id)}
+							<tr>
+								{#each answerColumns as column (column)}
+									<td>{p.form_answers?.[column] ?? ''}</td>
+								{/each}
+							</tr>
+						{/each}
+					</tbody>
+				</table>
+			</div>
+		{/if}
+	</section>
 
 	<section class="card">
 		<h2>Kunngjøringer</h2>
@@ -163,8 +218,9 @@
 									{#if p.notes}<div class="muted small">{p.notes}</div>{/if}
 								</td>
 								<td class="small">
-									<a href="mailto:{p.email}">{p.email}</a>
+									{#if p.email}<a href="mailto:{p.email}">{p.email}</a>{/if}
 									{#if p.phone}<div class="muted">{p.phone}</div>{/if}
+									{#if !p.email && !p.phone}<span class="muted">–</span>{/if}
 								</td>
 								<td>
 									<form method="POST" action="?/setStatus" use:enhance>

@@ -3,8 +3,10 @@
 Logistikkside for elvepadlingsturen til Sjoa: påmelding, samkjøring, overnatting og
 kunngjøringer, med sanntidsoppdatering for alle som har siden åpen.
 
-- **Oversikt** (`/`) – nøkkeltall, deltakerliste, biler, hytter og kunngjøringer.
-- **Påmelding** (`/pamelding`) – melde seg på eller av, oppgi bil og overnattingsønske.
+- **Oversikt** (`/`) – nøkkeltall, deltakerliste, svarene fra påmeldingsskjemaet, biler,
+  hytter og kunngjøringer.
+- **Påmelding** – skjer i et Google-skjema. `/pamelding` viderekobler dit, så gamle lenker
+  fortsatt virker.
 - **Admin** (`/admin`) – arrangørene redigerer samkjøring og overnatting, markerer betalt
   og legger ut kunngjøringer. Beskyttet med ett delt passord.
 
@@ -22,6 +24,41 @@ RLS anon kun lesetilgang, og serveren bruker service role-nøkkelen for alle end
 er fortsatt ingen egen backend – det er den samme SvelteKit-appen som kjører på Vercel – men
 det avviker fra «skriv direkte til Supabase» i den opprinnelige skissen. Skjemaene fungerer
 som en bonus også uten JavaScript.
+
+## Påmelding og skjemasvar
+
+Påmelding skjer i et Google-skjema. Appen leser svarene fra regnearket skjemaet skriver
+til, og speiler dem inn i `participants`. Slik blir skjemaet eneste påmeldingskanal,
+samtidig som samkjøring, overnatting og betalt-markering fortsatt henger på den samme
+deltakerraden.
+
+**Sette det opp:**
+
+1. I skjemaet: **Svar → Koble til regneark**.
+2. I regnearket: **Fil → Del → Publiser på nettet**. Velg fanen med svarene og formatet
+   **CSV**. Kopier lenken.
+3. Legg lenken inn som `GOOGLE_SHEET_CSV_URL`, både i `.env` lokalt og i Vercel.
+4. Sett `signupFormUrl` i [`src/lib/config.ts`](src/lib/config.ts) til delingslenken fra
+   **Send**-knappen i skjemaet.
+
+Svarene hentes ved sidevisning, men høyst én gang i minuttet. Arrangørene kan også trykke
+**Hent svar nå** i admin. Feiler hentingen, står feilmeldingen på adminsiden.
+
+**Ting verdt å vite:**
+
+- Kolonnene gjenkjennes på mønster, ikke eksakt navn, så tabellen følger med når du endrer
+  spørsmålene. Mønstrene ligger i `formColumns` i `src/lib/config.ts`. Bytter du til helt
+  andre ord for navn eller e-post, må de justeres der.
+- Nøkkelen per deltaker er e-postadressen, ellers navnet. Svarer noen to ganger, gjelder
+  det siste svaret.
+- Synken rører aldri status, betalt eller notater på en deltaker som allerede finnes. En
+  avmelding eller en betalingshake blir altså ikke overskrevet ved neste henting.
+- Rader som slettes i regnearket fjerner ikke deltakeren i appen. Meld dem av i admin.
+- Det publiserte regnearket er lesbart for alle som har URL-en. Derfor holdes e-post og
+  telefon utenfor den offentlige forsiden – de sendes ikke engang til nettleseren, bare til
+  adminsiden. Vil du vise dem likevel, tøm `privateFormColumns` i `src/lib/config.ts`.
+  Vil du at arket ikke skal være offentlig i det hele tatt, må du bytte til en service
+  account mot Google Sheets API i stedet.
 
 ## Lokal utvikling
 
@@ -63,12 +100,13 @@ og legger tabellene til i `supabase_realtime`-publikasjonen.
 
 | Tabell                      | Innhold                                                             |
 | --------------------------- | ------------------------------------------------------------------- |
-| `participants`              | Navn, e-post (unik), telefon, status, betalt, overnattingsønske, notat |
+| `participants`              | Navn, e-post, telefon, status, betalt, overnattingsønske, notat, og hele skjemasvaret i `form_answers` |
 | `transport`                 | Én rad per bil: sjåfør, avreisested, tidspunkt, antall plasser        |
 | `transport_passengers`      | Hvem som sitter på med hvem                                          |
 | `accommodation`             | Hytter med kapasitet                                                 |
 | `accommodation_assignments` | Hvem som bor hvor                                                    |
 | `announcements`             | Meldinger fra arrangørene                                            |
+| `form_sync_state`           | Når svarene sist ble hentet, kolonnerekkefølgen og siste feil          |
 
 `seats_available` og `capacity_available` lagres ikke, men regnes ut i viewene
 `transport_overview` og `accommodation_overview`, slik at tallene aldri kommer i utakt med
@@ -86,11 +124,14 @@ Rediger der og deploy på nytt.
    Variables** (for Production, Preview og Development).
 3. Push til `main` – Vercel bygger og deployer automatisk.
 
+Fem miljøvariabler nå: de fire opprinnelige pluss `GOOGLE_SHEET_CSV_URL`.
+
 `ADMIN_PASSWORD` og `SUPABASE_SERVICE_ROLE_KEY` må ikke ha `PUBLIC_`-prefiks; SvelteKit
 nekter å bygge hvis private variabler importeres i kode som havner i nettleseren.
 
 ## Videre arbeid
 
 Ideer som bevisst er utelatt for å holde ting enkelt: maks antall deltakere med automatisk
-venteliste, ekstra felter for erfaringsnivå og allergier, og en pakkeliste. Alt tre er små
-tillegg i `participants` pluss et felt i påmeldingsskjemaet.
+venteliste, og automatisk oppretting av biler ut fra hvem som svarer at de kan kjøre. Det
+siste er med vilje ikke gjort – hvor mange plasser noen har, står som fritekst i skjemaet,
+og arrangørene legger inn bilene i admin i stedet.

@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { trip } from '$lib/config';
+	import { signupFormUrl, trip } from '$lib/config';
 	import { formatDateTime, formatTimestamp } from '$lib/format';
+	import { formColumnsFor } from '$lib/formTable';
 	import { subscribeToTripData, type RealtimeState } from '$lib/realtime';
 	import { statusLabel, type Participant } from '$lib/types';
 	import type { PageData } from './$types';
@@ -42,6 +43,10 @@
 		live: 'Oppdateres automatisk',
 		offline: 'Frakoblet – last siden på nytt'
 	};
+
+	// Kolonnene kommer fra svarene selv, så tabellen følger skjemaet om det endres.
+	const answerColumns = $derived(formColumnsFor(active, false, d.syncState?.columns));
+	const fromForm = $derived(active.filter((p) => p.form_answers));
 
 	function sortByName(list: Participant[]) {
 		return [...list].sort((a, b) => a.name.localeCompare(b.name, 'nb'));
@@ -102,7 +107,9 @@
 		<dt>Kontakt</dt>
 		<dd><a href="mailto:{trip.contact}">{trip.contact}</a></dd>
 	</dl>
-	<p style="margin: 1rem 0 0"><a href="/pamelding">Meld deg på eller av →</a></p>
+	<p style="margin: 1rem 0 0">
+		<a href={signupFormUrl} target="_blank" rel="noopener">Meld deg på i påmeldingsskjemaet →</a>
+	</p>
 </section>
 
 <section class="card">
@@ -148,6 +155,43 @@
 				</tbody>
 			</table>
 		</div>
+	{/if}
+</section>
+
+<section class="card">
+	<div class="section-head">
+		<h2>Svar fra påmeldingsskjemaet</h2>
+		{#if d.syncState?.last_synced_at}
+			<span class="muted small">Sist hentet {formatTimestamp(d.syncState.last_synced_at)}</span>
+		{/if}
+	</div>
+
+	{#if fromForm.length === 0}
+		<p class="empty">Ingen svar hentet fra skjemaet ennå.</p>
+	{:else}
+		<div class="table-scroll">
+			<table>
+				<thead>
+					<tr>
+						{#each answerColumns as column (column)}
+							<th>{column}</th>
+						{/each}
+					</tr>
+				</thead>
+				<tbody>
+					{#each sortByName(fromForm) as p (p.id)}
+						<tr>
+							{#each answerColumns as column (column)}
+								<td>{p.form_answers?.[column] ?? ''}</td>
+							{/each}
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+		<p class="muted small" style="margin: 0.75rem 0 0">
+			Kontaktopplysninger vises bare for arrangørene.
+		</p>
 	{/if}
 </section>
 

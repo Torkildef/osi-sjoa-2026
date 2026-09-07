@@ -1,6 +1,7 @@
 import { fail, redirect } from '@sveltejs/kit';
 import { TRIP_DATA_KEY, loadTripData } from '$lib/data';
 import { endSession, isLoggedIn, isValidPassword, startSession } from '$lib/server/auth';
+import { syncIfStale, syncNow } from '$lib/server/formSync';
 import { supabaseAdmin } from '$lib/server/supabase';
 import { localInputToIso } from '$lib/time';
 import type { Actions, PageServerLoad, RequestEvent } from './$types';
@@ -8,6 +9,7 @@ import type { Actions, PageServerLoad, RequestEvent } from './$types';
 export const load: PageServerLoad = async ({ cookies, depends }) => {
 	depends(TRIP_DATA_KEY);
 	if (!isLoggedIn(cookies)) return { loggedIn: false as const };
+	await syncIfStale();
 	return { loggedIn: true as const, trip: await loadTripData(supabaseAdmin) };
 };
 
@@ -39,6 +41,17 @@ export const actions: Actions = {
 	logout: async ({ cookies }) => {
 		endSession(cookies);
 		redirect(303, '/admin');
+	},
+
+	syncForm: async (event) => {
+		requireAdmin(event);
+		const result = await syncNow();
+		if (result.status === 'error') return fail(502, { error: `Synk feilet: ${result.message}` });
+		if (result.status === 'skipped') return fail(400, { error: result.message });
+		return {
+			ok: true as const,
+			syncMessage: `${result.message} ${result.added} nye, ${result.updated} oppdatert.`
+		};
 	},
 
 	togglePaid: async (event) => {

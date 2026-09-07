@@ -1,6 +1,6 @@
 <script lang="ts">
 	import favicon from '$lib/assets/favicon.svg';
-	import { trip } from '$lib/config';
+	import { signupFormUrl, trip } from '$lib/config';
 	import '../app.css';
 
 	let { children } = $props();
@@ -15,7 +15,7 @@
 		<strong>{trip.organiser} · {trip.title}</strong>
 		<nav>
 			<a href="/">Oversikt</a>
-			<a href="/pamelding">Påmelding</a>
+			<a href={signupFormUrl} target="_blank" rel="noopener">Påmelding ↗</a>
 			<a href="/admin">Admin</a>
 		</nav>
 	</div>

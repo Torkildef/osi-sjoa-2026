@@ -3,13 +3,27 @@ export type ParticipantStatus = 'confirmed' | 'waitlist' | 'cancelled';
 export type Participant = {
 	id: string;
 	name: string;
-	email: string;
+	/** Kan mangle: skjemaet har ikke nødvendigvis en e-postkolonne. */
+	email: string | null;
 	phone: string | null;
 	status: ParticipantStatus;
 	paid: boolean;
 	accommodation_preference: string | null;
 	notes: string | null;
 	created_at: string;
+	/** Nøkkelen raden har i regnearket. Null for deltakere lagt inn for hånd. */
+	form_key: string | null;
+	/** Hele skjemasvaret slik det står i regnearket, kolonnenavn som nøkkel. */
+	form_answers: Record<string, string> | null;
+	source: string;
+};
+
+export type FormSyncState = {
+	last_synced_at: string | null;
+	last_error: string | null;
+	last_row_count: number | null;
+	last_added: number | null;
+	columns: string[] | null;
 };
 
 export type Transport = {
@@ -53,6 +67,7 @@ export type TripData = {
 	accommodation: Accommodation[];
 	accommodationAssignments: AccommodationAssignment[];
 	announcements: Announcement[];
+	syncState: FormSyncState | null;
 };
 
 export const statusLabel: Record<ParticipantStatus, string> = {
