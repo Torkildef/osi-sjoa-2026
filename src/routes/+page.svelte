@@ -5,14 +5,16 @@
 	import { SHEET_KEY, refreshSeconds, signupFormUrl, trip } from '$lib/config';
 	import { missing, places } from '$lib/places';
 	import { water as waterConfig } from '$lib/config';
-	import type { Cell } from '$lib/table';
+	import type { Cell } from '$lib/cells';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
 	const sheet = $derived(data.sheet);
-	const table = $derived(sheet.status === 'ok' ? sheet.table : null);
 	const roster = $derived(sheet.status === 'ok' ? sheet.roster : null);
+
+	/** Hvilken deltaker som er åpen i detaljpanelet. */
+	let selected = $state<number | null>(null);
 
 	// Uten database er det ingen Realtime å lytte på, så vi henter regnearket
 	// på nytt med jevne mellomrom i stedet.
@@ -43,6 +45,18 @@
 		return cell.kind === 'text' && cell.value.length > 14 ? 'left' : 'center';
 	}
 </script>
+
+{#snippet mark(cell: Cell | null)}
+	{#if cell?.kind === 'yes'}
+		<span class="mark yes" aria-label="Ja">✓</span>
+	{:else if cell?.kind === 'no'}
+		<span class="mark no" aria-label="Nei">✕</span>
+	{:else if cell?.kind === 'text'}
+		{cell.value}
+	{:else}
+		<span class="mark none" aria-label="Ikke oppgitt">–</span>
+	{/if}
+{/snippet}
 
 <svelte:head>
 	<title>{trip.title} – {trip.organiser}</title>
@@ -77,7 +91,7 @@
 	<div class="card">
 		<p class="notice error" style="margin: 0">{sheet.message}</p>
 	</div>
-{:else if table && table.rows.length === 0}
+{:else if roster && roster.people.length === 0}
 	<div class="card">
 		<h2>Ingen svar ennå</h2>
 		<p class="muted">
@@ -85,7 +99,7 @@
 			<a href={signupFormUrl} target="_blank" rel="noopener">Åpne påmeldingsskjemaet →</a>
 		</p>
 	</div>
-{:else if table && roster}
+{:else if roster}
 	<div class="grid stats">
 		<div class="stat">
 			<div class="value">{roster.people.length}</div>
@@ -101,161 +115,135 @@
 				<div class="label">Plasser i bilene</div>
 			</div>
 		{/if}
-		{#if roster.withLicence !== null}
+		{#if roster.borrowing !== null}
 			<div class="stat">
-				<div class="value">{roster.withLicence} / {roster.people.length}</div>
-				<div class="label">Har lappen</div>
+				<div class="value">{roster.borrowing}</div>
+				<div class="label">Låner utstyr</div>
 			</div>
 		{/if}
 	</div>
-
-	<section class="section-block">
-		<h2>Hvem kommer</h2>
-		<div class="sheet-wrap">
-			<table class="sheet roster">
-				<thead>
-					<tr>
-						<th scope="col">Navn</th>
-						{#if roster.mapping.departure}<th scope="col">Drar</th>{/if}
-						{#if roster.mapping.professional}<th scope="col">Proff</th>{/if}
-						{#if roster.mapping.licence}<th scope="col">Lappen</th>{/if}
-						<th scope="col">Bil</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each roster.people as person (person.name + person.departure)}
-						<tr>
-							<td class="name">
-								{person.name}
-								{#each Object.entries(person.extras) as [key, value] (key)}
-									<span class="muted small block">{value}</span>
-								{/each}
-							</td>
-							{#if roster.mapping.departure}
-								<td>{person.departure ?? '–'}</td>
-							{/if}
-							{#if roster.mapping.professional}
-								<td class="center">
-									{#if person.professional?.kind === 'yes'}
-										<span class="badge pro">Proff</span>
-									{:else}
-										<span class="mark none">–</span>
-									{/if}
-								</td>
-							{/if}
-							{#if roster.mapping.licence}
-								<td class="center">
-									{#if person.licence?.kind === 'yes'}
-										<span class="mark yes">✓</span>
-									{:else if person.licence?.kind === 'no'}
-										<span class="mark no">✕</span>
-									{:else}
-										<span class="mark none">–</span>
-									{/if}
-								</td>
-							{/if}
-							<td class="center">
-								{#if person.carId}
-									<a class="car-chip" href="#bil-{person.carId}">Bil {person.carId}</a>
-								{:else}
-									<span class="mark none">–</span>
-								{/if}
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		</div>
-	</section>
 
 	<section class="section-block">
 		<h2>Biler</h2>
 		{#if roster.cars.length === 0}
 			<p class="empty">Ingen har meldt at de tar med bil ennå.</p>
 		{:else}
-			<div class="grid cars">
-				{#each roster.cars as car (car.id)}
-					<div class="car" id="bil-{car.id}">
-						<div class="car-id">Bil {car.id}</div>
-						<div class="car-driver">{car.driver}</div>
-						<dl class="facts small">
-							<dt>Plasser</dt>
-							<dd>{car.seats ?? 'ikke oppgitt'}</dd>
-							<dt>Drar</dt>
-							<dd>{car.departure ?? 'ikke oppgitt'}</dd>
-						</dl>
-					</div>
-				{/each}
+			<div class="sheet-wrap">
+				<table class="sheet cars-table">
+					<thead>
+						<tr>
+							<th scope="col">Bileier</th>
+							<th scope="col" class="center">Plasser</th>
+							{#if roster.cars.some((c) => c.towHitch)}
+								<th scope="col" class="center">Hengerfeste</th>
+							{/if}
+							{#if roster.cars.some((c) => c.roofRack)}
+								<th scope="col" class="center">Takstativ</th>
+							{/if}
+						</tr>
+					</thead>
+					<tbody>
+						{#each roster.cars as car (car.id)}
+							<tr>
+								<td class="name">{car.driver}</td>
+								<td class="center">{car.seats ?? '–'}</td>
+								{#if roster.cars.some((c) => c.towHitch)}
+									<td class="center">{@render mark(car.towHitch)}</td>
+								{/if}
+								{#if roster.cars.some((c) => c.roofRack)}
+									<td class="center">{@render mark(car.roofRack)}</td>
+								{/if}
+							</tr>
+						{/each}
+					</tbody>
+					<tfoot>
+						<tr>
+							<td>{roster.cars.length} {roster.cars.length === 1 ? 'bil' : 'biler'}</td>
+							<td class="center">{roster.totalSeats ?? '–'}</td>
+							{#if roster.cars.some((c) => c.towHitch)}
+								<td class="center">{roster.cars.filter((c) => c.towHitch?.kind === 'yes').length}</td>
+							{/if}
+							{#if roster.cars.some((c) => c.roofRack)}
+								<td class="center">{roster.cars.filter((c) => c.roofRack?.kind === 'yes').length}</td>
+							{/if}
+						</tr>
+					</tfoot>
+				</table>
 			</div>
 		{/if}
 	</section>
 
-	<details class="raw">
-		<summary>Vis alle svar fra skjemaet</summary>
-		<div class="sheet-wrap">
-			<table class="sheet">
-				<thead>
-					<tr class="bands">
-						{#each table.bands as band, i (i)}
-							{#if band.group}
-								<th class="band tone-{band.group.tone}" colspan={band.span} scope="colgroup">
-									{band.group.emoji}
-									{band.group.label}
-								</th>
+	<section class="section-block">
+		<h2>Deltakere</h2>
+		<div class="roster-split">
+			<ul class="person-menu">
+				{#each roster.people as person, i (person.name + i)}
+					<li>
+						<button
+							type="button"
+							class="person"
+							class:selected={selected === i}
+							onclick={() => (selected = selected === i ? null : i)}
+							aria-expanded={selected === i}
+						>
+							<span class="person-name">{person.name}</span>
+							<span class="person-tags">
+								{#if person.professional?.kind === 'yes'}<span class="badge pro">Proff</span>{/if}
+								{#if person.carId}<span class="badge car">Bil</span>{/if}
+								{#if person.borrowedGear}<span class="badge gear">Låner</span>{/if}
+								{#if person.absence}<span class="badge warn">Avvik</span>{/if}
+							</span>
+						</button>
+					</li>
+				{/each}
+			</ul>
+
+			<div class="person-detail">
+				{#if selected === null}
+					<p class="muted">Velg en deltaker for å se detaljer.</p>
+				{:else}
+					{@const person = roster.people[selected]}
+					<h3>{person.name}</h3>
+					<dl class="facts">
+						{#if roster.mapping.departure}
+							<dt>Drar</dt>
+							<dd>{person.departure ?? '–'}</dd>
+						{/if}
+						{#if roster.mapping.licence}
+							<dt>Lappen</dt>
+							<dd>{@render mark(person.licence)}</dd>
+						{/if}
+						{#if roster.mapping.professional}
+							<dt>Proff</dt>
+							<dd>{@render mark(person.professional)}</dd>
+						{/if}
+						<dt>Bil</dt>
+						<dd>
+							{#if person.carId}
+								Stiller med bil{roster.cars[person.carId - 1]?.seats
+									? ` · ${roster.cars[person.carId - 1].seats} plasser`
+									: ''}
 							{:else}
-								{#each { length: band.span } as _, j (j)}
-									<th class="band band-empty" rowspan="2" scope="col">
-										{table.columns[j].name}
-									</th>
-								{/each}
+								<span class="mark none">–</span>
 							{/if}
+						</dd>
+						{#if roster.mapping.borrowedGear}
+							<dt>Låner utstyr</dt>
+							<dd>{person.borrowedGear ?? '–'}</dd>
+						{/if}
+						{#if roster.mapping.absence}
+							<dt>Kan ikke møte til planlagt tid</dt>
+							<dd>{person.absence ?? '–'}</dd>
+						{/if}
+						{#each person.extras as extra (extra.label)}
+							<dt>{extra.label}</dt>
+							<dd>{extra.value}</dd>
 						{/each}
-					</tr>
-					<tr class="labels">
-						{#each table.columns as column (column.name)}
-							{#if column.group}
-								<th class="tone-{column.group.tone} soft" scope="col">{column.name}</th>
-							{/if}
-						{/each}
-					</tr>
-				</thead>
-				<tbody>
-					{#each table.rows as row, r (r)}
-						<tr class:highlighted={row.highlighted}>
-							{#each row.cells as cell, c (c)}
-								<td
-									class="tone-{table.columns[c].group?.tone ?? 'plain'}"
-									style="text-align: {align(cell, table.columns[c].group !== null)}"
-								>
-									{#if cell.kind === 'yes'}
-										<span class="mark yes" aria-label="Ja">✓</span>
-									{:else if cell.kind === 'no'}
-										<span class="mark no" aria-label="Nei">✕</span>
-									{:else if cell.kind === 'empty'}
-										<span class="mark none" aria-label="Ikke oppgitt">–</span>
-									{:else}
-										{cell.value}
-									{/if}
-								</td>
-							{/each}
-						</tr>
-					{/each}
-				</tbody>
-				<tfoot>
-					<tr>
-						{#each table.columns as column, i (column.name)}
-							<td
-								class="tone-{column.group?.tone ?? 'plain'}"
-								style="text-align: {i === 0 ? 'left' : 'center'}"
-							>
-								{column.total}
-							</td>
-						{/each}
-					</tr>
-				</tfoot>
-			</table>
+					</dl>
+				{/if}
+			</div>
 		</div>
-	</details>
+	</section>
 
 	<p class="muted small footnote">
 		Hentet fra påmeldingsskjemaet, og oppdaterer seg selv hvert {refreshSeconds}. sekund.

@@ -40,42 +40,42 @@ ferskt svar kan bruke litt tid på å dukke opp.
 
 ## Oversikten
 
-Siden viser tre ting utledet fra skjemasvarene:
+Siden er på norsk, også når skjemaet er på engelsk. Den viser:
 
-- **Nøkkeltall** – antall påmeldte, biler, plasser og hvor mange som har lappen.
-- **Hvem kommer** – én rad per person: navn, når de drar, om de er proff, om de har
-  lappen, og hvilken bil de stiller med. Bil-merket lenker ned til bilen.
-- **Biler** – ett kort per bil: hvem som kjører, antall plasser og avreisetidspunkt.
-
-Under ligger **Vis alle svar fra skjemaet**, som folder ut hele regnearket i den
-grupperte tabellen. Ingenting går tapt selv om en kolonne ikke passer i oversikten.
+- **Nøkkeltall** – påmeldte, biler, plasser og hvor mange som låner utstyr.
+- **Biler** – én rad per bileier, med plasser, hengerfeste og takstativ, og en sum nederst.
+- **Deltakere** – en rullbar liste med alle. Klikk et navn for å se når de drar, om de
+  har lappen, hva de låner av utstyr, og når de ikke rekker planlagt avreise. Merkene i
+  lista (Proff, Bil, Låner, Avvik) viser det viktigste uten å klikke.
 
 ### Hvordan kolonnene kobles
 
 `fieldPatterns` i [`src/lib/config.ts`](src/lib/config.ts) sier hvilken kolonne som
-fyller hvilken rolle: `name`, `departure`, `professional`, `licence`, `hasCar`,
-`seats` og `carDeparture`.
+fyller hvilken rolle: `name`, `departure`, `professional`, `licence`, `hasCar`, `seats`,
+`towHitch`, `roofRack`, `borrowedGear`, `absence` og `carDeparture`.
 
 Hver rolle tar den **første kolonnen som treffer et av mønstrene sine**, og en kolonne
-kan bare fylle én rolle. Rekkefølgen i lista avgjør: de presise rollene plukker først,
-så «How many seats are available?» blir til seter og ikke havner på den mer generelle
-bil-rollen. Mønstrene dekker både norsk og engelsk.
+kan bare fylle én rolle. Rekkefølgen i lista avgjør, så de presise rollene plukker først.
+Mønstrene dekker norsk og engelsk.
 
-Finner en rolle ingen kolonne, faller den kolonnen bort fra tabellen – resten virker
-som før. Spør skjemaet ikke om når bilen drar, brukes sjåførens egen avreisetid.
+Ett mønster står for seg: `ABSENCE`, brukt både til å velge kolonne og til å gi
+merkelapp. De to må være identiske. «Can you not make the planned departure?» inneholder
+ordet *departure*, og ble uten dette lest som spørsmålet om når man drar.
 
-En person regnes som å ha bil hvis de svarer ja på bil-spørsmålet, eller oppgir et
-antall plasser over null. Hver slik person blir til én bil, nummerert i den
-rekkefølgen svarene kom.
+Finner en rolle ingen kolonne, faller feltet bare bort. Spør skjemaet ikke om når bilen
+drar, brukes sjåførens egen avreisetid. En person regnes som bileier hvis de svarer ja på
+bil-spørsmålet, eller oppgir plasser over null.
 
-Kolonner som ikke fyller en rolle vises som en liten linje under navnet, så
-kommentarer som «Trenger skyss» ikke forsvinner.
+### Norske merkelapper
+
+`columnLabels` oversetter spørsmålstekst til norsk merkelapp – første mønster som treffer
+vinner. Treffer ingen, brukes spørsmålsteksten slik den står. Kolonner uten egen rolle
+vises i detaljpanelet med sin norske merkelapp, så ingenting går tapt.
 
 ### Kolonner som skjules
 
-`hiddenColumns` fjerner kolonner fra hele siden. Som standard: e-post, telefon,
-tidsmerke og medlemsspørsmålet – støy i en oversikt, og kontaktopplysninger har ikke
-noe å gjøre på en åpen side.
+`hiddenColumns` fjerner kolonner fra hele siden: e-post, telefon, tidsmerke og
+medlemsspørsmålet. Kontaktopplysninger har ikke noe å gjøre på en åpen side.
 
 ### Slik leses cellene
 

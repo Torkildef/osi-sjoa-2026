@@ -1,5 +1,5 @@
-import { fieldPatterns, hiddenColumns } from './config';
-import { classify, type Cell } from './table';
+import { fieldPatterns, hiddenColumns, labelFor } from './config';
+import { classify, type Cell } from './cells';
 
 export type Person = {
 	name: string;
@@ -9,8 +9,12 @@ export type Person = {
 	licence: Cell | null;
 	/** Peker til bilen personen stiller med, ellers null. */
 	carId: number | null;
-	/** Kolonner som ikke fyller en rolle, tatt vare på så ingenting går tapt. */
-	extras: Record<string, string>;
+	/** Utstyr personen låner av klubben. */
+	borrowedGear: string | null;
+	/** Når personen ikke kan møte til planlagt tidspunkt. */
+	absence: string | null;
+	/** Øvrige svar, med norsk merkelapp. Tatt vare på så ingenting går tapt. */
+	extras: { label: string; value: string }[];
 };
 
 export type Car = {
@@ -18,6 +22,8 @@ export type Car = {
 	driver: string;
 	seats: number | null;
 	departure: string | null;
+	towHitch: Cell | null;
+	roofRack: Cell | null;
 };
 
 export type Roster = {
@@ -28,6 +34,8 @@ export type Roster = {
 	totalSeats: number | null;
 	withLicence: number | null;
 	professionals: number | null;
+	/** Hvor mange som låner utstyr – null når skjemaet ikke spør. */
+	borrowing: number | null;
 };
 
 /**
@@ -98,16 +106,20 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 				seats,
 				// Skjemaet spør ofte bare én gang om avreise. Da gjelder sjåførens tid
 				// også for bilen.
-				departure: text(record, mapping.carDeparture) ?? departure
+				departure: text(record, mapping.carDeparture) ?? departure,
+				towHitch: mapping.towHitch ? classify(record[mapping.towHitch] ?? '') : null,
+				roofRack: mapping.roofRack ? classify(record[mapping.roofRack] ?? '') : null
 			});
 		}
 
-		const extras: Record<string, string> = {};
+		const extras: { label: string; value: string }[] = [];
 		for (const header of headers) {
 			if (!header || roleColumns.has(header)) continue;
 			if (hiddenColumns.some((p) => p.test(header))) continue;
 			const value = record[header]?.trim();
-			if (value) extras[header] = value;
+			// Skjemaet er på engelsk, siden er på norsk – derfor merkelapp, ikke rå
+			// spørsmålstekst.
+			if (value) extras.push({ label: labelFor(header), value });
 		}
 
 		people.push({
@@ -116,6 +128,8 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 			professional: mapping.professional ? classify(record[mapping.professional] ?? '') : null,
 			licence: mapping.licence ? classify(record[mapping.licence] ?? '') : null,
 			carId,
+			borrowedGear: text(record, mapping.borrowedGear),
+			absence: text(record, mapping.absence),
 			extras
 		});
 	}
@@ -132,6 +146,7 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 			: null,
 		professionals: mapping.professional
 			? people.filter((p) => p.professional?.kind === 'yes').length
-			: null
+			: null,
+		borrowing: mapping.borrowedGear ? people.filter((p) => p.borrowedGear).length : null
 	};
 }
