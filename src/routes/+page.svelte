@@ -1,5 +1,7 @@
 <script lang="ts">
+	import Photo from '$lib/Photo.svelte';
 	import { trip } from '$lib/config';
+	import { photos } from '$lib/photos';
 	import { pages } from '$lib/nav';
 	import { schedule } from '$lib/schedule';
 	import type { PageData } from './$types';
@@ -23,7 +25,14 @@
 </svelte:head>
 
 <h1>{trip.title}</h1>
-<p class="lede">{trip.dates} · {trip.location} · {trip.price}</p>
+<p class="lede">{trip.dates} · {trip.location}</p>
+
+<Photo
+	class="hero"
+	src={photos.kruke.src}
+	alt={photos.kruke.alt}
+	caption="Kruke gård, der vi bor"
+/>
 
 {#if roster}
 	<div class="grid stats">

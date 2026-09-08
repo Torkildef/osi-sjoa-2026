@@ -94,6 +94,24 @@ medlemsspørsmålet. Kontaktopplysninger har ikke noe å gjøre på en åpen sid
 | tom                       | grå –         |
 | alt annet                 | teksten som den står |
 
+## Bilder
+
+Filene ligger i [`static/bilder/`](static/bilder/) og listes opp i
+[`src/lib/photos.ts`](src/lib/photos.ts):
+
+| Fil            | Vises som                    |
+| -------------- | ---------------------------- |
+| `osi-logo.png` | Logoen i toppen av siden     |
+| `kruke.jpg`    | Hovedbildet på forsiden      |
+
+Mangler en fil, skjuler bildet seg selv i stedet for å vise et brukket bildeikon, så
+siden ser hel ut både før og etter at bildene er lagt inn. Bytter du filendelse, må
+stien oppdateres i `photos.ts`.
+
+Legg gjerne inn flere bilder på samme måte: legg fila i `static/bilder/`, gi den en
+oppføring i `photos.ts`, og bruk `<Photo src={...} alt={...} caption="..." />`.
+`alt` er ikke valgfri – den leses opp for den som bruker skjermleser.
+
 ## Tidsskjemaet
 
 Punktene ligger i [`src/lib/schedule.ts`](src/lib/schedule.ts). Hvert punkt har `day`,

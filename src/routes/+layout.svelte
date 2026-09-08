@@ -3,6 +3,7 @@
 	import { page } from '$app/state';
 	import { signupFormUrl, trip } from '$lib/config';
 	import { pages } from '$lib/nav';
+	import { photos } from '$lib/photos';
 	import '../app.css';
 
 	let { children } = $props();
@@ -14,7 +15,16 @@
 
 <header class="site-header">
 	<div class="inner">
-		<strong>{trip.organiser} · {trip.title}</strong>
+		<a class="brand" href="/">
+			<!-- onerror: logoen legges inn av arrangørene, og toppen skal se hel ut uten den. -->
+			<img
+				src={photos.logo.src}
+				alt={photos.logo.alt}
+				class="logo"
+				onerror={(e) => e.currentTarget.remove()}
+			/>
+			<strong>{trip.organiser} · {trip.title}</strong>
+		</a>
 		<nav>
 			{#each pages as item (item.href)}
 				<a

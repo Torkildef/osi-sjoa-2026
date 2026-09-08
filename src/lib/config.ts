@@ -2,9 +2,8 @@
 export const trip = {
 	title: 'Sjoa 2026',
 	organiser: 'OSI Elvepadling',
-	dates: '18.–21. juni 2026',
-	location: 'Sjoa, Sel kommune',
-	price: '1 450 kr per deltaker',
+	dates: '11.–13. september 2026',
+	location: 'Sjoa',
 	contact: 'elvepadling@osi.no'
 };
 
