@@ -81,15 +81,19 @@ npm run preview  # se på produksjonsbygget lokalt
 ## Sette opp Supabase
 
 1. Opprett et prosjekt på [supabase.com](https://supabase.com).
-2. Kjør migrasjonene i `supabase/migrations/` i rekkefølge. Enten via SQL Editor
-   (kopier inn innholdet i hver fil), eller med Supabase CLI:
+2. Åpne **SQL Editor** i Supabase, lim inn hele [`supabase/setup.sql`](supabase/setup.sql)
+   og trykk Run. Den inneholder alle migrasjonene samlet, og er trygg å kjøre om igjen:
+   har du kjørt deler av oppsettet før, hoppes det som finnes over. Den sletter aldri data.
+
+   Foretrekker du Supabase CLI, ligger de samme endringene som enkeltmigrasjoner:
 
    ```sh
    npx supabase link --project-ref <prosjekt-ref>
    npx supabase db push
    ```
 
-3. Valgfritt: kjør `supabase/seed.sql` for å legge inn hyttene som utgangspunkt.
+3. Rediger hyttenavnene nederst i `setup.sql` (eller i `accommodation`-tabellen etterpå)
+   til de dere faktisk har booket.
 4. Hent `Project URL`, `anon`-nøkkelen og `service_role`-nøkkelen under
    **Project Settings → API**, og legg dem i `.env`.
 
