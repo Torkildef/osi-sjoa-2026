@@ -10,11 +10,13 @@
  */
 import type { PhotoKey } from './photos';
 
+export type PlaceKind = 'base' | 'elv' | 'service';
+
 export type Place = {
 	name: string;
 	emoji: string;
 	/** Styrer farge og gruppering: base = der vi bor, elv = elvepunkt, service = butikk/kafé. */
-	kind: 'base' | 'elv' | 'service';
+	kind: PlaceKind;
 	note?: string;
 	address?: string;
 	coords: [number, number] | null;
@@ -27,6 +29,13 @@ export type Place = {
 	/** Logo fra photos.ts. Vises i stedet for emojien der stedet har en. */
 	logo?: PhotoKey;
 };
+
+/** Navn og farge på kategoriene, brukt i filterknappene og tegnforklaringen. */
+export const kinds: { kind: PlaceKind; label: string }[] = [
+	{ kind: 'base', label: 'Der vi bor' },
+	{ kind: 'elv', label: 'Elva' },
+	{ kind: 'service', label: 'Mat og utstyr' }
+];
 
 export const places: Place[] = [
 	{
@@ -42,7 +51,7 @@ export const places: Place[] = [
 		name: 'Put inn – Bru-bru',
 		emoji: '🛶',
 		kind: 'elv',
-		note: 'Start på Bru-bru-strekket',
+		note: 'Start på Bru-bru',
 		coords: [61.753634744416374, 9.288169334633185],
 		labelDirection: 'bottom'
 	},
@@ -92,18 +101,13 @@ export const places: Place[] = [
 	}
 ];
 
-/**
- * Strekkene vi padler, tegnet mellom put inn og take out.
- *
- * Linjene er stiplet med vilje: de går rett fram mellom punktene og følger ikke
- * elveløpet. De viser hvilken strekning et løp dekker, ikke hvor elva renner.
- */
-export const runs: { name: string; from: string; to: string }[] = [
-	{ name: 'Bru-bru', from: 'Put inn – Bru-bru', to: 'Take out Bru-bru / put inn Playrun' },
-	{ name: 'Playrun', from: 'Take out Bru-bru / put inn Playrun', to: 'Take out – Playrun' }
-];
-
 export const placed = (list: Place[] = places) =>
 	list.filter((p): p is Place & { coords: [number, number] } => p.coords !== null);
 
 export const missing = (list: Place[] = places) => list.filter((p) => p.coords === null);
+
+export const placeByName = (name: string) => places.find((p) => p.name === name);
+
+/** Lenke til veibeskrivelse i Google Maps. */
+export const directionsUrl = ([lat, lon]: [number, number]) =>
+	`https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;

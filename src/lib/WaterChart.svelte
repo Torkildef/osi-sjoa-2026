@@ -1,14 +1,15 @@
 <script lang="ts">
 	import { water } from './config';
 	import type { Reading } from './nve';
+	import { formatFlow, levelFor, levelInfo } from './level';
 
 	let { readings, unit }: { readings: Reading[]; unit: string } = $props();
 
 	const [low, high] = water.perfect;
 
 	const W = 760;
-	const H = 220;
-	const PAD = { top: 14, right: 16, bottom: 26, left: 42 };
+	const H = 230;
+	const PAD = { top: 18, right: 16, bottom: 28, left: 44 };
 	const plotW = W - PAD.left - PAD.right;
 	const plotH = H - PAD.top - PAD.bottom;
 
@@ -21,14 +22,18 @@
 	const min = $derived(Math.min(...values, low));
 	const max = $derived(Math.max(...values, high));
 	const pad = $derived((max - min || 1) * 0.12);
-	const yMin = $derived(min - pad);
+	const yMin = $derived(Math.max(0, min - pad));
 	const yMax = $derived(max + pad);
 
-	const x = (t: number) =>
-		PAD.left + ((t - times[0]) / (times.at(-1)! - times[0] || 1)) * plotW;
+	const x = (t: number) => PAD.left + ((t - times[0]) / (times.at(-1)! - times[0] || 1)) * plotW;
 	const y = (v: number) => PAD.top + (1 - (v - yMin) / (yMax - yMin || 1)) * plotH;
 
-	const line = $derived(readings.map((r, i) => `${i ? 'L' : 'M'}${x(times[i])},${y(r.value)}`).join(' '));
+	const line = $derived(
+		readings.map((r, i) => `${i ? 'L' : 'M'}${x(times[i])},${y(r.value)}`).join(' ')
+	);
+	const area = $derived(
+		`${line} L${x(times.at(-1)!)},${PAD.top + plotH} L${x(times[0])},${PAD.top + plotH} Z`
+	);
 
 	const bandTop = $derived(y(Math.min(high, yMax)));
 	const bandBottom = $derived(y(Math.max(low, yMin)));
@@ -37,7 +42,6 @@
 		[yMin, (yMin + yMax) / 2, yMax].map((v, i) => ({ i, v, y: y(v), label: Math.round(v) }))
 	);
 
-	/** Klokkeslett langs x-aksen, med norsk tid uansett hvor serveren står. */
 	const clock = new Intl.DateTimeFormat('nb-NO', {
 		timeZone: 'Europe/Oslo',
 		hour: '2-digit',
@@ -46,27 +50,16 @@
 	const weekday = new Intl.DateTimeFormat('nb-NO', { timeZone: 'Europe/Oslo', weekday: 'short' });
 
 	/** «man 14» – ukedagen skiller de to endene av et 48-timers vindu fra hverandre. */
-	function dayHourLabel(date: Date): string {
-		return `${weekday.format(date).replace('.', '')} ${clock.format(date).slice(0, 2)}`;
-	}
-	const dayTime = new Intl.DateTimeFormat('nb-NO', {
-		timeZone: 'Europe/Oslo',
-		weekday: 'short',
-		hour: '2-digit',
-		minute: '2-digit'
-	});
+	const dayHourLabel = (date: Date) =>
+		`${weekday.format(date).replace('.', '')} ${clock.format(date).slice(0, 2)}`;
 
 	const xTicks = $derived(
-		[0, Math.floor(readings.length / 2), readings.length - 1]
+		[0, Math.floor(readings.length / 4), Math.floor(readings.length / 2), Math.floor((3 * readings.length) / 4), readings.length - 1]
 			.filter((i, n, a) => a.indexOf(i) === n && i >= 0)
 			.map((i) => ({ i, x: x(times[i]), label: dayHourLabel(new Date(times[i])) }))
 	);
 
-	const level = $derived(
-		latest.value < low ? 'lav' : latest.value > high ? 'hoy' : 'perfekt'
-	);
-	const levelText = { lav: 'Under perfekt', hoy: 'Over perfekt', perfekt: 'Perfekt' } as const;
-	const levelIcon = { lav: '▼', hoy: '▲', perfekt: '✓' } as const;
+	const level = $derived(levelFor(latest.value));
 
 	// Hover: nærmeste måling til pekeren.
 	let hover = $state<number | null>(null);
@@ -86,74 +79,71 @@
 		}
 		hover = best;
 	}
+
+	const hoverText = $derived(
+		hover === null
+			? ''
+			: `${formatFlow(values[hover])} ${unit} · ${clock.format(new Date(readings[hover].time))}`
+	);
+	const hoverX = $derived(
+		hover === null ? 0 : Math.min(Math.max(x(times[hover]), PAD.left + 70), W - PAD.right - 70)
+	);
 </script>
 
-<div class="water">
-	<div class="water-head">
-		<div>
-			<div class="water-value">
-				{latest.value.toLocaleString('nb-NO', { maximumFractionDigits: 1 })}
-				<span class="water-unit">{unit}</span>
-			</div>
-			<div class="muted small">
-				Målt {dayTime.format(new Date(latest.time))} · NVE stasjon {water.stationId}
-			</div>
-		</div>
-		<span class="state state-{level}">{levelIcon[level]} {levelText[level]}</span>
-	</div>
+<svg
+	viewBox="0 0 {W} {H}"
+	class="water-chart"
+	role="img"
+	aria-label="Vannføring siste {water.hours} timer. Nå {formatFlow(latest.value)} {unit}. {levelInfo[level].text}, der {low} til {high} {unit} regnes som perfekt."
+	onpointermove={onMove}
+	onpointerleave={() => (hover = null)}
+>
+	<defs>
+		<linearGradient id="water-fill" x1="0" x2="0" y1="0" y2="1">
+			<stop offset="0" stop-color="var(--primary)" stop-opacity="0.28" />
+			<stop offset="1" stop-color="var(--primary)" stop-opacity="0" />
+		</linearGradient>
+	</defs>
 
-	<svg
-		viewBox="0 0 {W} {H}"
-		class="water-chart"
-		role="img"
-		aria-label="Vannføring siste {water.hours} timer. Nå {latest.value} {unit}. {levelText[level]}, der {low} til {high} {unit} regnes som perfekt."
-		onpointermove={onMove}
-		onpointerleave={() => (hover = null)}
-	>
-		<!-- Perfekt-sonen. Båndet er merket med tekst, så fargen ikke er eneste signal. -->
-		<rect
-			x={PAD.left}
-			y={bandTop}
-			width={plotW}
-			height={Math.max(0, bandBottom - bandTop)}
-			class="band"
+	<!-- Perfekt-sonen. Båndet er merket med tekst, så fargen ikke er eneste signal. -->
+	<rect
+		x={PAD.left}
+		y={bandTop}
+		width={plotW}
+		height={Math.max(0, bandBottom - bandTop)}
+		class="band"
+	/>
+	<line x1={PAD.left} x2={W - PAD.right} y1={bandTop} y2={bandTop} class="band-edge" />
+	<line x1={PAD.left} x2={W - PAD.right} y1={bandBottom} y2={bandBottom} class="band-edge" />
+	<text x={W - PAD.right - 6} y={bandTop + 14} class="band-label" text-anchor="end">
+		{low}–{high} {unit} · perfekt
+	</text>
+
+	{#each ticks as tick (tick.i)}
+		<line x1={PAD.left} x2={W - PAD.right} y1={tick.y} y2={tick.y} class="grid" />
+		<text x={PAD.left - 8} y={tick.y + 4} class="axis" text-anchor="end">{tick.label}</text>
+	{/each}
+
+	{#each xTicks as tick (tick.i)}
+		<text x={tick.x} y={H - 8} class="axis" text-anchor="middle">{tick.label}</text>
+	{/each}
+
+	<path d={area} class="area" />
+	<path d={line} class="series" />
+
+	<!-- Siste punkt merkes direkte; resten leses av aksen og hover. -->
+	<circle cx={x(times.at(-1)!)} cy={y(latest.value)} r="5" class="last-dot" />
+
+	{#if hover !== null}
+		<line
+			x1={x(times[hover])}
+			x2={x(times[hover])}
+			y1={PAD.top}
+			y2={PAD.top + plotH}
+			class="crosshair"
 		/>
-		<text x={PAD.left + 6} y={bandTop + 13} class="band-label">
-			{low}–{high} {unit} · perfekt
-		</text>
-
-		{#each ticks as tick (tick.i)}
-			<line x1={PAD.left} x2={W - PAD.right} y1={tick.y} y2={tick.y} class="grid" />
-			<text x={PAD.left - 8} y={tick.y + 4} class="axis" text-anchor="end">{tick.label}</text>
-		{/each}
-
-		{#each xTicks as tick (tick.i)}
-			<text x={tick.x} y={H - 8} class="axis" text-anchor="middle">{tick.label}</text>
-		{/each}
-
-		<path d={line} class="series" />
-
-		<!-- Siste punkt merkes direkte; resten leses av aksen og hover. -->
-		<circle cx={x(times.at(-1)!)} cy={y(latest.value)} r="4.5" class="last-dot" />
-
-		{#if hover !== null}
-			<line
-				x1={x(times[hover])}
-				x2={x(times[hover])}
-				y1={PAD.top}
-				y2={PAD.top + plotH}
-				class="crosshair"
-			/>
-			<circle cx={x(times[hover])} cy={y(values[hover])} r="4.5" class="hover-dot" />
-			<text
-				x={Math.min(Math.max(x(times[hover]), PAD.left + 46), W - PAD.right - 46)}
-				y={PAD.top + 10}
-				class="hover-label"
-				text-anchor="middle"
-			>
-				{values[hover].toLocaleString('nb-NO', { maximumFractionDigits: 1 })}
-				{unit} · {clock.format(new Date(readings[hover].time))}
-			</text>
-		{/if}
-	</svg>
-</div>
+		<circle cx={x(times[hover])} cy={y(values[hover])} r="5" class="hover-dot" />
+		<rect x={hoverX - 68} y={PAD.top - 12} width="136" height="22" class="hover-bg" />
+		<text x={hoverX} y={PAD.top + 3} class="hover-label" text-anchor="middle">{hoverText}</text>
+	{/if}
+</svg>

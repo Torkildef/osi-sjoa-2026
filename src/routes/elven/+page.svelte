@@ -1,77 +1,101 @@
 <script lang="ts">
+	import Icon from '$lib/Icon.svelte';
+	import RiverProfile from '$lib/RiverProfile.svelte';
 	import WaterChart from '$lib/WaterChart.svelte';
+	import WaterNow from '$lib/WaterNow.svelte';
 	import { trip, water as waterConfig } from '$lib/config';
-	import { places, runs } from '$lib/places';
+	import { geometryInfo, riverIsDraft, sections, isTraced } from '$lib/river';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	const coordsFor = (name: string) => places.find((p) => p.name === name)?.coords ?? null;
-	const mapsUrl = (name: string) => {
-		const c = coordsFor(name);
-		return c ? `https://www.google.com/maps/search/?api=1&query=${c[0]},${c[1]}` : null;
-	};
+	const untraced = sections.filter((s) => !isTraced(s));
 </script>
 
 <svelte:head>
 	<title>Elven – {trip.title}</title>
 </svelte:head>
 
-<h1>Elven</h1>
-<p class="lede">Vannføring og strekningene vi padler.</p>
+<div class="page-head">
+	<div>
+		<h1 class="headline-large">Elven</h1>
+		<p class="lede">Hvordan Sjoa går akkurat nå, og strekningene vi padler.</p>
+	</div>
+</div>
 
-<section class="section-block">
+<section>
 	<div class="section-head">
-		<h2>Vannføring</h2>
-		<a class="small" href={waterConfig.stationUrl} target="_blank" rel="noopener">NVE Sildre ↗</a>
+		<h2 class="title-large"><Icon name="waves" size={22} class="primary-text" /> Vannføring</h2>
+		<a class="chip link" href={waterConfig.stationUrl} target="_blank" rel="noopener">
+			NVE Sildre
+			<Icon name="openInNew" size={16} />
+		</a>
 	</div>
 
 	{#if data.water.status === 'ok'}
-		<WaterChart readings={data.water.readings} unit={data.water.unit} />
-		<p class="muted small footnote">
-			Siste {waterConfig.hours} timer, målt av NVE. Hold pekeren over grafen for enkeltmålinger.
-		</p>
-	{:else if data.water.status === 'unconfigured'}
 		<div class="card">
-			<p class="muted" style="margin: 0">
-				Sett <code>NVE_API_KEY</code> for å vise vannføringen. Nøkkelen er gratis og hentes på
+			<WaterNow readings={data.water.readings} unit={data.water.unit} />
+			<WaterChart readings={data.water.readings} unit={data.water.unit} />
+			<p class="footnote">
+				Siste {waterConfig.hours} timer, målt av NVE ved stasjon {waterConfig.stationId}. Det grønne
+				båndet er vannføringen vi regner som perfekt. Hold pekeren over grafen for enkeltmålinger.
+			</p>
+		</div>
+	{:else if data.water.status === 'unconfigured'}
+		<div class="empty">
+			<Icon name="waterDrop" size={36} />
+			<div class="title-medium">Vannføringen er ikke koblet til</div>
+			<p class="body-medium">
+				Sett <code>NVE_API_KEY</code> for å vise grafen. Nøkkelen er gratis og hentes på
 				<a href="https://hydapi.nve.no/Users" target="_blank" rel="noopener">hydapi.nve.no</a>.
 			</p>
 		</div>
 	{:else}
-		<div class="card">
-			<p class="notice error" style="margin: 0">{data.water.message}</p>
-		</div>
+		<p class="notice error">
+			<Icon name="error" size={20} />
+			{data.water.message}
+		</p>
 	{/if}
 </section>
 
-<section class="section-block">
-	<h2>Strekninger</h2>
-	<div class="grid runs">
-		{#each runs as run (run.name)}
-			<div class="run">
-				<h3>{run.name}</h3>
-				<dl class="facts small">
-					<dt>Put inn</dt>
-					<dd>
-						{run.from}
-						{#if mapsUrl(run.from)}
-							<a href={mapsUrl(run.from)} target="_blank" rel="noopener">→</a>
-						{/if}
-					</dd>
-					<dt>Take out</dt>
-					<dd>
-						{run.to}
-						{#if mapsUrl(run.to)}
-							<a href={mapsUrl(run.to)} target="_blank" rel="noopener">→</a>
-						{/if}
-					</dd>
-				</dl>
-			</div>
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="kayaking" size={22} class="primary-text" /> Strekningene</h2>
+		<a class="chip link" href="/kart?strekning={sections[0]?.id}">
+			<Icon name="map" size={16} />
+			Se alt på kartet
+		</a>
+	</div>
+	<p class="body-medium on-surface-variant" style="margin-bottom: 1rem; max-width: 46rem">
+		Vi padler to strekninger etter hverandre: først Bru-bru gjennom Heidal, så Playrun videre
+		nedover. Take out på den første er put inn på den neste, så det går an å ta begge i ett.
+	</p>
+
+	<div class="stack" style="gap: 1.25rem">
+		{#each sections as section (section.id)}
+			<RiverProfile {section} />
 		{/each}
 	</div>
-	<p class="muted small footnote">
-		Strekningene er tegnet inn på <a href="/heidal">kartet</a>. Mer om gradering, sikkerhet og
-		nøkkelstryk kommer senere.
-	</p>
+
+	{#if riverIsDraft}
+		<p class="notice" style="margin-top: 1.25rem">
+			<Icon name="edit" size={20} />
+			<span>
+				Gradering og beskrivelser er foreløpige. Stryk, playspots og ting å passe på legges inn i
+				<code>src/lib/river.ts</code> etter hvert som noen har padlet strekningene.
+			</span>
+		</p>
+	{/if}
+
+	{#if untraced.length > 0}
+		<p class="notice" style="margin-top: 0.6rem">
+			<Icon name="info" size={20} />
+			<span>
+				Elveløpet er ikke hentet inn ennå, så kartet tegner strekningene som rette streker. Kjør
+				<code>node scripts/hent-elv.mjs</code> for å hente det fra OpenStreetMap.
+			</span>
+		</p>
+	{:else if geometryInfo.fetched}
+		<p class="footnote">Elveløp fra {geometryInfo.source}, hentet {geometryInfo.fetched}.</p>
+	{/if}
 </section>

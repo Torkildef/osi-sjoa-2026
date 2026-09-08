@@ -9,6 +9,10 @@ Legg bildefilene her. Siden viser dem automatisk, og skjuler dem så lenge de ma
 
 Bytter du filendelse, må stien oppdateres i `src/lib/photos.ts`.
 
+Fanelogoen (`favicon.png`, `apple-touch-icon.png`, `icon-192.png` og `icon-512.png`
+i `static/`) er laget fra `osi-logo.jpeg`. Bytter du logoen, lag dem på nytt fra den
+nye fila – 64, 180, 192 og 512 piksler, kvadratiske, med hvit bakgrunn.
+
 Hold filstørrelsen nede. Hovedbildet trenger ikke være bredere enn ca. 1600 piksler.
 
 Logoene til stedene vises i stedslista på Heidal-siden og i kartets popup:
