@@ -6,7 +6,7 @@
  */
 export const photos = {
 	logo: {
-		src: '/bilder/osi-logo.png',
+		src: '/bilder/osi-logo.jpeg',
 		alt: 'OSI-logoen'
 	},
 	kruke: {
@@ -18,11 +18,11 @@ export const photos = {
 		alt: 'Logoen til Strie Strømmer'
 	},
 	ysteri: {
-		src: '/bilder/heidal-ysteri.png',
+		src: '/bilder/heidal-ysteri.webp',
 		alt: 'Logoen til Heidal Ysteri'
 	},
 	kiwi: {
-		src: '/bilder/kiwi.png',
+		src: '/bilder/kiwi.jpg',
 		alt: 'Kiwi-logoen'
 	}
 } satisfies Record<string, { src: string; alt: string }>;
