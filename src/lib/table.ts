@@ -44,7 +44,7 @@ export type Table = {
 const YES = /^(ja|yes|true|sant|x|✓|ja!|jepp)$/i;
 const NO = /^(nei|no|false|usant|✗|-|–)$/i;
 
-function classify(raw: string): Cell {
+export function classify(raw: string): Cell {
 	const value = raw.trim();
 	if (value === '') return { kind: 'empty' };
 	if (YES.test(value)) return { kind: 'yes' };

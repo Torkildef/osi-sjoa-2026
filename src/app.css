@@ -790,3 +790,110 @@ ul.places a {
 	font-weight: 600;
 	fill: var(--text);
 }
+
+/* ---- Deltaker- og biloversikt ------------------------------------------ */
+
+.section-block {
+	margin-top: 2rem;
+}
+
+.grid.stats {
+	margin-bottom: 1.75rem;
+}
+
+table.sheet.roster td {
+	white-space: normal;
+	/* Rader med kommentar er høyere enn de andre; uten dette flyter avkrysningene
+	   ned til midten og raden blir vanskelig å lese på tvers. */
+	vertical-align: top;
+}
+
+table.sheet.roster td.name {
+	font-weight: 500;
+}
+
+.badge.pro {
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+table.sheet.roster td.center {
+	text-align: center;
+}
+
+table.sheet.roster tbody td {
+	background: var(--surface);
+}
+
+table.sheet.roster tbody tr:nth-child(even) td {
+	background: var(--tone-neutral-soft);
+}
+
+.car-chip {
+	display: inline-block;
+	padding: 0.1rem 0.55rem;
+	border-radius: 999px;
+	background: var(--tone-warm-soft);
+	border: 1px solid var(--tone-warm-band);
+	color: var(--text);
+	font-size: 0.82rem;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+}
+
+.car-chip:hover {
+	background: var(--tone-warm-head);
+}
+
+.grid.cars {
+	grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+}
+
+.car {
+	border: 1px solid var(--border);
+	border-top: 3px solid var(--tone-warm-band);
+	border-radius: var(--radius);
+	background: var(--surface);
+	padding: 0.85rem 1rem;
+}
+
+/* Så lenken fra deltakerlista ikke lander bak sidetoppen. */
+.car:target {
+	outline: 2px solid var(--accent);
+	outline-offset: 2px;
+}
+
+.car-id {
+	font-size: 0.75rem;
+	text-transform: uppercase;
+	letter-spacing: 0.06em;
+	color: var(--muted);
+	font-weight: 600;
+}
+
+.car-driver {
+	font-size: 1.15rem;
+	font-weight: 600;
+	margin-bottom: 0.5rem;
+}
+
+.car dl.facts {
+	grid-template-columns: auto 1fr;
+	gap: 0.2rem 0.75rem;
+}
+
+details.raw {
+	margin-top: 2rem;
+}
+
+details.raw summary {
+	cursor: pointer;
+	color: var(--accent);
+	font-size: 0.9rem;
+	padding: 0.35rem 0;
+}
+
+details.raw .sheet-wrap {
+	margin-top: 0.75rem;
+}

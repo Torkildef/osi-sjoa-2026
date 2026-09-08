@@ -54,10 +54,51 @@ export const columnGroups: ColumnGroup[] = [
 ];
 
 /**
- * Kolonner som ikke vises. Siden ligger åpent på nettet, så kontaktopplysninger
- * holdes utenfor. Legg til flere mønstre her for å skjule andre kolonner.
+ * Kolonner som ikke vises noe sted. Kontaktopplysninger holdes utenfor fordi siden
+ * ligger åpent på nettet; tidsmerke og medlemsspørsmål er støy i en oversikt.
  */
-export const hiddenColumns: RegExp[] = [/e-?post|e-?mail/i, /telefon|mobil|\btlf\b|phone/i];
+export const hiddenColumns: RegExp[] = [
+	/e-?post|e-?mail/i,
+	/telefon|mobil|\btlf\b|phone/i,
+	/tidsmerke|timestamp/i,
+	/member of the club|medlem i klubben|er du medlem/i
+];
+
+/**
+ * Hvilken kolonne i regnearket som fyller hvilken rolle i oversikten.
+ *
+ * Hver rolle tar den første kolonnen som treffer et av mønstrene sine, og en kolonne
+ * kan bare fylle én rolle. Rekkefølgen under er derfor viktig: de presise rollene
+ * plukker først, slik at «Antall plasser i bilen» blir seter og ikke havner på den
+ * mer generelle bil-rollen.
+ *
+ * Treffer ingen kolonne en rolle, faller den bare bort fra tabellen. Ingenting
+ * forsvinner – alle kolonner ligger fortsatt i «Vis alle svar fra skjemaet».
+ */
+export const fieldPatterns: { role: string; patterns: RegExp[] }[] = [
+	{ role: 'name', patterns: [/^navn$|^name$|\bfullt navn\b|full name|ditt navn|your name/i] },
+	{
+		role: 'seats',
+		patterns: [/(plass|sete|seat)/i]
+	},
+	{
+		role: 'carDeparture',
+		patterns: [/(bil|car).*(drar|reis|leav|depart)|(drar|leav|depart).*(bil|car)/i]
+	},
+	{
+		role: 'departure',
+		patterns: [/n(å|a)r.*(drar|reis)|when.*(leav|depart)|departure|avreise|drar du/i]
+	},
+	{
+		role: 'professional',
+		patterns: [/\bprof/i, /instrukt|instructor|guide|kursleder/i]
+	},
+	{
+		role: 'licence',
+		patterns: [/lappen|f(ø|o)rerkort|driv(er|ing)?.?s?.?licen[cs]e|\bsertifikat\b/i]
+	},
+	{ role: 'hasCar', patterns: [/\bbil\b|\bcar\b|kj(ø|o)re|driv/i] }
+];
 
 /**
  * Rader som skal utheves – arrangører og instruktører. Sjekkes mot alle celler

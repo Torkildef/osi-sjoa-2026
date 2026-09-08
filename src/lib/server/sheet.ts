@@ -1,9 +1,10 @@
 import { env } from '$env/dynamic/private';
 import { parseCsvRecords } from './csv';
+import { buildRoster, type Roster } from '$lib/roster';
 import { buildTable, type Table } from '$lib/table';
 
 export type SheetResult =
-	| { status: 'ok'; table: Table; fetchedAt: string }
+	| { status: 'ok'; table: Table; roster: Roster; fetchedAt: string }
 	| { status: 'unconfigured' }
 	| { status: 'error'; message: string };
 
@@ -56,5 +57,10 @@ export async function loadSheet(): Promise<SheetResult> {
 		return { status: 'error', message: 'Regnearket er tomt.' };
 	}
 
-	return { status: 'ok', table: buildTable(headers, records), fetchedAt: new Date().toISOString() };
+	return {
+		status: 'ok',
+		table: buildTable(headers, records),
+		roster: buildRoster(headers, records),
+		fetchedAt: new Date().toISOString()
+	};
 }

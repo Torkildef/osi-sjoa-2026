@@ -12,6 +12,7 @@
 
 	const sheet = $derived(data.sheet);
 	const table = $derived(sheet.status === 'ok' ? sheet.table : null);
+	const roster = $derived(sheet.status === 'ok' ? sheet.roster : null);
 
 	// Uten database er det ingen Realtime å lytte på, så vi henter regnearket
 	// på nytt med jevne mellomrom i stedet.
@@ -32,9 +33,6 @@
 		hour: '2-digit',
 		minute: '2-digit'
 	});
-
-	/** Første kolonne er navnet og skal stå fast når tabellen scrolles sidelengs. */
-	const isSticky = (index: number) => index === 0;
 
 	/**
 	 * Navn og rolle leses som tekst og hører til venstre. Avkrysningene midtstilles,
@@ -87,75 +85,177 @@
 			<a href={signupFormUrl} target="_blank" rel="noopener">Åpne påmeldingsskjemaet →</a>
 		</p>
 	</div>
-{:else if table}
-	<div class="sheet-wrap">
-		<table class="sheet">
-			<thead>
-				<tr class="bands">
-					{#each table.bands as band, i (i)}
-						{#if band.group}
-							<th class="band tone-{band.group.tone}" colspan={band.span} scope="colgroup">
-								{band.group.emoji}
-								{band.group.label}
-							</th>
-						{:else}
-							{#each { length: band.span } as _, j (j)}
-								<th class="band band-empty" rowspan="2" scope="col" class:sticky={isSticky(j)}>
-									{table.columns[j].name}
-								</th>
-							{/each}
-						{/if}
-					{/each}
-				</tr>
-				<tr class="labels">
-					{#each table.columns as column, i (column.name)}
-						{#if column.group}
-							<th class="tone-{column.group.tone} soft" scope="col">{column.name}</th>
-						{/if}
-					{/each}
-				</tr>
-			</thead>
+{:else if table && roster}
+	<div class="grid stats">
+		<div class="stat">
+			<div class="value">{roster.people.length}</div>
+			<div class="label">Påmeldte</div>
+		</div>
+		<div class="stat">
+			<div class="value">{roster.cars.length}</div>
+			<div class="label">{roster.cars.length === 1 ? 'Bil' : 'Biler'}</div>
+		</div>
+		{#if roster.totalSeats !== null}
+			<div class="stat">
+				<div class="value">{roster.totalSeats}</div>
+				<div class="label">Plasser i bilene</div>
+			</div>
+		{/if}
+		{#if roster.withLicence !== null}
+			<div class="stat">
+				<div class="value">{roster.withLicence} / {roster.people.length}</div>
+				<div class="label">Har lappen</div>
+			</div>
+		{/if}
+	</div>
 
-			<tbody>
-				{#each table.rows as row, r (r)}
-					<tr class:highlighted={row.highlighted}>
-						{#each row.cells as cell, c (c)}
-							<td
-								class:sticky={isSticky(c)}
-								class:name={isSticky(c)}
-								class="tone-{table.columns[c].group?.tone ?? 'plain'}"
-								style="text-align: {align(cell, table.columns[c].group !== null)}"
-							>
-								{#if cell.kind === 'yes'}
-									<span class="mark yes" aria-label="Ja">✓</span>
-								{:else if cell.kind === 'no'}
-									<span class="mark no" aria-label="Nei">✕</span>
-								{:else if cell.kind === 'empty'}
-									<span class="mark none" aria-label="Ikke oppgitt">–</span>
+	<section class="section-block">
+		<h2>Hvem kommer</h2>
+		<div class="sheet-wrap">
+			<table class="sheet roster">
+				<thead>
+					<tr>
+						<th scope="col">Navn</th>
+						{#if roster.mapping.departure}<th scope="col">Drar</th>{/if}
+						{#if roster.mapping.professional}<th scope="col">Proff</th>{/if}
+						{#if roster.mapping.licence}<th scope="col">Lappen</th>{/if}
+						<th scope="col">Bil</th>
+					</tr>
+				</thead>
+				<tbody>
+					{#each roster.people as person (person.name + person.departure)}
+						<tr>
+							<td class="name">
+								{person.name}
+								{#each Object.entries(person.extras) as [key, value] (key)}
+									<span class="muted small block">{value}</span>
+								{/each}
+							</td>
+							{#if roster.mapping.departure}
+								<td>{person.departure ?? '–'}</td>
+							{/if}
+							{#if roster.mapping.professional}
+								<td class="center">
+									{#if person.professional?.kind === 'yes'}
+										<span class="badge pro">Proff</span>
+									{:else}
+										<span class="mark none">–</span>
+									{/if}
+								</td>
+							{/if}
+							{#if roster.mapping.licence}
+								<td class="center">
+									{#if person.licence?.kind === 'yes'}
+										<span class="mark yes">✓</span>
+									{:else if person.licence?.kind === 'no'}
+										<span class="mark no">✕</span>
+									{:else}
+										<span class="mark none">–</span>
+									{/if}
+								</td>
+							{/if}
+							<td class="center">
+								{#if person.carId}
+									<a class="car-chip" href="#bil-{person.carId}">Bil {person.carId}</a>
 								{:else}
-									{cell.value}
+									<span class="mark none">–</span>
 								{/if}
+							</td>
+						</tr>
+					{/each}
+				</tbody>
+			</table>
+		</div>
+	</section>
+
+	<section class="section-block">
+		<h2>Biler</h2>
+		{#if roster.cars.length === 0}
+			<p class="empty">Ingen har meldt at de tar med bil ennå.</p>
+		{:else}
+			<div class="grid cars">
+				{#each roster.cars as car (car.id)}
+					<div class="car" id="bil-{car.id}">
+						<div class="car-id">Bil {car.id}</div>
+						<div class="car-driver">{car.driver}</div>
+						<dl class="facts small">
+							<dt>Plasser</dt>
+							<dd>{car.seats ?? 'ikke oppgitt'}</dd>
+							<dt>Drar</dt>
+							<dd>{car.departure ?? 'ikke oppgitt'}</dd>
+						</dl>
+					</div>
+				{/each}
+			</div>
+		{/if}
+	</section>
+
+	<details class="raw">
+		<summary>Vis alle svar fra skjemaet</summary>
+		<div class="sheet-wrap">
+			<table class="sheet">
+				<thead>
+					<tr class="bands">
+						{#each table.bands as band, i (i)}
+							{#if band.group}
+								<th class="band tone-{band.group.tone}" colspan={band.span} scope="colgroup">
+									{band.group.emoji}
+									{band.group.label}
+								</th>
+							{:else}
+								{#each { length: band.span } as _, j (j)}
+									<th class="band band-empty" rowspan="2" scope="col">
+										{table.columns[j].name}
+									</th>
+								{/each}
+							{/if}
+						{/each}
+					</tr>
+					<tr class="labels">
+						{#each table.columns as column (column.name)}
+							{#if column.group}
+								<th class="tone-{column.group.tone} soft" scope="col">{column.name}</th>
+							{/if}
+						{/each}
+					</tr>
+				</thead>
+				<tbody>
+					{#each table.rows as row, r (r)}
+						<tr class:highlighted={row.highlighted}>
+							{#each row.cells as cell, c (c)}
+								<td
+									class="tone-{table.columns[c].group?.tone ?? 'plain'}"
+									style="text-align: {align(cell, table.columns[c].group !== null)}"
+								>
+									{#if cell.kind === 'yes'}
+										<span class="mark yes" aria-label="Ja">✓</span>
+									{:else if cell.kind === 'no'}
+										<span class="mark no" aria-label="Nei">✕</span>
+									{:else if cell.kind === 'empty'}
+										<span class="mark none" aria-label="Ikke oppgitt">–</span>
+									{:else}
+										{cell.value}
+									{/if}
+								</td>
+							{/each}
+						</tr>
+					{/each}
+				</tbody>
+				<tfoot>
+					<tr>
+						{#each table.columns as column, i (column.name)}
+							<td
+								class="tone-{column.group?.tone ?? 'plain'}"
+								style="text-align: {i === 0 ? 'left' : 'center'}"
+							>
+								{column.total}
 							</td>
 						{/each}
 					</tr>
-				{/each}
-			</tbody>
-
-			<tfoot>
-				<tr>
-					{#each table.columns as column, i (column.name)}
-						<td
-							class:sticky={isSticky(i)}
-							class="tone-{column.group?.tone ?? 'plain'}"
-							style="text-align: {i === 0 ? 'left' : 'center'}"
-						>
-							{column.total}
-						</td>
-					{/each}
-				</tr>
-			</tfoot>
-		</table>
-	</div>
+				</tfoot>
+			</table>
+		</div>
+	</details>
 
 	<p class="muted small footnote">
 		Hentet fra påmeldingsskjemaet, og oppdaterer seg selv hvert {refreshSeconds}. sekund.
