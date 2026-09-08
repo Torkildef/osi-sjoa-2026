@@ -14,6 +14,6 @@
 {#if !failed}
 	<figure class="photo {className}">
 		<img {src} {alt} loading="lazy" onerror={() => (failed = true)} />
-		{#if caption}<figcaption class="muted small">{caption}</figcaption>{/if}
+		{#if caption}<figcaption class="body-small on-surface-variant">{caption}</figcaption>{/if}
 	</figure>
 {/if}

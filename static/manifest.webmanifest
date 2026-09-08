@@ -1,0 +1,14 @@
+{
+	"name": "Sjoa 2026 – OSI Elvepadling",
+	"short_name": "Sjoa 2026",
+	"description": "Turside for OSI Elvepadlings tur til Sjoa 11.–13. september 2026.",
+	"start_url": "/",
+	"display": "standalone",
+	"background_color": "#f7f9fc",
+	"theme_color": "#005f8f",
+	"lang": "no",
+	"icons": [
+		{ "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+		{ "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+	]
+}

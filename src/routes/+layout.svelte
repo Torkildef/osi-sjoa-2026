@@ -1,43 +1,57 @@
 <script lang="ts">
-	import favicon from '$lib/assets/favicon.svg';
 	import { page } from '$app/state';
+	import Icon from '$lib/Icon.svelte';
 	import { signupFormUrl, trip } from '$lib/config';
 	import { pages } from '$lib/nav';
 	import { photos } from '$lib/photos';
 	import '../app.css';
 
 	let { children } = $props();
+
+	const isCurrent = (href: string) =>
+		href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
 </script>
 
 <svelte:head>
-	<link rel="icon" href={favicon} />
+	<meta name="description" content="Turside for {trip.organiser} sin tur til Sjoa, {trip.dates}." />
 </svelte:head>
 
-<header class="site-header">
+<header class="top-bar">
 	<div class="inner">
 		<a class="brand" href="/">
-			<!-- onerror: logoen legges inn av arrangørene, og toppen skal se hel ut uten den. -->
-			<img
-				src={photos.logo.src}
-				alt={photos.logo.alt}
-				class="logo"
-				onerror={(e) => e.currentTarget.remove()}
-			/>
-			<strong>{trip.organiser} · {trip.title}</strong>
+			<img src={photos.logo.src} alt={photos.logo.alt} class="logo" />
+			<span class="brand-text">
+				<strong>{trip.title}</strong>
+				<span>{trip.organiser}</span>
+			</span>
 		</a>
-		<nav>
+		<span class="spacer"></span>
+		<nav class="main-nav" aria-label="Hovedmeny">
 			{#each pages as item (item.href)}
 				<a
 					href={item.href}
-					aria-current={page.url.pathname === item.href ? 'page' : undefined}
-					class:current={page.url.pathname === item.href}>{item.label}</a
+					aria-current={isCurrent(item.href) ? 'page' : undefined}
+					class:current={isCurrent(item.href)}
 				>
+					<Icon name={item.icon} size={20} />
+					<span>{item.label}</span>
+				</a>
 			{/each}
-			<a class="external" href={signupFormUrl} target="_blank" rel="noopener">Skjema ↗</a>
 		</nav>
+		<a class="btn btn-tonal btn-small signup" href={signupFormUrl} target="_blank" rel="noopener">
+			Meld deg på
+			<Icon name="openInNew" size={16} class="trailing" />
+		</a>
 	</div>
 </header>
 
 <main class="page">
 	{@render children()}
 </main>
+
+<footer class="site-footer">
+	<span>{trip.organiser} · {trip.title}</span>
+	<a href="mailto:{trip.contact}">{trip.contact}</a>
+	<a href={signupFormUrl} target="_blank" rel="noopener">Påmeldingsskjema</a>
+	<span>Kart: © OpenStreetMap, Kartverket · Vannføring: NVE</span>
+</footer>

@@ -3,7 +3,11 @@ export const trip = {
 	title: 'Sjoa 2026',
 	organiser: 'OSI Elvepadling',
 	dates: '11.–13. september 2026',
-	location: 'Sjoa',
+	/** ISO-dato for første og siste dag. Brukes til nedtellingen på forsiden. */
+	start: '2026-09-11',
+	end: '2026-09-13',
+	location: 'Heidal',
+	base: 'Kruke gård',
 	contact: 'elvepadling@osi.no'
 };
 
@@ -41,7 +45,7 @@ const ABSENCE =
  * mer generelle bil-rollen.
  *
  * Treffer ingen kolonne en rolle, faller den bare bort fra tabellen. Ingenting
- * forsvinner – alle kolonner ligger fortsatt i «Vis alle svar fra skjemaet».
+ * forsvinner – alle kolonner ligger fortsatt i detaljene til hver deltaker.
  */
 export const fieldPatterns: { role: string; patterns: RegExp[] }[] = [
 	{ role: 'name', patterns: [/^navn$|^name$|\bfullt navn\b|full name|ditt navn|your name/i] },
@@ -123,3 +127,19 @@ export const water = {
 	hours: 48,
 	stationUrl: 'https://sildre.nve.no/station/2.595.0'
 };
+
+/** Antall hele dager fra `now` til turen starter. Negativt når turen er i gang eller over. */
+export function daysUntilTrip(now = new Date()): number {
+	const start = new Date(`${trip.start}T00:00:00+02:00`).getTime();
+	const today = new Date(now);
+	today.setHours(0, 0, 0, 0);
+	return Math.round((start - today.getTime()) / 86_400_000);
+}
+
+/** Er turen i gang akkurat nå? */
+export function tripIsOn(now = new Date()): boolean {
+	const start = new Date(`${trip.start}T00:00:00+02:00`).getTime();
+	const end = new Date(`${trip.end}T23:59:59+02:00`).getTime();
+	const t = now.getTime();
+	return t >= start && t <= end;
+}
