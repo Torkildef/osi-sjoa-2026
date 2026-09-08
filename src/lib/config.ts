@@ -70,3 +70,20 @@ export const refreshSeconds = 60;
 
 /** Cache-nøkkel: server-load registrerer den, klienten kaller invalidate() med den. */
 export const SHEET_KEY = 'sjoa:sheet';
+
+/**
+ * Vannføring fra NVE, vist som graf over de siste 48 timene.
+ *
+ * `parameter` er NVEs parameterkode: 1001 er vannføring (m³/s), 1000 er vannstand
+ * (meter). Vi bruker vannføring fordi «perfekt mellom 25 og 60» bare gir mening i
+ * m³/s – vannstanden på Sjoa ligger på et par meter. Bytt til 1000 om det likevel
+ * er vannstanden dere går etter, og juster `perfect` tilsvarende.
+ */
+export const water = {
+	stationId: '2.595.0',
+	parameter: 1001,
+	/** Nedre og øvre grense for det som regnes som fine forhold. */
+	perfect: [25, 60] as [number, number],
+	hours: 48,
+	stationUrl: 'https://sildre.nve.no/station/2.595.0'
+};

@@ -101,6 +101,28 @@ Et sted med `coords: null` havner ikke på kartet, men vises i lista under med �
 koordinat». Det er med vilje: en markør på omtrent riktig sted er verre enn ingen markør,
 for da tror folk de kan kjøre etter den.
 
+## Vannføring
+
+Under kartet vises vannføringen fra NVE for de siste 48 timene, med sonen som regnes
+som fine forhold markert i grafen.
+
+Krever en API-nøkkel til [NVEs HydAPI](https://hydapi.nve.no/) – gratis, hentes på
+[hydapi.nve.no/Users](https://hydapi.nve.no/Users). Legg den inn som `NVE_API_KEY`.
+Uten nøkkel skjules grafen, resten av siden virker som før.
+
+Innstillingene ligger i `water` i [`src/lib/config.ts`](src/lib/config.ts):
+
+| Felt         | Betydning                                                              |
+| ------------ | ---------------------------------------------------------------------- |
+| `stationId`  | NVE-stasjonen. `2.595.0` er den på [Sildre](https://sildre.nve.no/station/2.595.0) |
+| `parameter`  | `1001` = vannføring (m³/s), `1000` = vannstand (meter)                  |
+| `perfect`    | Nedre og øvre grense for fine forhold, tegnet som bånd i grafen         |
+| `hours`      | Hvor langt tilbake grafen går                                          |
+
+**Merk:** vi henter *vannføring*, ikke vannstand. «Perfekt mellom 25 og 60» gir bare
+mening i m³/s – vannstanden på Sjoa ligger på et par meter. Er det likevel vannstanden
+dere går etter, bytt `parameter` til `1000` og juster `perfect`.
+
 ## Personvern
 
 Et publisert regneark er lesbart for alle som har URL-en, og denne siden ligger åpent på
