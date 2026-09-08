@@ -648,3 +648,32 @@ ul.places a {
 	margin-left: 0.4rem;
 	white-space: nowrap;
 }
+
+/* Stedsnavn ved siden av kartnålene. */
+.leaflet-tooltip.map-label {
+	background: var(--surface);
+	color: var(--text);
+	border: 1px solid var(--border);
+	border-radius: 5px;
+	box-shadow: 0 1px 3px rgb(0 0 0 / 0.25);
+	padding: 0.15rem 0.4rem;
+	font-size: 0.78rem;
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+.leaflet-tooltip.map-label::before {
+	display: none; /* pilen peker på nåla, som allerede er tydelig nok */
+}
+
+.leaflet-tooltip.map-label-base {
+	border-color: #2f8f5b;
+}
+
+.leaflet-tooltip.map-label-service {
+	border-color: #b1791f;
+}
+
+.leaflet-tooltip.map-label-elv {
+	border-color: var(--accent);
+}

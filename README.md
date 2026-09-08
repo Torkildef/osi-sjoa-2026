@@ -92,6 +92,11 @@ viser bare hvilken strekning et løp dekker.
 **Legge til eller flytte et sted:** høyreklikk stedet i Google Maps og velg det øverste
 punktet i menyen. Da kopieres «61.7536, 9.2881», som limes rett inn i `coords`.
 
+Hvert sted får navnet sitt skrevet ved siden av markøren. `labelDirection` styrer hvilken
+vei navnet peker. Kiwi, Strie Strømmer og Ysteriet ligger noen hundre meter fra hverandre,
+så de peker hver sin vei for at navnene ikke skal legge seg oppå hverandre når hele
+området vises. Endrer du et sted, kan det hende naboen må peke en annen vei.
+
 Et sted med `coords: null` havner ikke på kartet, men vises i lista under med «mangler
 koordinat». Det er med vilje: en markør på omtrent riktig sted er verre enn ingen markør,
 for da tror folk de kan kjøre etter den.

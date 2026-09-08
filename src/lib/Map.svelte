@@ -53,6 +53,14 @@
 
 					L.marker(place.coords, { icon, title: place.name })
 						.bindPopup(popupHtml(place))
+						// Navnet står permanent ved siden av markøren, så kartet kan leses
+						// uten å klikke seg gjennom hver enkelt nål.
+						.bindTooltip(place.name, {
+							permanent: true,
+							direction: place.labelDirection ?? 'right',
+							offset: labelOffset(place.labelDirection ?? 'right'),
+							className: `map-label map-label-${place.kind}`
+						})
 						.addTo(map);
 				}
 
@@ -67,6 +75,14 @@
 
 		return () => map?.remove();
 	});
+
+	/** Dytter navnet klar av den 34 px brede nåla, uansett hvilken vei det peker. */
+	function labelOffset(direction: string): [number, number] {
+		if (direction === 'top') return [0, -18];
+		if (direction === 'bottom') return [0, 18];
+		if (direction === 'left') return [-18, 0];
+		return [18, 0];
+	}
 
 	function popupHtml(place: Place): string {
 		const [lat, lon] = place.coords!;

@@ -16,6 +16,12 @@ export type Place = {
 	note?: string;
 	address?: string;
 	coords: [number, number] | null;
+	/**
+	 * Hvilken vei navnet peker fra markøren. Kiwi, Strie Strømmer og Ysteriet ligger
+	 * få hundre meter fra hverandre, så uten at de peker hver sin vei legger navnene
+	 * seg oppå hverandre når hele området vises.
+	 */
+	labelDirection?: 'top' | 'bottom' | 'left' | 'right';
 };
 
 export const places: Place[] = [
@@ -25,35 +31,40 @@ export const places: Place[] = [
 		kind: 'base',
 		note: 'Her bor vi',
 		address: 'Øvrebygdsvegen 1230, 2670 Heidal',
-		coords: null
+		coords: [61.752070260638256, 9.328132979057257],
+		labelDirection: 'bottom'
 	},
 	{
 		name: 'Put inn – Bru-bru',
 		emoji: '🛶',
 		kind: 'elv',
 		note: 'Start på Bru-bru-strekket',
-		coords: [61.753634744416374, 9.288169334633185]
+		coords: [61.753634744416374, 9.288169334633185],
+		labelDirection: 'bottom'
 	},
 	{
 		name: 'Take out Bru-bru / put inn Playrun',
 		emoji: '🔁',
 		kind: 'elv',
 		note: 'Slutt på Bru-bru, start på Playrun',
-		coords: [61.73427772497469, 9.360923757140876]
+		coords: [61.73427772497469, 9.360923757140876],
+		labelDirection: 'right'
 	},
 	{
 		name: 'Take out – Playrun',
 		emoji: '🏁',
 		kind: 'elv',
 		note: 'Slutt på Playrun',
-		coords: [61.70778483076899, 9.432610297209571]
+		coords: [61.70778483076899, 9.432610297209571],
+		labelDirection: 'top'
 	},
 	{
 		name: 'Kiwi',
 		emoji: '🛒',
 		kind: 'service',
 		note: 'Matbutikk',
-		coords: null
+		coords: [61.759444129192566, 9.285411013661914],
+		labelDirection: 'top'
 	},
 	{
 		name: 'Strie Strømmer',
@@ -61,14 +72,16 @@ export const places: Place[] = [
 		kind: 'service',
 		note: 'Kajakkbutikk',
 		address: 'Heidalsvegen 1814, 2676 Heidal',
-		coords: null
+		coords: [61.75840888399415, 9.285542659189701],
+		labelDirection: 'left'
 	},
 	{
 		name: 'Ysteriet',
 		emoji: '☕',
 		kind: 'service',
 		note: 'Kafé og bakeri',
-		coords: null
+		coords: [61.75780945895403, 9.291542782739475],
+		labelDirection: 'right'
 	}
 ];
 
