@@ -8,6 +8,8 @@
  * Slik henter du en koordinat: høyreklikk stedet i Google Maps og velg det øverste
  * punktet i menyen. Da kopieres «61.7536, 9.2881», som limes rett inn her.
  */
+import type { PhotoKey } from './photos';
+
 export type Place = {
 	name: string;
 	emoji: string;
@@ -22,6 +24,8 @@ export type Place = {
 	 * seg oppå hverandre når hele området vises.
 	 */
 	labelDirection?: 'top' | 'bottom' | 'left' | 'right';
+	/** Logo fra photos.ts. Vises i stedet for emojien der stedet har en. */
+	logo?: PhotoKey;
 };
 
 export const places: Place[] = [
@@ -64,7 +68,8 @@ export const places: Place[] = [
 		kind: 'service',
 		note: 'Matbutikk',
 		coords: [61.759444129192566, 9.285411013661914],
-		labelDirection: 'top'
+		labelDirection: 'top',
+		logo: 'kiwi'
 	},
 	{
 		name: 'Strie Strømmer',
@@ -73,7 +78,8 @@ export const places: Place[] = [
 		note: 'Kajakkbutikk',
 		address: 'Heidalsvegen 1814, 2676 Heidal',
 		coords: [61.75840888399415, 9.285542659189701],
-		labelDirection: 'left'
+		labelDirection: 'left',
+		logo: 'strie'
 	},
 	{
 		name: 'Ysteriet',
@@ -81,7 +87,8 @@ export const places: Place[] = [
 		kind: 'service',
 		note: 'Kafé og bakeri',
 		coords: [61.75780945895403, 9.291542782739475],
-		labelDirection: 'right'
+		labelDirection: 'right',
+		logo: 'ysteri'
 	}
 ];
 

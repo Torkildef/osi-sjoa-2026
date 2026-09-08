@@ -1,8 +1,8 @@
 /**
  * Bildene siden bruker. Filene ligger i static/bilder/ og serveres fra roten.
  *
- * Mangler en fil, skjuler <Photo> seg selv i stedet for å vise et brukket
- * bildeikon – da ser siden hel ut både før og etter at bildene er lagt inn.
+ * Mangler en fil, skjuler bildet seg selv i stedet for å vise et brukket bildeikon –
+ * da ser siden hel ut både før og etter at bildene er lagt inn.
  */
 export const photos = {
 	logo: {
@@ -12,5 +12,19 @@ export const photos = {
 	kruke: {
 		src: '/bilder/kruke.jpg',
 		alt: 'Kruke gård en sommerkveld, med biler og kajakker på takstativene foran tømmerhusene'
+	},
+	strie: {
+		src: '/bilder/strie-strommer.png',
+		alt: 'Logoen til Strie Strømmer'
+	},
+	ysteri: {
+		src: '/bilder/heidal-ysteri.png',
+		alt: 'Logoen til Heidal Ysteri'
+	},
+	kiwi: {
+		src: '/bilder/kiwi.png',
+		alt: 'Kiwi-logoen'
 	}
-};
+} satisfies Record<string, { src: string; alt: string }>;
+
+export type PhotoKey = keyof typeof photos;

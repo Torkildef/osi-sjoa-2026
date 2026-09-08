@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { photos } from './photos';
 	import { places, placed, runs, type Place } from './places';
 
 	let container: HTMLDivElement;
@@ -7,8 +8,23 @@
 
 	const shown = placed();
 
+	let map: import('leaflet').Map | undefined;
+	const markers = new Map<string, import('leaflet').Marker>();
+
+	/**
+	 * Zoomer til et sted og åpner popupen. Kalles fra stedslista, fordi butikkene
+	 * ligger så tett at nålene dekker hverandre når hele området vises – uten dette
+	 * er de nederste umulige å treffe med musa.
+	 */
+	export function focusPlace(name: string) {
+		const place = places.find((p) => p.name === name);
+		const marker = markers.get(name);
+		if (!map || !place?.coords || !marker) return;
+		map.flyTo(place.coords, Math.max(map.getZoom(), 15), { duration: 0.6 });
+		marker.openPopup();
+	}
+
 	onMount(() => {
-		let map: import('leaflet').Map | undefined;
 
 		// Leaflet rører window ved import, så den lastes først her – ikke under SSR.
 		(async () => {
@@ -51,7 +67,7 @@
 						popupAnchor: [0, -16]
 					});
 
-					L.marker(place.coords, { icon, title: place.name })
+					const marker = L.marker(place.coords, { icon, title: place.name })
 						.bindPopup(popupHtml(place))
 						// Navnet står permanent ved siden av markøren, så kartet kan leses
 						// uten å klikke seg gjennom hver enkelt nål.
@@ -62,6 +78,7 @@
 							className: `map-label map-label-${place.kind}`
 						})
 						.addTo(map);
+					markers.set(place.name, marker);
 				}
 
 				map.fitBounds(
@@ -73,7 +90,11 @@
 			}
 		})();
 
-		return () => map?.remove();
+		return () => {
+			map?.remove();
+			map = undefined;
+			markers.clear();
+		};
 	});
 
 	/** Dytter navnet klar av den 34 px brede nåla, uansett hvilken vei det peker. */
@@ -87,7 +108,14 @@
 	function popupHtml(place: Place): string {
 		const [lat, lon] = place.coords!;
 		const url = `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`;
+		// this.remove(): logoene legges inn etter hvert, og popupen skal se hel ut uten dem.
+		const logo = place.logo
+			? `<img class="popup-logo" src="${photos[place.logo].src}" alt="${escape(
+					photos[place.logo].alt
+				)}" onerror="this.remove()">`
+			: '';
 		return `
+			${logo}
 			<strong>${place.emoji} ${escape(place.name)}</strong>
 			${place.note ? `<br><span class="muted">${escape(place.note)}</span>` : ''}
 			${place.address ? `<br><span class="muted">${escape(place.address)}</span>` : ''}

@@ -1057,3 +1057,58 @@ a.brand img.logo {
 	background: #fff;
 	padding: 1px;
 }
+
+/* Logoer på stedene. Merkene har ulike formater – wordmark, rundt segl – så vi
+   låser høyden og lar bredden følge etter. */
+img.place-logo {
+	height: 22px;
+	max-width: 74px;
+	object-fit: contain;
+	object-position: left center;
+	flex: none;
+	margin-top: 0.15rem;
+}
+
+.leaflet-popup-content img.popup-logo {
+	display: block;
+	height: 26px;
+	max-width: 110px;
+	object-fit: contain;
+	object-position: left center;
+	margin-bottom: 0.35rem;
+}
+
+/* Stedskortene er knapper som zoomer kartet til stedet. */
+button.place-button {
+	display: flex;
+	gap: 0.6rem;
+	align-items: flex-start;
+	width: 100%;
+	padding: 0;
+	background: none;
+	border: none;
+	border-radius: 0;
+	color: inherit;
+	font: inherit;
+	font-weight: 400;
+	text-align: left;
+	cursor: pointer;
+}
+
+button.place-button:disabled {
+	cursor: default;
+	opacity: 1;
+}
+
+button.place-button:not(:disabled):hover strong {
+	text-decoration: underline;
+}
+
+ul.places li {
+	flex-direction: column;
+	gap: 0.35rem;
+}
+
+ul.places a.route {
+	margin-left: 1.8rem;
+}
