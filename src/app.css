@@ -534,3 +534,117 @@ table.sheet tbody tr:last-child td {
 .footnote {
 	margin: 0.85rem 0 0;
 }
+
+/* ---- Kart -------------------------------------------------------------- */
+
+.map-section {
+	margin-top: 2.5rem;
+}
+
+.map-frame {
+	position: relative;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	overflow: hidden;
+	background: var(--surface);
+}
+
+.map {
+	height: 26rem;
+	width: 100%;
+}
+
+@media (max-width: 40rem) {
+	.map {
+		height: 20rem;
+	}
+}
+
+.map-fallback {
+	position: absolute;
+	inset: auto 1rem 1rem;
+	margin: 0;
+	background: var(--surface);
+}
+
+/* Emoji som kartnål – slipper Leaflets bildefiler. */
+.pin-wrap {
+	background: none;
+	border: none;
+}
+
+.pin {
+	display: grid;
+	place-items: center;
+	width: 34px;
+	height: 34px;
+	font-size: 1.15rem;
+	line-height: 1;
+	border-radius: 50%;
+	background: var(--surface);
+	border: 2px solid var(--accent);
+	box-shadow: 0 1px 4px rgb(0 0 0 / 0.3);
+}
+
+.pin-base {
+	border-color: #2f8f5b;
+}
+
+.pin-service {
+	border-color: #b1791f;
+}
+
+/* Leaflets popup skal følge sidens tema. */
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+	background: var(--surface);
+	color: var(--text);
+}
+
+.leaflet-popup-content {
+	margin: 0.7rem 0.9rem;
+	line-height: 1.45;
+}
+
+.leaflet-container {
+	background: var(--bg);
+	font: inherit;
+}
+
+ul.places {
+	list-style: none;
+	padding: 0;
+	margin: 1rem 0 0;
+	display: grid;
+	gap: 0.5rem;
+	grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+}
+
+ul.places li {
+	display: flex;
+	gap: 0.6rem;
+	align-items: flex-start;
+	padding: 0.55rem 0.7rem;
+	border: 1px solid var(--border);
+	border-radius: 6px;
+	background: var(--surface);
+}
+
+ul.places li.unplaced {
+	opacity: 0.7;
+	border-style: dashed;
+}
+
+.place-emoji {
+	font-size: 1.1rem;
+	line-height: 1.4;
+}
+
+.block {
+	display: block;
+}
+
+ul.places a {
+	margin-left: 0.4rem;
+	white-space: nowrap;
+}

@@ -79,6 +79,23 @@ Totalraden nederst regnes ut slik:
 Summeringen er mekanisk og teller alt som står der. Har noen skrevet «Backup» i
 bil-kolonnen, telles det som et svar – siden kan ikke vite at bilen ikke er i bruk.
 
+## Kartet
+
+Under tabellen ligger et kart over turområdet, med Leaflet og OpenStreetMap-fliser.
+Ingen API-nøkkel, ingen konto.
+
+Stedene ligger i [`src/lib/places.ts`](src/lib/places.ts). Hvert sted har navn, emoji og
+`coords` som `[breddegrad, lengdegrad]`. Elvestrekkene i `runs` tegnes som stiplede
+linjer mellom put inn og take out – de går rett fram og følger **ikke** elveløpet, de
+viser bare hvilken strekning et løp dekker.
+
+**Legge til eller flytte et sted:** høyreklikk stedet i Google Maps og velg det øverste
+punktet i menyen. Da kopieres «61.7536, 9.2881», som limes rett inn i `coords`.
+
+Et sted med `coords: null` havner ikke på kartet, men vises i lista under med «mangler
+koordinat». Det er med vilje: en markør på omtrent riktig sted er verre enn ingen markør,
+for da tror folk de kan kjøre etter den.
+
 ## Personvern
 
 Et publisert regneark er lesbart for alle som har URL-en, og denne siden ligger åpent på
