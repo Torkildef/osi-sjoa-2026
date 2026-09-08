@@ -14,9 +14,7 @@
 	<div class="inner">
 		<strong>{trip.organiser} · {trip.title}</strong>
 		<nav>
-			<a href="/">Oversikt</a>
-			<a href={signupFormUrl} target="_blank" rel="noopener">Påmelding ↗</a>
-			<a href="/admin">Admin</a>
+			<a href={signupFormUrl} target="_blank" rel="noopener">Påmeldingsskjemaet ↗</a>
 		</nav>
 	</div>
 </header>

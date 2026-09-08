@@ -1,55 +1,44 @@
 <script lang="ts">
-	import { signupFormUrl, trip } from '$lib/config';
-	import { formatDateTime, formatTimestamp } from '$lib/format';
-	import { formColumnsFor } from '$lib/formTable';
-	import { subscribeToTripData, type RealtimeState } from '$lib/realtime';
-	import { statusLabel, type Participant } from '$lib/types';
+	import { invalidate } from '$app/navigation';
+	import { SHEET_KEY, refreshSeconds, signupFormUrl, trip } from '$lib/config';
+	import type { Cell } from '$lib/table';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
-	let live = $state<RealtimeState>('connecting');
-	$effect(() => subscribeToTripData((state) => (live = state)));
+	const sheet = $derived(data.sheet);
+	const table = $derived(sheet.status === 'ok' ? sheet.table : null);
 
-	const d = $derived(data.trip);
-	const byId = $derived(new Map(d.participants.map((p) => [p.id, p])));
-	const active = $derived(d.participants.filter((p) => p.status !== 'cancelled'));
-	const confirmed = $derived(d.participants.filter((p) => p.status === 'confirmed'));
-	const waitlist = $derived(d.participants.filter((p) => p.status === 'waitlist'));
-	const paidCount = $derived(confirmed.filter((p) => p.paid).length);
-	const seatsAvailable = $derived(d.transport.reduce((sum, t) => sum + t.seats_available, 0));
+	// Uten database er det ingen Realtime å lytte på, så vi henter regnearket
+	// på nytt med jevne mellomrom i stedet.
+	let refreshing = $state(false);
+	$effect(() => {
+		const timer = setInterval(() => refresh(), refreshSeconds * 1000);
+		return () => clearInterval(timer);
+	});
 
-	const name = (id: string) => byId.get(id)?.name ?? 'Ukjent';
+	async function refresh() {
+		refreshing = true;
+		await invalidate(SHEET_KEY);
+		refreshing = false;
+	}
 
-	const passengersFor = (transportId: string) =>
-		d.transportPassengers.filter((tp) => tp.transport_id === transportId).map((tp) => tp.participant_id);
+	const timeFormat = new Intl.DateTimeFormat('nb-NO', {
+		timeZone: 'Europe/Oslo',
+		hour: '2-digit',
+		minute: '2-digit'
+	});
 
-	const residentsFor = (accommodationId: string) =>
-		d.accommodationAssignments
-			.filter((a) => a.accommodation_id === accommodationId)
-			.map((a) => a.participant_id);
+	/** Første kolonne er navnet og skal stå fast når tabellen scrolles sidelengs. */
+	const isSticky = (index: number) => index === 0;
 
-	const assignedIds = $derived(new Set(d.accommodationAssignments.map((a) => a.participant_id)));
-	const seatedIds = $derived(new Set(d.transportPassengers.map((tp) => tp.participant_id)));
-	const driverIds = $derived(new Set(d.transport.map((t) => t.driver_participant_id)));
-
-	const withoutBed = $derived(active.filter((p) => !assignedIds.has(p.id)));
-	const withoutSeat = $derived(
-		active.filter((p) => !seatedIds.has(p.id) && !driverIds.has(p.id))
-	);
-
-	const liveText: Record<RealtimeState, string> = {
-		connecting: 'Kobler til …',
-		live: 'Oppdateres automatisk',
-		offline: 'Frakoblet – last siden på nytt'
-	};
-
-	// Kolonnene kommer fra svarene selv, så tabellen følger skjemaet om det endres.
-	const answerColumns = $derived(formColumnsFor(active, false, d.syncState?.columns));
-	const fromForm = $derived(active.filter((p) => p.form_answers));
-
-	function sortByName(list: Participant[]) {
-		return [...list].sort((a, b) => a.name.localeCompare(b.name, 'nb'));
+	/**
+	 * Navn og rolle leses som tekst og hører til venstre. Avkrysningene midtstilles,
+	 * så ✓-ene danner en kolonne øyet kan skanne nedover.
+	 */
+	function align(cell: Cell, grouped: boolean): string {
+		if (!grouped) return 'left';
+		return cell.kind === 'text' && cell.value.length > 14 ? 'left' : 'center';
 	}
 </script>
 
@@ -60,195 +49,112 @@
 <div class="section-head">
 	<div>
 		<h1>{trip.title}</h1>
-		<p class="lede">{trip.dates} · {trip.location}</p>
+		<p class="lede">{trip.dates} · {trip.location} · {trip.price}</p>
 	</div>
-	<span class="live" class:live-on={live === 'live'} class:live-off={live === 'offline'}>
-		<span class="dot"></span>{liveText[live]}
-	</span>
-</div>
-
-{#if data.loadFailed}
-	<p class="notice error">
-		Får ikke kontakt med databasen akkurat nå, så listene under kan være tomme. Prøv å laste
-		siden på nytt om litt.
-	</p>
-{/if}
-
-<div class="grid" style="margin-bottom: 1.25rem">
-	<div class="stat">
-		<div class="value">{confirmed.length}</div>
-		<div class="label">Påmeldte</div>
-	</div>
-	<div class="stat">
-		<div class="value">{waitlist.length}</div>
-		<div class="label">På venteliste</div>
-	</div>
-	<div class="stat">
-		<div class="value">{paidCount} / {confirmed.length}</div>
-		<div class="label">Har betalt</div>
-	</div>
-	<div class="stat">
-		<div class="value">{seatsAvailable}</div>
-		<div class="label">Ledige bilplasser</div>
-	</div>
-</div>
-
-<section class="card">
-	<h2>Nøkkelinfo</h2>
-	<dl class="facts">
-		<dt>Når</dt>
-		<dd>{trip.dates}</dd>
-		<dt>Hvor</dt>
-		<dd>{trip.location}</dd>
-		<dt>Pris</dt>
-		<dd>{trip.price} <span class="muted small">– {trip.priceIncludes}</span></dd>
-		<dt>Betaling</dt>
-		<dd>{trip.paymentInfo}</dd>
-		<dt>Kontakt</dt>
-		<dd><a href="mailto:{trip.contact}">{trip.contact}</a></dd>
-	</dl>
-	<p style="margin: 1rem 0 0">
-		<a href={signupFormUrl} target="_blank" rel="noopener">Meld deg på i påmeldingsskjemaet →</a>
-	</p>
-</section>
-
-<section class="card">
-	<h2>Kunngjøringer</h2>
-	{#if d.announcements.length === 0}
-		<p class="empty">Ingenting fra arrangørene ennå.</p>
-	{:else}
-		{#each d.announcements as a (a.id)}
-			<article style="padding-bottom: 0.75rem">
-				<p style="margin: 0 0 0.15rem">{a.message}</p>
-				<p class="muted small" style="margin: 0">
-					{formatTimestamp(a.created_at)}{a.created_by ? ` · ${a.created_by}` : ''}
-				</p>
-			</article>
-		{/each}
-	{/if}
-</section>
-
-<section class="card">
-	<h2>Deltakere</h2>
-	{#if active.length === 0}
-		<p class="empty">Ingen påmeldte ennå.</p>
-	{:else}
-		<div class="table-scroll">
-			<table>
-				<thead>
-					<tr>
-						<th>Navn</th>
-						<th>Status</th>
-						<th>Betalt</th>
-					</tr>
-				</thead>
-				<tbody>
-					{#each sortByName(active) as p (p.id)}
-						<tr>
-							<td>{p.name}</td>
-							<td><span class="badge {p.status}">{statusLabel[p.status]}</span></td>
-							<td>
-								{#if p.paid}<span class="badge paid">Betalt</span>{:else}<span class="muted">–</span>{/if}
-							</td>
-						</tr>
-					{/each}
-				</tbody>
-			</table>
-		</div>
-	{/if}
-</section>
-
-<section class="card">
-	<div class="section-head">
-		<h2>Svar fra påmeldingsskjemaet</h2>
-		{#if d.syncState?.last_synced_at}
-			<span class="muted small">Sist hentet {formatTimestamp(d.syncState.last_synced_at)}</span>
+	<div class="head-actions">
+		{#if sheet.status === 'ok'}
+			<span class="muted small">
+				Oppdatert {timeFormat.format(new Date(sheet.fetchedAt))}
+			</span>
 		{/if}
+		<button class="secondary small" onclick={refresh} disabled={refreshing}>
+			{refreshing ? 'Henter …' : 'Oppdater'}
+		</button>
 	</div>
+</div>
 
-	{#if fromForm.length === 0}
-		<p class="empty">Ingen svar hentet fra skjemaet ennå.</p>
-	{:else}
-		<div class="table-scroll">
-			<table>
-				<thead>
-					<tr>
-						{#each answerColumns as column (column)}
-							<th>{column}</th>
+{#if sheet.status === 'unconfigured'}
+	<div class="card">
+		<h2>Regnearket er ikke koblet til ennå</h2>
+		<p class="muted">
+			Sett miljøvariabelen <code>GOOGLE_SHEET_CSV_URL</code> til CSV-lenken fra
+			<strong>Fil → Del → Publiser på nettet</strong> i regnearket skjemaet skriver til.
+		</p>
+	</div>
+{:else if sheet.status === 'error'}
+	<div class="card">
+		<p class="notice error" style="margin: 0">{sheet.message}</p>
+	</div>
+{:else if table && table.rows.length === 0}
+	<div class="card">
+		<h2>Ingen svar ennå</h2>
+		<p class="muted">
+			Første påmelding dukker opp her automatisk.
+			<a href={signupFormUrl} target="_blank" rel="noopener">Åpne påmeldingsskjemaet →</a>
+		</p>
+	</div>
+{:else if table}
+	<div class="sheet-wrap">
+		<table class="sheet">
+			<thead>
+				<tr class="bands">
+					{#each table.bands as band, i (i)}
+						{#if band.group}
+							<th class="band tone-{band.group.tone}" colspan={band.span} scope="colgroup">
+								{band.group.emoji}
+								{band.group.label}
+							</th>
+						{:else}
+							{#each { length: band.span } as _, j (j)}
+								<th class="band band-empty" rowspan="2" scope="col" class:sticky={isSticky(j)}>
+									{table.columns[j].name}
+								</th>
+							{/each}
+						{/if}
+					{/each}
+				</tr>
+				<tr class="labels">
+					{#each table.columns as column, i (column.name)}
+						{#if column.group}
+							<th class="tone-{column.group.tone} soft" scope="col">{column.name}</th>
+						{/if}
+					{/each}
+				</tr>
+			</thead>
+
+			<tbody>
+				{#each table.rows as row, r (r)}
+					<tr class:highlighted={row.highlighted}>
+						{#each row.cells as cell, c (c)}
+							<td
+								class:sticky={isSticky(c)}
+								class:name={isSticky(c)}
+								class="tone-{table.columns[c].group?.tone ?? 'plain'}"
+								style="text-align: {align(cell, table.columns[c].group !== null)}"
+							>
+								{#if cell.kind === 'yes'}
+									<span class="mark yes" aria-label="Ja">✓</span>
+								{:else if cell.kind === 'no'}
+									<span class="mark no" aria-label="Nei">✕</span>
+								{:else if cell.kind === 'empty'}
+									<span class="mark none" aria-label="Ikke oppgitt">–</span>
+								{:else}
+									{cell.value}
+								{/if}
+							</td>
 						{/each}
 					</tr>
-				</thead>
-				<tbody>
-					{#each sortByName(fromForm) as p (p.id)}
-						<tr>
-							{#each answerColumns as column (column)}
-								<td>{p.form_answers?.[column] ?? ''}</td>
-							{/each}
-						</tr>
+				{/each}
+			</tbody>
+
+			<tfoot>
+				<tr>
+					{#each table.columns as column, i (column.name)}
+						<td
+							class:sticky={isSticky(i)}
+							class="tone-{column.group?.tone ?? 'plain'}"
+							style="text-align: {i === 0 ? 'left' : 'center'}"
+						>
+							{column.total}
+						</td>
 					{/each}
-				</tbody>
-			</table>
-		</div>
-		<p class="muted small" style="margin: 0.75rem 0 0">
-			Kontaktopplysninger vises bare for arrangørene.
-		</p>
-	{/if}
-</section>
+				</tr>
+			</tfoot>
+		</table>
+	</div>
 
-<section class="card">
-	<h2>Samkjøring</h2>
-	{#if d.transport.length === 0}
-		<p class="empty">Ingen biler registrert ennå.</p>
-	{:else}
-		{#each d.transport as t (t.id)}
-			{@const passengers = passengersFor(t.id)}
-			<article style="padding-bottom: 1rem">
-				<h3>{name(t.driver_participant_id)} kjører</h3>
-				<p class="muted small" style="margin: 0 0 0.35rem">
-					Fra {t.departure_location} · {formatDateTime(t.departure_time)} ·
-					{t.seats_available} av {t.seats_total}
-					{t.seats_total === 1 ? 'plass' : 'plasser'} ledig
-				</p>
-				{#if passengers.length === 0}
-					<p class="small muted" style="margin: 0">Ingen passasjerer ennå.</p>
-				{:else}
-					<p class="small" style="margin: 0">
-						Passasjerer: {passengers.map(name).join(', ')}
-					</p>
-				{/if}
-			</article>
-		{/each}
-	{/if}
-	{#if withoutSeat.length > 0}
-		<p class="small muted" style="margin: 0">
-			Uten bilplass: {sortByName(withoutSeat).map((p) => p.name).join(', ')}
-		</p>
-	{/if}
-</section>
-
-<section class="card">
-	<h2>Overnatting</h2>
-	{#if d.accommodation.length === 0}
-		<p class="empty">Ingen overnatting registrert ennå.</p>
-	{:else}
-		{#each d.accommodation as a (a.id)}
-			{@const residents = residentsFor(a.id)}
-			<article style="padding-bottom: 1rem">
-				<h3>{a.name}</h3>
-				<p class="muted small" style="margin: 0 0 0.35rem">
-					{residents.length} av {a.capacity} plasser i bruk
-				</p>
-				{#if residents.length === 0}
-					<p class="small muted" style="margin: 0">Ingen tildelt ennå.</p>
-				{:else}
-					<p class="small" style="margin: 0">{sortByName(residents.map((id) => byId.get(id)!).filter(Boolean)).map((p) => p.name).join(', ')}</p>
-				{/if}
-			</article>
-		{/each}
-	{/if}
-	{#if withoutBed.length > 0}
-		<p class="small muted" style="margin: 0">
-			Uten tildelt overnatting: {sortByName(withoutBed).map((p) => p.name).join(', ')}
-		</p>
-	{/if}
-</section>
+	<p class="muted small footnote">
+		Hentet fra påmeldingsskjemaet, og oppdaterer seg selv hvert {refreshSeconds}. sekund.
+		<a href={signupFormUrl} target="_blank" rel="noopener">Åpne skjemaet →</a>
+	</p>
+{/if}

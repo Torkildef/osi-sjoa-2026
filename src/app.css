@@ -48,7 +48,7 @@ body {
 }
 
 .page {
-	max-width: 60rem;
+	max-width: 78rem;
 	margin: 0 auto;
 	padding: 1.5rem 1rem 4rem;
 }
@@ -59,7 +59,7 @@ body {
 }
 
 .site-header .inner {
-	max-width: 60rem;
+	max-width: 78rem;
 	margin: 0 auto;
 	padding: 0.9rem 1rem;
 	display: flex;
@@ -355,4 +355,182 @@ button:disabled {
 	gap: 0.5rem;
 	align-items: baseline;
 	justify-content: space-between;
+}
+
+
+/* ---- Svartabellen ------------------------------------------------------ */
+
+:root {
+	--tone-warm-band: #e3a97c;
+	--tone-warm-head: #f5dcc6;
+	--tone-warm-soft: #fdf3ea;
+	--tone-cool-band: #a3c5ac;
+	--tone-cool-head: #d2e5d7;
+	--tone-cool-soft: #eff6f1;
+	--tone-neutral-band: #b9c2c9;
+	--tone-neutral-head: #dde2e6;
+	--tone-neutral-soft: #f2f4f6;
+	--row-highlight: #eaf3ec;
+	--mark-yes: #2f8f5b;
+	--mark-no: #b9c0c7;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--tone-warm-band: #7d5535;
+		--tone-warm-head: #4a3524;
+		--tone-warm-soft: #2a211a;
+		--tone-cool-band: #3f6b4d;
+		--tone-cool-head: #274233;
+		--tone-cool-soft: #1c2721;
+		--tone-neutral-band: #48515a;
+		--tone-neutral-head: #333a41;
+		--tone-neutral-soft: #23282d;
+		--row-highlight: #1f2b23;
+		--mark-yes: #6ed09b;
+		--mark-no: #5c666f;
+	}
+}
+
+.head-actions {
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.sheet-wrap {
+	overflow-x: auto;
+	border: 1px solid var(--border);
+	border-radius: var(--radius);
+	background: var(--surface);
+}
+
+table.sheet {
+	border-collapse: separate;
+	border-spacing: 0;
+	width: 100%;
+	font-size: 0.92rem;
+}
+
+table.sheet th,
+table.sheet td {
+	border: none;
+	border-bottom: 1px solid var(--border);
+	padding: 0.6rem 0.75rem;
+	white-space: nowrap;
+}
+
+/* Fargebåndene over gruppene. */
+table.sheet th.band {
+	text-align: center;
+	font-size: 0.78rem;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--text);
+	padding: 0.5rem 0.75rem;
+}
+
+table.sheet th.band.tone-warm {
+	background: var(--tone-warm-band);
+}
+
+table.sheet th.band.tone-cool {
+	background: var(--tone-cool-band);
+}
+
+table.sheet th.band.tone-neutral {
+	background: var(--tone-neutral-band);
+}
+
+/* Kolonner uten gruppe (navn, rolle) spenner over begge overskriftsradene. */
+table.sheet th.band-empty {
+	background: var(--tone-neutral-soft);
+	text-align: left;
+	vertical-align: bottom;
+}
+
+table.sheet tr.labels th {
+	font-size: 0.74rem;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	text-align: center;
+	font-weight: 600;
+	color: var(--text);
+}
+
+table.sheet tr.labels th.tone-warm {
+	background: var(--tone-warm-head);
+}
+
+table.sheet tr.labels th.tone-cool {
+	background: var(--tone-cool-head);
+}
+
+table.sheet tr.labels th.tone-neutral {
+	background: var(--tone-neutral-head);
+}
+
+/* Svake fargeflater i selve tabellen, så gruppene henger visuelt sammen. */
+table.sheet td.tone-warm {
+	background: var(--tone-warm-soft);
+}
+
+table.sheet td.tone-cool {
+	background: var(--tone-cool-soft);
+}
+
+table.sheet td.tone-neutral {
+	background: var(--tone-neutral-soft);
+}
+
+table.sheet td.tone-plain {
+	background: var(--surface);
+}
+
+table.sheet td.name {
+	font-weight: 500;
+}
+
+table.sheet tr.highlighted td.name {
+	font-weight: 700;
+	background: var(--row-highlight);
+}
+
+/* Navnekolonnen står fast når tabellen scrolles sidelengs. */
+table.sheet .sticky {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	border-right: 1px solid var(--border);
+}
+
+table.sheet thead .sticky {
+	z-index: 2;
+}
+
+table.sheet .mark {
+	font-weight: 700;
+}
+
+table.sheet .mark.yes {
+	color: var(--mark-yes);
+}
+
+table.sheet .mark.no,
+table.sheet .mark.none {
+	color: var(--mark-no);
+}
+
+table.sheet tfoot td {
+	font-weight: 700;
+	border-bottom: none;
+	border-top: 2px solid var(--border);
+}
+
+table.sheet tbody tr:last-child td {
+	border-bottom: none;
+}
+
+.footnote {
+	margin: 0.85rem 0 0;
 }

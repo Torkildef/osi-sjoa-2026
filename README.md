@@ -1,141 +1,98 @@
 # Sjoa 2026 – OSI Elvepadling
 
-Logistikkside for elvepadlingsturen til Sjoa: påmelding, samkjøring, overnatting og
-kunngjøringer, med sanntidsoppdatering for alle som har siden åpen.
+Én side som viser påmeldingene til elvepadlingsturen til Sjoa, hentet rett fra
+Google-skjemaet.
 
-- **Oversikt** (`/`) – nøkkeltall, deltakerliste, svarene fra påmeldingsskjemaet, biler,
-  hytter og kunngjøringer.
-- **Påmelding** – skjer i et Google-skjema. `/pamelding` viderekobler dit, så gamle lenker
-  fortsatt virker.
-- **Admin** (`/admin`) – arrangørene redigerer samkjøring og overnatting, markerer betalt
-  og legger ut kunngjøringer. Beskyttet med ett delt passord.
+Påmelding skjer i skjemaet. Siden leser svarene fra regnearket skjemaet skriver til,
+og viser dem i en gruppert tabell med avkrysninger og en totalrad nederst. Ingen
+database, ingen innlogging, ingen backend – bare regnearket og en side som tegner det.
 
-Stack: SvelteKit + TypeScript, Supabase (Postgres, PostgREST og Realtime), hostet på Vercel.
+Stack: SvelteKit + TypeScript på Vercel.
 
-## Om arkitekturen
-
-Lesing skjer direkte fra Supabase med anon-nøkkelen, og Realtime holder sidene oppdatert
-uten manuell refresh.
-
-**Skriving går gjennom SvelteKit sine form actions**, ikke direkte fra nettleseren. Grunnen
-er at anon-nøkkelen ligger åpent i frontend-koden: hadde den hatt skrivetilgang, kunne hvem
-som helst markert seg selv som betalt eller lagt ut kunngjøringer i klubbens navn. Derfor gir
-RLS anon kun lesetilgang, og serveren bruker service role-nøkkelen for alle endringer. Dette
-er fortsatt ingen egen backend – det er den samme SvelteKit-appen som kjører på Vercel – men
-det avviker fra «skriv direkte til Supabase» i den opprinnelige skissen. Skjemaene fungerer
-som en bonus også uten JavaScript.
-
-## Påmelding og skjemasvar
-
-Påmelding skjer i et Google-skjema. Appen leser svarene fra regnearket skjemaet skriver
-til, og speiler dem inn i `participants`. Slik blir skjemaet eneste påmeldingskanal,
-samtidig som samkjøring, overnatting og betalt-markering fortsatt henger på den samme
-deltakerraden.
-
-**Sette det opp:**
-
-1. I skjemaet: **Svar → Koble til regneark**.
-2. I regnearket: **Fil → Del → Publiser på nettet**. Velg fanen med svarene og formatet
-   **CSV**. Kopier lenken.
-3. Legg lenken inn som `GOOGLE_SHEET_CSV_URL`, både i `.env` lokalt og i Vercel.
-4. Sett `signupFormUrl` i [`src/lib/config.ts`](src/lib/config.ts) til delingslenken fra
-   **Send**-knappen i skjemaet.
-
-Svarene hentes ved sidevisning, men høyst én gang i minuttet. Arrangørene kan også trykke
-**Hent svar nå** i admin. Feiler hentingen, står feilmeldingen på adminsiden.
-
-**Ting verdt å vite:**
-
-- Kolonnene gjenkjennes på mønster, ikke eksakt navn, så tabellen følger med når du endrer
-  spørsmålene. Mønstrene ligger i `formColumns` i `src/lib/config.ts`. Bytter du til helt
-  andre ord for navn eller e-post, må de justeres der.
-- Nøkkelen per deltaker er e-postadressen, ellers navnet. Svarer noen to ganger, gjelder
-  det siste svaret.
-- Synken rører aldri status, betalt eller notater på en deltaker som allerede finnes. En
-  avmelding eller en betalingshake blir altså ikke overskrevet ved neste henting.
-- Rader som slettes i regnearket fjerner ikke deltakeren i appen. Meld dem av i admin.
-- Det publiserte regnearket er lesbart for alle som har URL-en. Derfor holdes e-post og
-  telefon utenfor den offentlige forsiden – de sendes ikke engang til nettleseren, bare til
-  adminsiden. Vil du vise dem likevel, tøm `privateFormColumns` i `src/lib/config.ts`.
-  Vil du at arket ikke skal være offentlig i det hele tatt, må du bytte til en service
-  account mot Google Sheets API i stedet.
-
-## Lokal utvikling
+## Kom i gang
 
 ```sh
 npm install
-cp .env.example .env   # fyll inn verdiene fra Supabase
+cp .env.example .env   # fyll inn CSV-lenken
 npm run dev
 ```
 
 Appen kjører på http://localhost:5173.
 
-Nyttige kommandoer:
-
 ```sh
-npm run check    # typesjekk (svelte-check)
+npm run check    # typesjekk
 npm run build    # produksjonsbygg
 npm run preview  # se på produksjonsbygget lokalt
 ```
 
-## Sette opp Supabase
+## Koble til regnearket
 
-1. Opprett et prosjekt på [supabase.com](https://supabase.com).
-2. Åpne **SQL Editor** i Supabase, lim inn hele [`supabase/setup.sql`](supabase/setup.sql)
-   og trykk Run. Den inneholder alle migrasjonene samlet, og er trygg å kjøre om igjen:
-   har du kjørt deler av oppsettet før, hoppes det som finnes over. Den sletter aldri data.
+1. I skjemaet: **Svar → Koble til regneark**.
+2. I regnearket: **Fil → Del → Publiser på nettet**. Velg fanen med svarene og formatet
+   **CSV**. Kopier lenken.
+3. Legg den inn som `GOOGLE_SHEET_CSV_URL` – i `.env` lokalt, og under **Settings →
+   Environment Variables** i Vercel.
 
-   Foretrekker du Supabase CLI, ligger de samme endringene som enkeltmigrasjoner:
+Hentingen skjer på serveren, så regneark-lenken blir ikke synlig i frontend-koden, og
+nettleseren slipper CORS-trøbbel. Siden henter på nytt hvert minutt, og har en
+**Oppdater**-knapp. Merk at Google selv cacher det publiserte arket noen minutter, så et
+ferskt svar kan bruke litt tid på å dukke opp.
 
-   ```sh
-   npx supabase link --project-ref <prosjekt-ref>
-   npx supabase db push
-   ```
+## Tilpasse tabellen
 
-3. Rediger hyttenavnene nederst i `setup.sql` (eller i `accommodation`-tabellen etterpå)
-   til de dere faktisk har booket.
-4. Hent `Project URL`, `anon`-nøkkelen og `service_role`-nøkkelen under
-   **Project Settings → API**, og legg dem i `.env`.
+Alt som styrer tabellen ligger i [`src/lib/config.ts`](src/lib/config.ts):
 
-Migrasjonene setter opp tabellene, slår på Row Level Security med lesetilgang for alle,
-og legger tabellene til i `supabase_realtime`-publikasjonen.
+| Innstilling      | Hva den gjør                                                            |
+| ---------------- | ----------------------------------------------------------------------- |
+| `columnGroups`   | Fargebåndene. Hver kolonne havner i første gruppe som treffer et mønster |
+| `hiddenColumns`  | Kolonner som ikke vises. E-post og telefon er skjult som standard        |
+| `highlightRow`   | Rader som uthevet – instruktører, assistenter, arrangører                |
+| `refreshSeconds` | Hvor ofte siden henter på nytt                                           |
+| `trip`           | Tittel, datoer, sted og pris i toppen                                    |
+| `signupFormUrl`  | Lenken til skjemaet                                                      |
 
-## Datamodell
+Kolonnene gjenkjennes på **mønster**, ikke eksakt navn, så små omformuleringer i
+skjemaet går fint. Legger du til et spørsmål som ikke treffer noen gruppe, dukker det opp
+som en egen kolonne til venstre – ingenting går tapt, men vil du ha det inn i et
+fargebånd, legger du til et mønster i `columnGroups`.
 
-| Tabell                      | Innhold                                                             |
-| --------------------------- | ------------------------------------------------------------------- |
-| `participants`              | Navn, e-post, telefon, status, betalt, overnattingsønske, notat, og hele skjemasvaret i `form_answers` |
-| `transport`                 | Én rad per bil: sjåfør, avreisested, tidspunkt, antall plasser        |
-| `transport_passengers`      | Hvem som sitter på med hvem                                          |
-| `accommodation`             | Hytter med kapasitet                                                 |
-| `accommodation_assignments` | Hvem som bor hvor                                                    |
-| `announcements`             | Meldinger fra arrangørene                                            |
-| `form_sync_state`           | Når svarene sist ble hentet, kolonnerekkefølgen og siste feil          |
+Kolonner som ikke tilhører en gruppe vises først, siden det gjerne er de
+identifiserende feltene (navn, rolle).
 
-`seats_available` og `capacity_available` lagres ikke, men regnes ut i viewene
-`transport_overview` og `accommodation_overview`, slik at tallene aldri kommer i utakt med
-hvem som faktisk er plassert.
+### Slik leses cellene
 
-## Turinformasjon
+| I regnearket                   | På siden                       |
+| ------------------------------ | ------------------------------ |
+| `Ja`, `Yes`, `True`, `X`       | grønn ✓                        |
+| `Nei`, `No`, `False`, `-`      | grå ✕                          |
+| tom                            | grå –                          |
+| alt annet                      | teksten som den står           |
 
-Datoer, sted, pris og kontaktadresse ligger i [`src/lib/config.ts`](src/lib/config.ts).
-Rediger der og deploy på nytt.
+Totalraden nederst regnes ut slik:
 
-## Deploy til Vercel
+- **Ja/nei-kolonne** → `10 av 14`
+- **Tallkolonne** → summen
+- **Blandet kolonne** → hvor mange som har oppgitt noe (nei-svar telles ikke, ellers
+  ville «Trenger utstyr» vist 11 når to trenger utstyr)
+- **Kolonne alle har fylt ut** → tom, fordi tallet bare ville vært antall rader om igjen
 
-1. Importer GitHub-repoet i Vercel. Framework detekteres som SvelteKit.
-2. Legg inn de fire miljøvariablene fra `.env.example` under **Settings → Environment
-   Variables** (for Production, Preview og Development).
-3. Push til `main` – Vercel bygger og deployer automatisk.
+Summeringen er mekanisk og teller alt som står der. Har noen skrevet «Backup» i
+bil-kolonnen, telles det som et svar – siden kan ikke vite at bilen ikke er i bruk.
 
-Fem miljøvariabler nå: de fire opprinnelige pluss `GOOGLE_SHEET_CSV_URL`.
+## Personvern
 
-`ADMIN_PASSWORD` og `SUPABASE_SERVICE_ROLE_KEY` må ikke ha `PUBLIC_`-prefiks; SvelteKit
-nekter å bygge hvis private variabler importeres i kode som havner i nettleseren.
+Et publisert regneark er lesbart for alle som har URL-en, og denne siden ligger åpent på
+nettet. E-post og telefon filtreres derfor bort før dataen sendes til nettleseren – ikke
+bare skjult i visningen, men aldri sendt. Vil du vise dem likevel, tøm `hiddenColumns`.
 
-## Videre arbeid
+## Deploy
 
-Ideer som bevisst er utelatt for å holde ting enkelt: maks antall deltakere med automatisk
-venteliste, og automatisk oppretting av biler ut fra hvem som svarer at de kan kjøre. Det
-siste er med vilje ikke gjort – hvor mange plasser noen har, står som fritekst i skjemaet,
-og arrangørene legger inn bilene i admin i stedet.
+Importer repoet i Vercel, legg inn `GOOGLE_SHEET_CSV_URL` under **Settings → Environment
+Variables**, og push til `main`.
+
+## Om `supabase/`-mappa
+
+Mappa inneholder SQL-en fra en tidligere versjon som hadde database med samkjøring,
+overnattingsfordeling, betalt-markering og et adminpanel. Ingenting av dette brukes av
+appen nå. Filene er beholdt fordi funksjonaliteten kan bli aktuell igjen; koden som brukte
+dem ligger i git-historikken.
