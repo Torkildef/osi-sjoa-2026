@@ -1,7 +1,9 @@
 <script lang="ts">
+	import Countdown from '$lib/Countdown.svelte';
 	import Icon from '$lib/Icon.svelte';
 	import WaterNow from '$lib/WaterNow.svelte';
-	import { daysUntilTrip, signupFormUrl, trip, tripIsOn } from '$lib/config';
+	import { signupFormUrl, trip } from '$lib/config';
+	import { practical } from '$lib/info';
 	import { photos } from '$lib/photos';
 	import { pages } from '$lib/nav';
 	import { schedule } from '$lib/schedule';
@@ -11,17 +13,6 @@
 
 	const roster = $derived(data.sheet.status === 'ok' ? data.sheet.roster : null);
 	const next = schedule[0];
-
-	const days = daysUntilTrip();
-	const countdown = tripIsOn()
-		? 'Vi er på elva! 🎉'
-		: days > 1
-			? `Om ${days} dager`
-			: days === 1
-				? 'I morgen!'
-				: days === 0
-					? 'I dag!'
-					: null;
 
 	let heroFailed = $state(false);
 </script>
@@ -34,9 +25,7 @@
 	{#if !heroFailed}
 		<img src={photos.kruke.src} alt={photos.kruke.alt} onerror={() => (heroFailed = true)} />
 	{/if}
-	{#if countdown}
-		<span class="countdown">{countdown}</span>
-	{/if}
+	<Countdown />
 	<div class="hero-body">
 		<div>
 			<div class="overline" style="color: rgb(255 255 255 / 0.8)">{trip.organiser}</div>
@@ -45,10 +34,11 @@
 		<div class="hero-sub">
 			<span><Icon name="event" size={18} /> {trip.dates}</span>
 			<span><Icon name="house" size={18} /> {trip.base}, {trip.location}</span>
+			<span><Icon name="schedule" size={18} /> Avreise {trip.meetup.label.toLowerCase()}</span>
 		</div>
 		<div class="hero-actions">
 			<a class="btn btn-filled" href={signupFormUrl} target="_blank" rel="noopener">
-				Meld deg på
+				Lenke til skjema
 				<Icon name="openInNew" size={18} class="trailing" />
 			</a>
 			<a class="btn btn-tonal" href="/plan">
@@ -113,6 +103,38 @@
 
 <section class="block">
 	<div class="section-head">
+		<h2 class="title-large">Praktisk</h2>
+	</div>
+	<div class="grid wide">
+		{#each practical as card (card.title)}
+			<div class="card info-card">
+				<span class="info-emoji">{card.emoji}</span>
+				<h3 class="title-medium">{card.title}</h3>
+				<ul>
+					{#each card.lines as line (line)}
+						<li>{line}</li>
+					{/each}
+				</ul>
+				{#if card.link}
+					<div class="info-actions">
+						<a
+							class="chip link"
+							href={card.link.href}
+							target={card.link.href.startsWith('http') ? '_blank' : undefined}
+							rel={card.link.href.startsWith('http') ? 'noopener' : undefined}
+						>
+							<Icon name={card.link.href.startsWith('http') ? 'directions' : 'map'} size={16} />
+							{card.link.label}
+						</a>
+					</div>
+				{/if}
+			</div>
+		{/each}
+	</div>
+</section>
+
+<section class="block">
+	<div class="section-head">
 		<h2 class="title-large">Utforsk</h2>
 	</div>
 	<div class="grid">
@@ -124,18 +146,5 @@
 				<p class="body-medium on-surface-variant">{item.blurb}</p>
 			</a>
 		{/each}
-	</div>
-</section>
-
-<section class="block">
-	<div class="card filled" style="display: flex; flex-wrap: wrap; gap: 0.75rem 1.5rem; align-items: center; justify-content: space-between">
-		<div>
-			<div class="title-medium">Spørsmål om turen?</div>
-			<div class="body-medium on-surface-variant">Arrangørene svarer på e-post.</div>
-		</div>
-		<a class="btn btn-outlined" href="mailto:{trip.contact}">
-			<Icon name="mail" size={18} />
-			{trip.contact}
-		</a>
 	</div>
 </section>

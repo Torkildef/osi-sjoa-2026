@@ -980,6 +980,7 @@ a.list-item:hover {
 	font-size: 0.82rem;
 	color: var(--on-surface-variant);
 	line-height: 1.35;
+	overflow-wrap: anywhere;
 }
 
 .list-item.selected .supporting {
@@ -1024,6 +1025,11 @@ table.data td {
 	border-bottom: 1px solid var(--outline-variant);
 	white-space: nowrap;
 	vertical-align: middle;
+}
+
+table.data td.wrap {
+	white-space: normal;
+	min-width: 12rem;
 }
 
 table.data th {
@@ -1101,6 +1107,27 @@ dl.facts dt {
 
 dl.facts dd {
 	margin: 0;
+	/* Svarene kan være hele setninger. */
+	overflow-wrap: anywhere;
+	white-space: pre-line;
+}
+
+@media (max-width: 34rem) {
+	dl.facts {
+		grid-template-columns: 1fr;
+		gap: 0.1rem;
+	}
+
+	dl.facts dt {
+		margin-top: 0.6rem;
+		font-size: 0.75rem;
+		text-transform: uppercase;
+		letter-spacing: 0.05em;
+	}
+
+	dl.facts dt:first-child {
+		margin-top: 0;
+	}
 }
 
 /* ---- Meldinger ---------------------------------------------------------- */
@@ -1261,6 +1288,32 @@ dl.facts dd {
 	background: rgb(255 255 255 / 0.28);
 }
 
+/* ---- Praktisk info ------------------------------------------------------ */
+
+.info-card {
+	display: grid;
+	gap: 0.4rem;
+	align-content: start;
+}
+
+.info-card .info-emoji {
+	font-size: 1.6rem;
+	line-height: 1;
+}
+
+.info-card ul {
+	margin: 0;
+	padding-left: 1.1rem;
+	font-size: 0.9rem;
+	color: var(--on-surface-variant);
+	display: grid;
+	gap: 0.2rem;
+}
+
+.info-card .info-actions {
+	margin-top: 0.3rem;
+}
+
 /* ---- Vannføring --------------------------------------------------------- */
 
 .water-now {
@@ -1299,6 +1352,15 @@ dl.facts dd {
 .water-chart .band {
 	fill: var(--success);
 	opacity: 0.12;
+}
+
+.water-chart .band.good {
+	fill: var(--primary);
+	opacity: 0.08;
+}
+
+.water-chart .band-label.good {
+	fill: var(--primary);
 }
 
 .water-chart .band-edge {

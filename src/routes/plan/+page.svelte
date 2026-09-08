@@ -18,10 +18,7 @@
 </svelte:head>
 
 <div class="page-head">
-	<div>
-		<h1 class="headline-large">Plan</h1>
-		<p class="lede">Tidsskjema for helgen. Tidene er omtrentlige – elva bestemmer.</p>
-	</div>
+	<h1 class="headline-large">Plan</h1>
 </div>
 
 {#each days as group (group.day)}
@@ -63,9 +60,6 @@
 {#if scheduleIsDraft}
 	<p class="notice" style="margin-top: 1.5rem">
 		<Icon name="edit" size={20} />
-		<span>
-			Planen er ikke ferdig. Hvem som er med på hvert punkt fylles ut etter hvert, og redigeres i
-			<code>src/lib/schedule.ts</code>.
-		</span>
+		<span>Planen er ikke ferdig. Tidene er omtrentlige – elva bestemmer.</span>
 	</p>
 {/if}

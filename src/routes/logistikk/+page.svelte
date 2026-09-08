@@ -62,12 +62,9 @@
 </svelte:head>
 
 <div class="page-head">
-	<div>
-		<h1 class="headline-large">Logistikk</h1>
-		<p class="lede">Hvem som kommer, hvilke biler vi har, og hvem som trenger utstyr.</p>
-	</div>
+	<h1 class="headline-large">Logistikk</h1>
 	<a class="btn btn-tonal btn-small" href={signupFormUrl} target="_blank" rel="noopener">
-		Åpne skjemaet
+		Lenke til skjema
 		<Icon name="openInNew" size={16} class="trailing" />
 	</a>
 </div>
@@ -228,7 +225,7 @@
 						<span class="trailing">
 							{#if person.professional?.kind === 'yes'}<span class="tag primary">Proff</span>{/if}
 							{#if person.carId}<span class="tag tertiary">Bil</span>{/if}
-							{#if person.borrowedGear}<span class="tag success">Låner</span>{/if}
+							{#if person.borrowedGear}<span class="tag success">Låner {person.borrowedGear.toLowerCase()}</span>{/if}
 							{#if person.absence}<span class="tag warning">Avvik</span>{/if}
 							<Icon name="keyboardArrowDown" size={22} class="chevron" />
 						</span>
@@ -277,8 +274,4 @@
 			{/each}
 		</ul>
 	</section>
-
-	<p class="footnote">
-		Hentet fra påmeldingsskjemaet. Siden oppdaterer seg selv hvert {refreshSeconds}. sekund.
-	</p>
 {/if}

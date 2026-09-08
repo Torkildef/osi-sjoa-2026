@@ -8,7 +8,14 @@ export const trip = {
 	end: '2026-09-13',
 	location: 'Heidal',
 	base: 'Kruke gård',
-	contact: 'elvepadling@osi.no'
+	contact: 'elvepadling@osi.no',
+	/** Felles avreise fra Oslo. Nedtellingen på forsiden går mot dette. */
+	meetup: {
+		time: '2026-09-11T16:00:00+02:00',
+		label: 'Fredag 16:00',
+		place: 'Kajakkrommet (klubbhuset)',
+		address: 'Rolf E. Stenersens allé 21, Sogn studentby, 0858 Oslo'
+	}
 };
 
 /** Påmeldingsskjemaet deltakerne fyller ut. Lenken finner du under «Send» i skjemaet. */
@@ -23,7 +30,24 @@ export const hiddenColumns: RegExp[] = [
 	/e-?post|e-?mail/i,
 	/telefon|mobil|\btlf\b|phone/i,
 	/tidsmerke|timestamp/i,
-	/member of the club|medlem i klubben|er du medlem/i
+	/member of the club|medlem i klubben|er du medlem/i,
+	/acknowledge|inherent risk/i
+];
+
+/**
+ * Kolonner om lån av utstyr. Skjemaet spør om kajakk, vest og hjelm hver for seg,
+ * så alle kolonnene som treffer leses – ikke bare den første. Et ja-svar teller
+ * som lån; fritekst (hjelmstørrelse) vises i detaljene.
+ */
+export const gearPattern = /l(å|a)ne|borrow|\butstyr\b|\bgear\b|equipment/i;
+
+/** Hva som lånes, utledet av spørsmålsteksten. */
+export const gearNames: { pattern: RegExp; name: string }[] = [
+	{ pattern: /kayak|kajakk/i, name: 'Kajakk' },
+	{ pattern: /jacket|vest|pfd/i, name: 'Vest' },
+	{ pattern: /helmet|hjelm/i, name: 'Hjelm' },
+	{ pattern: /paddle|åre/i, name: 'Åre' },
+	{ pattern: /drysuit|t(ø|o)rrdrakt|drakt/i, name: 'Tørrdrakt' }
 ];
 
 /**
@@ -52,10 +76,6 @@ export const fieldPatterns: { role: string; patterns: RegExp[] }[] = [
 	{ role: 'towHitch', patterns: [/hengerfeste|tilhenger|\bhenger\b|tow.?hitch|\bhitch\b/i] },
 	{ role: 'roofRack', patterns: [/takstativ|takboks|roof.?rack|\broof\b/i] },
 	{ role: 'seats', patterns: [/plass|sete|seat/i] },
-	{
-		role: 'borrowedGear',
-		patterns: [/l(å|a)ne|borrow|\butstyr\b|\bgear\b|equipment|trenger.*(kajakk|padle|drakt)/i]
-	},
 	{ role: 'absence', patterns: [ABSENCE] },
 	{
 		role: 'carDeparture',
@@ -80,7 +100,12 @@ export const fieldPatterns: { role: string; patterns: RegExp[] }[] = [
  * gir merkelappen; treffer ingen, brukes spørsmålsteksten slik den står i regnearket.
  */
 export const columnLabels: { pattern: RegExp; label: string }[] = [
+	{ pattern: /helmet|hjelm/i, label: 'Hjelmstørrelse' },
+	{ pattern: /about your car|om bilen/i, label: 'Om bilen' },
 	{ pattern: /l(å|a)ne|borrow|\butstyr\b|\bgear\b|equipment/i, label: 'Låner utstyr' },
+	{ pattern: /pictures|videos|photo|bilde/i, label: 'Bilder på sosiale medier' },
+	{ pattern: /long weekend|lang helg/i, label: 'Lang helg' },
+	{ pattern: /shoey/i, label: 'Shoey' },
 	{ pattern: ABSENCE, label: 'Kan ikke møte til planlagt tid' },
 	{ pattern: /n(å|a)r.*(drar|reis)|when.*(leav|depart)|departure|avreise/i, label: 'Drar' },
 	{ pattern: /\bprof|instrukt|instructor/i, label: 'Proff' },
@@ -89,7 +114,7 @@ export const columnLabels: { pattern: RegExp; label: string }[] = [
 	{ pattern: /hengerfeste|tilhenger|hitch/i, label: 'Hengerfeste' },
 	{ pattern: /takstativ|takboks|roof/i, label: 'Takstativ' },
 	{ pattern: /\bbil\b|\bcar\b/i, label: 'Bil' },
-	{ pattern: /kommentar|anything else|annet|other/i, label: 'Kommentar' },
+	{ pattern: /kommentar|anything else|anything on your heart|annet|other/i, label: 'Kommentar' },
 	{ pattern: /erfaring|experience|niv(å|a)|level/i, label: 'Erfaring' },
 	{ pattern: /allergi|allerg|kost|diet/i, label: 'Allergier og kost' }
 ];
@@ -122,19 +147,15 @@ export const SHEET_KEY = 'sjoa:sheet';
 export const water = {
 	stationId: '2.595.0',
 	parameter: 1001,
-	/** Nedre og øvre grense for det som regnes som fine forhold. */
+	/**
+	 * Sonene, i m³/s: under `good` er det lavt, mellom good og perfect er det bra,
+	 * innenfor perfect er det perfekt, og over perfect blir det spennende.
+	 */
+	good: [20, 25] as [number, number],
 	perfect: [25, 60] as [number, number],
 	hours: 48,
 	stationUrl: 'https://sildre.nve.no/station/2.595.0'
 };
-
-/** Antall hele dager fra `now` til turen starter. Negativt når turen er i gang eller over. */
-export function daysUntilTrip(now = new Date()): number {
-	const start = new Date(`${trip.start}T00:00:00+02:00`).getTime();
-	const today = new Date(now);
-	today.setHours(0, 0, 0, 0);
-	return Math.round((start - today.getTime()) / 86_400_000);
-}
 
 /** Er turen i gang akkurat nå? */
 export function tripIsOn(now = new Date()): boolean {
@@ -142,4 +163,17 @@ export function tripIsOn(now = new Date()): boolean {
 	const end = new Date(`${trip.end}T23:59:59+02:00`).getTime();
 	const t = now.getTime();
 	return t >= start && t <= end;
+}
+
+/** Tid igjen til felles avreise, som «2 d 17 t» eller «45 min». Null når den er passert. */
+export function untilMeetup(now = new Date()): string | null {
+	const ms = new Date(trip.meetup.time).getTime() - now.getTime();
+	if (ms <= 0) return null;
+	const minutes = Math.floor(ms / 60_000);
+	const d = Math.floor(minutes / 1440);
+	const h = Math.floor((minutes % 1440) / 60);
+	const m = minutes % 60;
+	if (d > 0) return `${d} d ${h} t`;
+	if (h > 0) return `${h} t ${m} min`;
+	return `${m} min`;
 }
