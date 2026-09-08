@@ -1,11 +1,19 @@
 # Sjoa 2026 – OSI Elvepadling
 
-Én side som viser påmeldingene til elvepadlingsturen til Sjoa, hentet rett fra
-Google-skjemaet.
+Turside for elvepadlingsturen til Sjoa. Påmelding skjer i et Google-skjema, og siden
+leser svarene rett fra regnearket skjemaet skriver til. Ingen database, ingen
+innlogging, ingen backend.
 
-Påmelding skjer i skjemaet. Siden leser svarene fra regnearket skjemaet skriver til,
-og viser dem i en gruppert tabell med avkrysninger og en totalrad nederst. Ingen
-database, ingen innlogging, ingen backend – bare regnearket og en side som tegner det.
+| Side          | Innhold                                                          |
+| ------------- | ---------------------------------------------------------------- |
+| `/`           | Nøkkeltall, neste punkt på planen og lenker videre                |
+| `/heidal`     | Kart med overnatting, put inn og take out, butikk og kafé         |
+| `/elven`      | Vannføring siste 48 timer, og strekningene vi padler              |
+| `/logistikk`  | Biler med plasser, hengerfeste og takstativ, og deltakerlista     |
+| `/plan`       | Tidsskjema for helgen                                            |
+
+Menyen ligger i [`src/lib/nav.ts`](src/lib/nav.ts). Hver side henter bare det den
+trenger: bare `/logistikk` og `/` snakker med regnearket, bare `/elven` med NVE.
 
 Stack: SvelteKit + TypeScript på Vercel.
 
@@ -85,6 +93,18 @@ medlemsspørsmålet. Kontaktopplysninger har ikke noe å gjøre på en åpen sid
 | `Nei`, `No`, `False`, `-` | grå ✕         |
 | tom                       | grå –         |
 | alt annet                 | teksten som den står |
+
+## Tidsskjemaet
+
+Punktene ligger i [`src/lib/schedule.ts`](src/lib/schedule.ts). Hvert punkt har `day`,
+valgfri `time`, `title` og `note`.
+
+- `people` fylles ut når det er avklart hvem som er med på et punkt. Står den tom, vises
+  den ikke.
+- `place` viser til navnet på et sted i `places.ts` og gir en lenke til kartet. Navnet må
+  stemme nøyaktig; gjør det ikke det, utelates lenken i stedet for å peke feil.
+- `scheduleIsDraft` styrer notisen om at planen ikke er ferdig. Sett den til `false` når
+  den er det.
 
 ## Kartet
 
