@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from './Icon.svelte';
+	import Map from './Map.svelte';
 	import { placeByName } from './places';
 	import { featureKinds, isTraced, lengthKm, lineFor, profileFor, type Section } from './river';
 
@@ -13,6 +14,11 @@
 	const traced = $derived(isTraced(section));
 	const km = $derived(lengthKm(lineFor(section)));
 	const nodes = $derived(profileFor(section));
+	/** Nummeret punktet har på kartet – put inn og take out har ikke nummer. */
+	const numberOf = (node: (typeof nodes)[number]) => {
+		const i = section.features.indexOf(node as (typeof section.features)[number]);
+		return i === -1 ? null : i + 1;
+	};
 	const from = $derived(placeByName(section.from));
 	const to = $derived(placeByName(section.to));
 
@@ -60,10 +66,17 @@
 		</div>
 	</header>
 
+	<div class="section-map">
+		<Map {section} compact />
+	</div>
+
 	<ol class="profile">
 		{#each nodes as node (node.kind + node.name)}
 			<li class={node.kind}>
-				<span class="node" title={featureKinds[node.kind].label}>{featureKinds[node.kind].emoji}</span>
+				<span class="node" title={featureKinds[node.kind].label}>
+					{featureKinds[node.kind].emoji}
+					{#if numberOf(node)}<span class="num">{numberOf(node)}</span>{/if}
+				</span>
 				<div class="node-body">
 					<div class="node-title">
 						{node.kind === 'putin' || node.kind === 'takeout'
@@ -88,7 +101,7 @@
 			{#if node.kind === 'putin' && section.features.length === 0}
 				<li class="empty-features">
 					<div class="node-note">
-						Stryk og nøkkelpunkter er ikke lagt inn ennå. De kommer her, i rekkefølge nedover elva.
+						Ingen navngitte stryk her. Bare deg, elva og en jevn strøm som gjør jobben for deg.
 					</div>
 				</li>
 			{/if}

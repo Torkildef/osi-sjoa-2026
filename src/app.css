@@ -1588,12 +1588,23 @@ dl.qa dd {
 	place-items: center;
 	width: 26px;
 	height: 26px;
-	font-size: 0.85rem;
+	font-size: 0.78rem;
+	font-weight: 800;
 	line-height: 1;
 	border-radius: 50%;
-	background: var(--surface-container-lowest);
-	border: 2px solid var(--on-surface-variant);
+	background: var(--river, var(--primary));
+	color: #fff;
+	border: 2px solid #fff;
 	box-shadow: var(--elevation-1);
+}
+
+.map-frame.compact {
+	border-radius: var(--shape-lg);
+	box-shadow: none;
+}
+
+.map-frame.compact .map {
+	height: 18rem;
 }
 
 .leaflet-container {
@@ -1824,8 +1835,25 @@ ol.profile .node {
 	z-index: 1;
 }
 
-ol.profile li.rapid .node {
-	border-color: var(--on-surface-variant);
+ol.profile .node .num {
+	position: absolute;
+	top: -7px;
+	right: -7px;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 4px;
+	border-radius: var(--shape-full);
+	background: var(--river);
+	color: #fff;
+	font-size: 0.68rem;
+	font-weight: 800;
+	display: grid;
+	place-items: center;
+	border: 2px solid var(--surface-container-low);
+}
+
+.river-section .section-map {
+	padding: 0 1.2rem;
 }
 
 ol.profile li.hazard .node {
