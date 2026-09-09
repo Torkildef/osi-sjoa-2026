@@ -1130,6 +1130,38 @@ dl.facts dd {
 	}
 }
 
+/* Spørsmål og svar, som i skjemaet: spørsmålet lite og dempet over svaret. */
+dl.qa {
+	margin: 0;
+	display: grid;
+	gap: 0.6rem 1.25rem;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+
+dl.qa > div {
+	display: grid;
+	gap: 0.15rem;
+	padding: 0.55rem 0.75rem;
+	border-radius: var(--shape-md);
+	background: var(--surface-container-lowest);
+}
+
+dl.qa dt {
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--on-surface-variant);
+}
+
+dl.qa dd {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 600;
+	overflow-wrap: anywhere;
+	white-space: pre-line;
+}
+
 /* ---- Meldinger ---------------------------------------------------------- */
 
 .notice {
@@ -1933,9 +1965,8 @@ li.entry .entry-meta {
 	}
 }
 
-.person-details dl.facts {
-	padding-top: 0.6rem;
-	border-top: 1px solid var(--outline-variant);
+.person-details dl.qa {
+	padding-top: 0.75rem;
 }
 
 .avatar {

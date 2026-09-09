@@ -43,6 +43,7 @@
 
 	const showTow = $derived(roster?.cars.some((c) => c.towHitch) ?? false);
 	const showRack = $derived(roster?.cars.some((c) => c.roofRack) ?? false);
+	const showNote = $derived(roster?.cars.some((c) => c.note) ?? false);
 </script>
 
 {#snippet mark(cell: Cell | null)}
@@ -167,6 +168,7 @@
 							{/if}
 							{#if showTow}<th scope="col" class="center">Hengerfeste</th>{/if}
 							{#if showRack}<th scope="col" class="center">Takstativ</th>{/if}
+							{#if showNote}<th scope="col">Om bilen</th>{/if}
 						</tr>
 					</thead>
 					<tbody>
@@ -179,6 +181,7 @@
 								{/if}
 								{#if showTow}<td class="center">{@render mark(car.towHitch)}</td>{/if}
 								{#if showRack}<td class="center">{@render mark(car.roofRack)}</td>{/if}
+								{#if showNote}<td class="wrap">{car.note ?? ''}</td>{/if}
 							</tr>
 						{/each}
 					</tbody>
@@ -193,6 +196,7 @@
 							{#if showRack}
 								<td class="center">{roster.cars.filter((c) => c.roofRack?.kind === 'yes').length}</td>
 							{/if}
+							{#if showNote}<td></td>{/if}
 						</tr>
 					</tfoot>
 				</table>
@@ -223,49 +227,66 @@
 							{/if}
 						</span>
 						<span class="trailing">
-							{#if person.professional?.kind === 'yes'}<span class="tag primary">Proff</span>{/if}
 							{#if person.carId}<span class="tag tertiary">Bil</span>{/if}
-							{#if person.borrowedGear}<span class="tag success">Låner {person.borrowedGear.toLowerCase()}</span>{/if}
-							{#if person.absence}<span class="tag warning">Avvik</span>{/if}
 							<Icon name="keyboardArrowDown" size={22} class="chevron" />
 						</span>
 					</button>
 					{#if selected === i}
 						<div class="person-details">
-							<dl class="facts">
+							<dl class="qa">
 								{#if roster.mapping.departure}
-									<dt>Drar</dt>
-									<dd>{person.departure ?? '–'}</dd>
+									<div>
+										<dt>Drar</dt>
+										<dd>{person.departure ?? 'Ikke oppgitt'}</dd>
+									</div>
 								{/if}
 								{#if roster.mapping.licence}
-									<dt>Lappen</dt>
-									<dd>{@render mark(person.licence)}</dd>
+									<div>
+										<dt>Lappen</dt>
+										<dd>{@render mark(person.licence)}</dd>
+									</div>
 								{/if}
 								{#if roster.mapping.professional}
-									<dt>Proff</dt>
-									<dd>{@render mark(person.professional)}</dd>
+									<div>
+										<dt>Proff</dt>
+										<dd>{@render mark(person.professional)}</dd>
+									</div>
 								{/if}
-								<dt>Bil</dt>
-								<dd>
-									{#if person.carId}
-										Stiller med bil{roster.cars[person.carId - 1]?.seats
-											? ` · ${roster.cars[person.carId - 1].seats} plasser`
-											: ''}
-									{:else}
-										<span class="mark none">–</span>
-									{/if}
-								</dd>
+								<div>
+									<dt>Bil</dt>
+									<dd>
+										{#if person.carId}
+											Ja{roster.cars[person.carId - 1]?.seats
+												? ` · ${roster.cars[person.carId - 1].seats} plasser`
+												: ''}
+										{:else}
+											Nei
+										{/if}
+									</dd>
+								</div>
 								{#if roster.mapping.borrowedGear}
-									<dt>Låner utstyr</dt>
-									<dd>{person.borrowedGear ?? '–'}</dd>
+									<div>
+										<dt>Låner utstyr</dt>
+										<dd>{person.borrowedGear ?? 'Nei'}</dd>
+									</div>
+									{#if person.helmetSize}
+										<div>
+											<dt>Hjelmstørrelse</dt>
+											<dd>{person.helmetSize}</dd>
+										</div>
+									{/if}
 								{/if}
 								{#if roster.mapping.absence}
-									<dt>Kan ikke møte til planlagt tid</dt>
-									<dd>{person.absence ?? '–'}</dd>
+									<div>
+										<dt>Kan ikke møte til planlagt tid</dt>
+										<dd>{person.absence ?? 'Møter som planlagt'}</dd>
+									</div>
 								{/if}
 								{#each person.extras as extra (extra.label)}
-									<dt>{extra.label}</dt>
-									<dd>{extra.value}</dd>
+									<div>
+										<dt>{extra.label}</dt>
+										<dd>{extra.value}</dd>
+									</div>
 								{/each}
 							</dl>
 						</div>

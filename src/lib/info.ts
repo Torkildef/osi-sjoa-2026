@@ -41,16 +41,7 @@ export const practical: InfoCard[] = [
 		lines: [
 			'450 kr for reisen',
 			'600 kr for overnatting – kontant eller Vipps',
-			'Mat og drikke på egen regning. Vi fyrer opp grillen lørdag 🔥',
-			'Stiller du med bil, får du 2000 kr til drivstoff og bom'
-		]
-	},
-	{
-		emoji: '🛶',
-		title: 'Utstyr',
-		lines: [
-			'Klubben låner ut kajakk, vest og hjelm – kryss av i skjemaet',
-			'Hjemreise søndag, vi er i Oslo mellom 19 og 21'
+			'Mat og drikke på egen regning. Vi fyrer opp grillen lørdag 🔥'
 		]
 	}
 ];

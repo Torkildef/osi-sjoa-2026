@@ -32,7 +32,7 @@
 			<WaterNow readings={data.water.readings} unit={data.water.unit} />
 			<WaterChart readings={data.water.readings} unit={data.water.unit} />
 			<div class="chip-row" style="margin-top: 0.5rem">
-				<span class="chip warning">🪨 Under {waterConfig.good[0]} · lavt</span>
+				<span class="chip warning">🪨 Under {waterConfig.good[0]} · hompete</span>
 				<span class="chip primary">👍 {waterConfig.good[0]}–{waterConfig.good[1]} · bra</span>
 				<span class="chip success">🤙 {waterConfig.perfect[0]}–{waterConfig.perfect[1]} · perfekt</span>
 				<span class="chip tertiary">🌊 Over {waterConfig.perfect[1]} · spennende</span>

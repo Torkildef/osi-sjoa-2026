@@ -11,6 +11,8 @@ export type Person = {
 	carId: number | null;
 	/** Utstyr personen låner av klubben, f.eks. «Kajakk, Vest». Null når ingenting. */
 	borrowedGear: string | null;
+	/** Hjelmstørrelsen personen pleier å bruke, fra lånespørsmålet om hjelm. */
+	helmetSize: string | null;
 	/** Når personen ikke kan møte til planlagt tidspunkt. */
 	absence: string | null;
 	/** Øvrige svar, med norsk merkelapp. Tatt vare på så ingenting går tapt. */
@@ -24,6 +26,8 @@ export type Car = {
 	departure: string | null;
 	towHitch: Cell | null;
 	roofRack: Cell | null;
+	/** «Anything else we should know about your car?» */
+	note: string | null;
 };
 
 export type Roster = {
@@ -121,7 +125,8 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 				// også for bilen.
 				departure: text(record, mapping.carDeparture) ?? departure,
 				towHitch: mapping.towHitch ? classify(record[mapping.towHitch] ?? '') : null,
-				roofRack: mapping.roofRack ? classify(record[mapping.roofRack] ?? '') : null
+				roofRack: mapping.roofRack ? classify(record[mapping.roofRack] ?? '') : null,
+				note: text(record, mapping.carNote)
 			});
 		}
 
@@ -130,9 +135,11 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 		// Et ja teller som lån. Fritekst – som hjelmstørrelse – er informasjon, ikke
 		// et lån, og havner i detaljene med sin merkelapp.
 		const gear: string[] = [];
+		let helmetSize: string | null = null;
 		for (const column of gearColumns) {
 			const cell = classify(record[column] ?? '');
 			if (cell.kind === 'yes') gear.push(gearName(column));
+			else if (cell.kind === 'text' && /helmet|hjelm/i.test(column)) helmetSize = cell.value;
 			else if (cell.kind === 'text') extras.push({ label: labelFor(column), value: cell.value });
 		}
 
@@ -152,6 +159,7 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 			licence: mapping.licence ? classify(record[mapping.licence] ?? '') : null,
 			carId,
 			borrowedGear: gear.length > 0 ? gear.join(', ') : null,
+			helmetSize,
 			absence: text(record, mapping.absence),
 			extras
 		});

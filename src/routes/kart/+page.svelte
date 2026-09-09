@@ -69,9 +69,6 @@
 			{s.name} · {s.grade}
 		</span>
 	{/each}
-	{#if sections.some((s) => !isTraced(s))}
-		<span class="on-surface-variant">Stiplet = rett strek mellom put inn og take out, ikke elveløpet</span>
-	{/if}
 </div>
 
 {#each kinds as k (k.kind)}

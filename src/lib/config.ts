@@ -31,7 +31,9 @@ export const hiddenColumns: RegExp[] = [
 	/telefon|mobil|\btlf\b|phone/i,
 	/tidsmerke|timestamp/i,
 	/member of the club|medlem i klubben|er du medlem/i,
-	/acknowledge|inherent risk/i
+	/acknowledge|inherent risk/i,
+	/pictures|videos|photo|social media/i,
+	/long weekend|lang helg/i
 ];
 
 /**
@@ -75,6 +77,7 @@ export const fieldPatterns: { role: string; patterns: RegExp[] }[] = [
 	{ role: 'name', patterns: [/^navn$|^name$|\bfullt navn\b|full name|ditt navn|your name/i] },
 	{ role: 'towHitch', patterns: [/hengerfeste|tilhenger|\bhenger\b|tow.?hitch|\bhitch\b/i] },
 	{ role: 'roofRack', patterns: [/takstativ|takboks|roof.?rack|\broof\b/i] },
+	{ role: 'carNote', patterns: [/about your car|om bilen/i] },
 	{ role: 'seats', patterns: [/plass|sete|seat/i] },
 	{ role: 'absence', patterns: [ABSENCE] },
 	{
@@ -103,8 +106,6 @@ export const columnLabels: { pattern: RegExp; label: string }[] = [
 	{ pattern: /helmet|hjelm/i, label: 'Hjelmstørrelse' },
 	{ pattern: /about your car|om bilen/i, label: 'Om bilen' },
 	{ pattern: /l(å|a)ne|borrow|\butstyr\b|\bgear\b|equipment/i, label: 'Låner utstyr' },
-	{ pattern: /pictures|videos|photo|bilde/i, label: 'Bilder på sosiale medier' },
-	{ pattern: /long weekend|lang helg/i, label: 'Lang helg' },
 	{ pattern: /shoey/i, label: 'Shoey' },
 	{ pattern: ABSENCE, label: 'Kan ikke møte til planlagt tid' },
 	{ pattern: /n(å|a)r.*(drar|reis)|when.*(leav|depart)|departure|avreise/i, label: 'Drar' },
