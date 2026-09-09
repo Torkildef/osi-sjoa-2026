@@ -38,13 +38,19 @@
 			</span>
 		</div>
 		<p class="body-medium on-surface-variant">{section.description}</p>
+		{#if section.flowNote}
+			<p class="body-small on-surface-variant"><strong>Vannføring:</strong> {section.flowNote}</p>
+		{/if}
 		<div class="river-facts">
 			<span><Icon name="tripOrigin" size={16} /> {from ? shortName(from.name) : section.from}</span>
 			<span><Icon name="sportsScore" size={16} /> {to ? shortName(to.name) : section.to}</span>
-			{#if km > 0}
-				<span title={traced ? 'Langs elveløpet' : 'I luftlinje – elveløpet er ikke hentet inn ennå'}>
-					<Icon name="straighten" size={16} />
-					{traced ? `${km} km` : `ca. ${km} km i luftlinje`}
+			{#if traced && km > 0}
+				<span title="Langs elveløpet"><Icon name="straighten" size={16} /> {km} km</span>
+			{:else if section.lengthKm}
+				<span><Icon name="straighten" size={16} /> ca. {section.lengthKm} km</span>
+			{:else if km > 0}
+				<span title="I luftlinje – elveløpet er ikke hentet inn ennå">
+					<Icon name="straighten" size={16} /> ca. {km} km i luftlinje
 				</span>
 			{/if}
 			<a class="chip link" href="/kart?strekning={section.id}">
@@ -88,4 +94,7 @@
 			{/if}
 		{/each}
 	</ol>
+	{#if section.sourceNote}
+		<p class="body-small on-surface-variant" style="padding: 0 1.2rem 1rem">{section.sourceNote}</p>
+	{/if}
 </article>
