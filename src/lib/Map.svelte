@@ -3,16 +3,22 @@
 	import Icon from './Icon.svelte';
 	import { photos } from './photos';
 	import { directionsUrl, kinds, placed, places, type Place, type PlaceKind } from './places';
-	import { featureKinds, isTraced, lineFor, sections, type Section } from './river';
+	import { featurePosition, featureKinds, isTraced, lineFor, sections, type Section } from './river';
 
 	type LeafletModule = typeof import('leaflet');
 	type BaseLayer = 'topo' | 'kart' | 'satellitt';
 
 	let {
-		onready
+		onready,
+		section,
+		compact = false
 	}: {
 		/** Kalles når kartet er tegnet, så siden kan zoome til det URL-en peker på. */
 		onready?: () => void;
+		/** Vis bare denne strekningen, med put inn, take out og punktene langs den. */
+		section?: Section;
+		/** Lavere kart uten filter, til bruk inne i et kort. */
+		compact?: boolean;
 	} = $props();
 
 	let container: HTMLDivElement;
@@ -57,7 +63,11 @@
 	const sectionLines = new Map<string, import('leaflet').Polyline>();
 	const featureMarkers = new Map<string, import('leaflet').Marker>();
 
-	const shown = placed();
+	// Kartet bygges én gang ved montering, så disse trenger ikke å reagere på endringer.
+	const drawnSections = $derived(section ? [section] : sections);
+	const shown = $derived(
+		placed(section ? places.filter((p) => p.name === section.from || p.name === section.to) : places)
+	);
 
 	/** Zoomer til et sted og åpner popupen. Butikkene ligger så tett at nålene dekker
 	 *  hverandre når hele området vises; lista er eneste sikre vei til dem. */
@@ -95,7 +105,7 @@
 
 	function allBounds() {
 		const points: [number, number][] = shown.map((p) => p.coords);
-		for (const s of sections) points.push(...lineFor(s));
+		for (const s of drawnSections) points.push(...lineFor(s));
 		return L!.latLngBounds(points);
 	}
 
@@ -165,7 +175,7 @@
 				drawPlaces(L);
 				drawFeatures(L);
 
-				map.fitBounds(allBounds(), { padding: [40, 40], maxZoom: 13 });
+				map.fitBounds(allBounds(), { padding: compact ? [24, 24] : [40, 40], maxZoom: section ? 14 : 13 });
 				onready?.();
 			} catch {
 				failed = true;
@@ -183,7 +193,7 @@
 	});
 
 	function drawSections(L: LeafletModule, map: import('leaflet').Map) {
-		for (const section of sections) {
+		for (const section of drawnSections) {
 			const line = lineFor(section);
 			if (line.length < 2) continue;
 			const traced = isTraced(section);
@@ -236,21 +246,24 @@
 	}
 
 	function drawFeatures(L: LeafletModule) {
-		for (const section of sections) {
-			for (const f of section.features) {
-				if (!f.coords) continue;
+		for (const section of drawnSections) {
+			// Nummerert som i elveprofilen, så kart og liste kan leses sammen.
+			section.features.forEach((f, i) => {
+				const at = featurePosition(section, f);
+				if (!at) return;
 				const icon = L.divIcon({
-					html: `<span class="river-pin">${featureKinds[f.kind].emoji}</span>`,
+					html: `<span class="river-pin" style="--river: ${section.color}">${i + 1}</span>`,
 					className: 'pin-wrap',
 					iconSize: [26, 26],
 					iconAnchor: [13, 13],
 					popupAnchor: [0, -14]
 				});
-				const marker = L.marker(f.coords, { icon, title: f.name })
+				const marker = L.marker(at, { icon, title: f.name })
+					.bindTooltip(`${featureKinds[f.kind].emoji} ${f.name}`, { direction: 'top', offset: [0, -12], className: 'map-label' })
 					.bindPopup(featurePopupHtml(section, f))
 					.addTo(groups.get('elv')!);
 				featureMarkers.set(f.name, marker);
-			}
+			});
 		}
 	}
 
@@ -295,7 +308,7 @@
 	}
 </script>
 
-<div class="map-frame">
+<div class="map-frame" class:compact>
 	<div class="map" bind:this={container}></div>
 
 	<div class="map-tools">

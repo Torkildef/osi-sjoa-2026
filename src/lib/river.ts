@@ -85,7 +85,7 @@ export const sections: Section[] = [
 		from: 'Put inn – Bru-bru',
 		to: 'Take out Bru-bru / put inn Playrun',
 		description:
-			'Fra bru til bru gjennom Heidal. Passer for nybegynnere: for det meste rolig, jevn strøm ned til brua der Playrun starter.',
+			'Fra bru til bru, akkurat som navnet lover. Rolig nok til at du rekker å nyte utsikten, og akkurat nok strøm til at du føler deg som en helt når du treffer bakevja. Kajakken flyter stort sett dit den skal.',
 		features: [
 			// Fyll inn stryk og nøkkelpunkter her etter hvert. Eksempel:
 			// { name: 'Første stryket', kind: 'rapid', grade: 'II+', at: 0.3, coords: null, note: 'Hold høyre.' },
@@ -99,13 +99,11 @@ export const sections: Section[] = [
 		from: 'Take out Bru-bru / put inn Playrun',
 		to: 'Take out – Playrun',
 		description:
-			'Sjoas klassiker, og trolig Norges mest padlede strekning. For mer erfarne. Fra Harlaug bru til Faukstad: stryk på rekke og rad med rolige partier imellom, bakevjer ved hullene og flere kjente surfebølger.',
+			'Sjoas svar på en fornøyelsespark: bølger å surfe på, hull å bli kjent med, og bakevjer der du kan tenke over livsvalgene dine. Rullekrav, fordi elva ikke tar imot unnskyldninger.',
 		tags: ['Rullekrav'],
 		lengthKm: 6.5,
-		flowNote:
-			'Linjene er stort sett de samme fra 25 til 100 m³/s – bølgene og hullene blir bare større med mer vann. Rundt 25 m³/s er det steinete og mer teknisk.',
-		sourceNote:
-			'Stryk etter beskrivelser fra Mad Goats, A Wet State og Nokken. Rekkefølgen stemmer, plasseringen langs linja er omtrentlig.',
+		flowNote: 'Samme linjer fra 25 til 100 m³/s – det blir bare mer av alt.',
+		sourceNote: 'Rekkefølgen stemmer, plasseringen på kartet er omtrentlig til noen padler med GPS.',
 		features: [
 			{
 				name: 'Golf Stream',
@@ -113,14 +111,14 @@ export const sections: Section[] = [
 				grade: 'II+',
 				at: 0.08,
 				coords: null,
-				note: 'Første stryket etter put inn ved Harlaug bru. Stort hull på venstre side – hold deg midt i elva. Hullet er en populær playspot.'
+				note: 'Første stryket. Stort hull til venstre – hold deg midt i elva, med mindre du vil hilse på det.'
 			},
 			{
 				name: 'Micro-surf',
 				kind: 'play',
 				at: 0.2,
 				coords: null,
-				note: 'Liten, snill bølge å øve surfing på.'
+				note: 'Liten, snill bølge. Perfekt for å late som du kan surfe.'
 			},
 			{
 				name: 'Haystacks',
@@ -128,14 +126,14 @@ export const sections: Section[] = [
 				grade: 'II',
 				at: 0.3,
 				coords: null,
-				note: 'Rad med store, ufarlige bølger.'
+				note: 'Store, ufarlige bølger på rekke. Ren fornøyelse.'
 			},
 			{
 				name: 'Grønn bølge',
 				kind: 'play',
 				at: 0.5,
 				coords: null,
-				note: 'Fin, grønn surfebølge på venstre side omtrent halvveis.'
+				note: 'Grønn surfebølge på venstre side, omtrent halvveis.'
 			},
 			{
 				name: 'Big Bend / Chocolate Canyon',
@@ -143,21 +141,21 @@ export const sections: Section[] = [
 				grade: 'III',
 				at: 0.65,
 				coords: null,
-				note: 'Elva smalner og blir brattere gjennom en kort kløft med lagdelte skiferfjell. Selve hjertet av Playrun – her henger stryka sammen.'
+				note: 'Kort kløft der elva smalner og stryka henger sammen. Hjertet av Playrun.'
 			},
 			{
 				name: 'Faukstad-bølga',
 				kind: 'play',
 				at: 0.8,
 				coords: null,
-				note: 'Kjent rodeobølge rett ovenfor brua ved Nedre Heidal. Lite, men kraftig hull rett nedenfor bølga.'
+				note: 'Kjent rodeobølge rett før brua. Lite, men kraftig hull rett nedenfor – det vet hva det driver med.'
 			},
 			{
 				name: 'Brua ved Nedre Heidal',
 				kind: 'bridge',
 				at: 0.83,
 				coords: null,
-				note: 'Den eneste brua du padler under på strekningen.'
+				note: 'Den eneste brua på strekningen. Vink til publikum.'
 			},
 			{
 				name: 'China Hole',
@@ -165,7 +163,7 @@ export const sections: Section[] = [
 				grade: 'III',
 				at: 0.86,
 				coords: null,
-				note: 'Faukstad-stryket, rett etter brua. Linja er midt-venstre: ikke midt i elva, og ikke helt til venstre.'
+				note: 'Rett etter brua. Linja er midt-venstre – ikke midt, ikke helt venstre. Ja, det er så presist det blir.'
 			},
 			{
 				name: 'Øyene',
@@ -173,15 +171,7 @@ export const sections: Section[] = [
 				grade: 'II',
 				at: 0.93,
 				coords: null,
-				note: 'Elva åpner seg igjen, med flere morsomme stryk rundt skogkledde øyer.'
-			},
-			{
-				name: 'Washing Machine',
-				kind: 'rapid',
-				grade: 'III',
-				at: 0.97,
-				coords: null,
-				note: 'Også kalt Tjuvspranget. Avslutter strekningen med et smell rett før take out ved raftingbasene på Faukstad.'
+				note: 'Elva åpner seg, og du får velge løp rundt øyene. Alle er riktige. Nesten.'
 			}
 		]
 	}
@@ -207,6 +197,35 @@ export function lineFor(section: Section): [number, number][] {
 
 /** Når og hvor elveløpet ble hentet – null så lenge fila er tom. */
 export const geometryInfo = { source: geometry.source, fetched: geometry.fetched };
+
+/**
+ * Punktet som ligger `at` (0–1) av veien langs linja. Brukes for punkter uten
+ * koordinat: de plasseres langs elvelinja etter posisjonen sin i profilen, og
+ * havner dermed på selve elva så snart elveløpet er hentet inn.
+ */
+export function pointAlong(line: [number, number][], at: number): [number, number] | null {
+	if (line.length === 0) return null;
+	if (line.length === 1) return line[0];
+	const total = line.slice(1).reduce((sum, p, i) => sum + distanceM(line[i], p), 0);
+	let target = Math.min(1, Math.max(0, at)) * total;
+	for (let i = 1; i < line.length; i++) {
+		const seg = distanceM(line[i - 1], line[i]);
+		if (target <= seg || i === line.length - 1) {
+			const t = seg === 0 ? 0 : target / seg;
+			return [
+				line[i - 1][0] + (line[i][0] - line[i - 1][0]) * t,
+				line[i - 1][1] + (line[i][1] - line[i - 1][1]) * t
+			];
+		}
+		target -= seg;
+	}
+	return line.at(-1) ?? null;
+}
+
+/** Der et punkt tegnes på kartet: egen koordinat, ellers langs elvelinja. */
+export function featurePosition(section: Section, f: RiverFeature): [number, number] | null {
+	return f.coords ?? pointAlong(lineFor(section), f.at);
+}
 
 /** Lengde langs en linje i kilometer, med én desimal. */
 export function lengthKm(line: [number, number][]): number {
