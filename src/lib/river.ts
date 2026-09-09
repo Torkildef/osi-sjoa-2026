@@ -55,6 +55,12 @@ export type Section = {
 	description: string;
 	/** Korte merkelapper ved graderingen, som «Rullekrav». */
 	tags?: string[];
+	/** Lengde fra turbeskrivelser, brukt til elveløpet er hentet inn. */
+	lengthKm?: number;
+	/** Om vannføring: hva som er lavt, hva som endrer seg med mer vann. */
+	flowNote?: string;
+	/** Hvor beskrivelsen kommer fra, og hva som er usikkert. */
+	sourceNote?: string;
 	features: RiverFeature[];
 };
 
@@ -78,7 +84,8 @@ export const sections: Section[] = [
 		color: '#0b7a75',
 		from: 'Put inn – Bru-bru',
 		to: 'Take out Bru-bru / put inn Playrun',
-		description: 'Fra bru til bru gjennom Heidal. Passer for nybegynnere.',
+		description:
+			'Fra bru til bru gjennom Heidal. Passer for nybegynnere: for det meste rolig, jevn strøm ned til brua der Playrun starter.',
 		features: [
 			// Fyll inn stryk og nøkkelpunkter her etter hvert. Eksempel:
 			// { name: 'Første stryket', kind: 'rapid', grade: 'II+', at: 0.3, coords: null, note: 'Hold høyre.' },
@@ -91,9 +98,92 @@ export const sections: Section[] = [
 		color: '#c2410c',
 		from: 'Take out Bru-bru / put inn Playrun',
 		to: 'Take out – Playrun',
-		description: 'Sjoas klassiker. For mer erfarne.',
+		description:
+			'Sjoas klassiker, og trolig Norges mest padlede strekning. For mer erfarne. Fra Harlaug bru til Faukstad: stryk på rekke og rad med rolige partier imellom, bakevjer ved hullene og flere kjente surfebølger.',
 		tags: ['Rullekrav'],
-		features: []
+		lengthKm: 6.5,
+		flowNote:
+			'Linjene er stort sett de samme fra 25 til 100 m³/s – bølgene og hullene blir bare større med mer vann. Rundt 25 m³/s er det steinete og mer teknisk.',
+		sourceNote:
+			'Stryk etter beskrivelser fra Mad Goats, A Wet State og Nokken. Rekkefølgen stemmer, plasseringen langs linja er omtrentlig.',
+		features: [
+			{
+				name: 'Golf Stream',
+				kind: 'rapid',
+				grade: 'II+',
+				at: 0.08,
+				coords: null,
+				note: 'Første stryket etter put inn ved Harlaug bru. Stort hull på venstre side – hold deg midt i elva. Hullet er en populær playspot.'
+			},
+			{
+				name: 'Micro-surf',
+				kind: 'play',
+				at: 0.2,
+				coords: null,
+				note: 'Liten, snill bølge å øve surfing på.'
+			},
+			{
+				name: 'Haystacks',
+				kind: 'rapid',
+				grade: 'II',
+				at: 0.3,
+				coords: null,
+				note: 'Rad med store, ufarlige bølger.'
+			},
+			{
+				name: 'Grønn bølge',
+				kind: 'play',
+				at: 0.5,
+				coords: null,
+				note: 'Fin, grønn surfebølge på venstre side omtrent halvveis.'
+			},
+			{
+				name: 'Big Bend / Chocolate Canyon',
+				kind: 'rapid',
+				grade: 'III',
+				at: 0.65,
+				coords: null,
+				note: 'Elva smalner og blir brattere gjennom en kort kløft med lagdelte skiferfjell. Selve hjertet av Playrun – her henger stryka sammen.'
+			},
+			{
+				name: 'Faukstad-bølga',
+				kind: 'play',
+				at: 0.8,
+				coords: null,
+				note: 'Kjent rodeobølge rett ovenfor brua ved Nedre Heidal. Lite, men kraftig hull rett nedenfor bølga.'
+			},
+			{
+				name: 'Brua ved Nedre Heidal',
+				kind: 'bridge',
+				at: 0.83,
+				coords: null,
+				note: 'Den eneste brua du padler under på strekningen.'
+			},
+			{
+				name: 'China Hole',
+				kind: 'rapid',
+				grade: 'III',
+				at: 0.86,
+				coords: null,
+				note: 'Faukstad-stryket, rett etter brua. Linja er midt-venstre: ikke midt i elva, og ikke helt til venstre.'
+			},
+			{
+				name: 'Øyene',
+				kind: 'rapid',
+				grade: 'II',
+				at: 0.93,
+				coords: null,
+				note: 'Elva åpner seg igjen, med flere morsomme stryk rundt skogkledde øyer.'
+			},
+			{
+				name: 'Washing Machine',
+				kind: 'rapid',
+				grade: 'III',
+				at: 0.97,
+				coords: null,
+				note: 'Også kalt Tjuvspranget. Avslutter strekningen med et smell rett før take out ved raftingbasene på Faukstad.'
+			}
+		]
 	}
 ];
 
