@@ -39,7 +39,7 @@
 			{/each}
 		</nav>
 		<a class="btn btn-tonal btn-small signup" href={signupFormUrl} target="_blank" rel="noopener">
-			Meld deg på
+			Lenke til skjema
 			<Icon name="openInNew" size={16} class="trailing" />
 		</a>
 	</div>
@@ -51,7 +51,5 @@
 
 <footer class="site-footer">
 	<span>{trip.organiser} · {trip.title}</span>
-	<a href="mailto:{trip.contact}">{trip.contact}</a>
-	<a href={signupFormUrl} target="_blank" rel="noopener">Påmeldingsskjema</a>
 	<span>Kart: © OpenStreetMap, Kartverket · Vannføring: NVE</span>
 </footer>

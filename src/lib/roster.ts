@@ -1,4 +1,4 @@
-import { fieldPatterns, hiddenColumns, labelFor } from './config';
+import { fieldPatterns, gearNames, gearPattern, hiddenColumns, labelFor } from './config';
 import { classify, type Cell } from './cells';
 
 export type Person = {
@@ -9,7 +9,7 @@ export type Person = {
 	licence: Cell | null;
 	/** Peker til bilen personen stiller med, ellers null. */
 	carId: number | null;
-	/** Utstyr personen låner av klubben. */
+	/** Utstyr personen låner av klubben, f.eks. «Kajakk, Vest». Null når ingenting. */
 	borrowedGear: string | null;
 	/** Når personen ikke kan møte til planlagt tidspunkt. */
 	absence: string | null;
@@ -84,9 +84,22 @@ function bringsCar(hasCar: Cell | null, seats: number | null): boolean {
 	return true;
 }
 
+/** Navnet på utstyret et lånespørsmål handler om. */
+function gearName(column: string): string {
+	return gearNames.find((g) => g.pattern.test(column))?.name ?? labelFor(column);
+}
+
 export function buildRoster(headers: string[], records: Record<string, string>[]): Roster {
 	const mapping = mapColumns(headers);
 	const roleColumns = new Set(Object.values(mapping));
+
+	// Alle lånespørsmålene, ikke bare det første: skjemaet spør om kajakk, vest og
+	// hjelm hver for seg.
+	const gearColumns = headers.filter(
+		(h) => h && gearPattern.test(h) && !hiddenColumns.some((p) => p.test(h)) && !roleColumns.has(h)
+	);
+	if (gearColumns.length > 0) mapping.borrowedGear = gearColumns.join(' | ');
+	gearColumns.forEach((h) => roleColumns.add(h));
 
 	const people: Person[] = [];
 	const cars: Car[] = [];
@@ -113,6 +126,16 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 		}
 
 		const extras: { label: string; value: string }[] = [];
+
+		// Et ja teller som lån. Fritekst – som hjelmstørrelse – er informasjon, ikke
+		// et lån, og havner i detaljene med sin merkelapp.
+		const gear: string[] = [];
+		for (const column of gearColumns) {
+			const cell = classify(record[column] ?? '');
+			if (cell.kind === 'yes') gear.push(gearName(column));
+			else if (cell.kind === 'text') extras.push({ label: labelFor(column), value: cell.value });
+		}
+
 		for (const header of headers) {
 			if (!header || roleColumns.has(header)) continue;
 			if (hiddenColumns.some((p) => p.test(header))) continue;
@@ -128,7 +151,7 @@ export function buildRoster(headers: string[], records: Record<string, string>[]
 			professional: mapping.professional ? classify(record[mapping.professional] ?? '') : null,
 			licence: mapping.licence ? classify(record[mapping.licence] ?? '') : null,
 			carId,
-			borrowedGear: text(record, mapping.borrowedGear),
+			borrowedGear: gear.length > 0 ? gear.join(', ') : null,
 			absence: text(record, mapping.absence),
 			extras
 		});

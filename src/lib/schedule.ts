@@ -23,14 +23,14 @@ export const schedule: ScheduleEntry[] = [
 	{
 		day: 'Fredag',
 		time: '16:00',
-		title: 'Felles avreise',
-		note: 'Bilene fyller opp og drar samlet.'
+		title: 'Oppmøte ved kajakkrommet',
+		note: 'Rolf E. Stenersens allé 21, Sogn studentby. Bilene fyller opp og drar samlet.'
 	},
 	{
 		day: 'Fredag',
 		time: '21:00',
-		title: 'Ankomst og felles samling',
-		note: 'Omtrentlig ankomst Kruke gård.',
+		title: 'Ankomst Kruke gård',
+		note: 'Omtrentlig. Felles samling når alle er fremme.',
 		place: 'Kruke gård'
 	},
 	{
@@ -39,6 +39,17 @@ export const schedule: ScheduleEntry[] = [
 		title: 'Avreise til Bru-bru',
 		note: 'Hvem som er med kommer senere.',
 		place: 'Put inn – Bru-bru'
+	},
+	{
+		day: 'Lørdag',
+		title: 'Grillkveld på Kruke',
+		note: 'Ta med det du vil ha på grillen.',
+		place: 'Kruke gård'
+	},
+	{
+		day: 'Søndag',
+		title: 'Padling og hjemreise',
+		note: 'Vi er vanligvis hjemme i Oslo mellom 19 og 21.'
 	}
 ];
 

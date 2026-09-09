@@ -5,8 +5,9 @@ export type Cell =
 	| { kind: 'empty' }
 	| { kind: 'text'; value: string };
 
-const YES = /^(ja|yes|true|sant|x|✓|jepp)$/i;
-const NO = /^(nei|no|false|usant|✗|-|–)$/i;
+// Skjemaet bruker lekne svar som «Yea!» og «Nope», så de må med her.
+const YES = /^(ja|yes|yea!?|yeah|yep|true|sant|x|✓|jepp|jo)$/i;
+const NO = /^(nei|no|nope|false|usant|✗|-|–)$/i;
 
 /** Gjør en celletekst om til ja, nei, tom eller fritekst. */
 export function classify(raw: string): Cell {

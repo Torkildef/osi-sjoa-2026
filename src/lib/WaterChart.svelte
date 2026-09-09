@@ -6,6 +6,7 @@
 	let { readings, unit }: { readings: Reading[]; unit: string } = $props();
 
 	const [low, high] = water.perfect;
+	const goodLow = water.good[0];
 
 	const W = 760;
 	const H = 230;
@@ -19,7 +20,7 @@
 
 	// Skalaen rommer alltid hele perfekt-sonen, ellers ville båndet forsvunnet ut av
 	// bildet når vannføringen ligger langt utenfor, og grafen mistet referansen sin.
-	const min = $derived(Math.min(...values, low));
+	const min = $derived(Math.min(...values, goodLow));
 	const max = $derived(Math.max(...values, high));
 	const pad = $derived((max - min || 1) * 0.12);
 	const yMin = $derived(Math.max(0, min - pad));
@@ -37,6 +38,7 @@
 
 	const bandTop = $derived(y(Math.min(high, yMax)));
 	const bandBottom = $derived(y(Math.max(low, yMin)));
+	const goodBottom = $derived(y(Math.max(goodLow, yMin)));
 
 	const ticks = $derived(
 		[yMin, (yMin + yMax) / 2, yMax].map((v, i) => ({ i, v, y: y(v), label: Math.round(v) }))
@@ -105,6 +107,14 @@
 		</linearGradient>
 	</defs>
 
+	<!-- Bra-sonen under perfekt-sonen, i en svakere tone. -->
+	<rect
+		x={PAD.left}
+		y={bandBottom}
+		width={plotW}
+		height={Math.max(0, goodBottom - bandBottom)}
+		class="band good"
+	/>
 	<!-- Perfekt-sonen. Båndet er merket med tekst, så fargen ikke er eneste signal. -->
 	<rect
 		x={PAD.left}
@@ -118,6 +128,11 @@
 	<text x={W - PAD.right - 6} y={bandTop + 14} class="band-label" text-anchor="end">
 		{low}–{high} {unit} · perfekt
 	</text>
+	{#if goodBottom - bandBottom > 14}
+		<text x={W - PAD.right - 6} y={goodBottom - 4} class="band-label good" text-anchor="end">
+			{goodLow}–{low} · bra
+		</text>
+	{/if}
 
 	{#each ticks as tick (tick.i)}
 		<line x1={PAD.left} x2={W - PAD.right} y1={tick.y} y2={tick.y} class="grid" />

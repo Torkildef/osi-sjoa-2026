@@ -42,10 +42,7 @@
 </svelte:head>
 
 <div class="page-head">
-	<div>
-		<h1 class="headline-large">Kart</h1>
-		<p class="lede">Der vi bor, der vi padler, og der du får tak i mat og utstyr.</p>
-	</div>
+	<h1 class="headline-large">Kart</h1>
 </div>
 
 <Map bind:this={map} {onready} />

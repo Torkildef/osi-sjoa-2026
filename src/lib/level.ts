@@ -1,20 +1,23 @@
 import { water } from './config';
 
-export type Level = 'lav' | 'perfekt' | 'hoy';
+export type Level = 'lav' | 'bra' | 'perfekt' | 'spennende';
 
-/** Hvor vannføringen ligger i forhold til perfekt-sonen i config. */
+/** Hvilken sone vannføringen ligger i, etter grensene i config. */
 export function levelFor(value: number): Level {
-	const [low, high] = water.perfect;
-	return value < low ? 'lav' : value > high ? 'hoy' : 'perfekt';
+	if (value < water.good[0]) return 'lav';
+	if (value < water.perfect[0]) return 'bra';
+	if (value <= water.perfect[1]) return 'perfekt';
+	return 'spennende';
 }
 
 export const levelInfo: Record<
 	Level,
-	{ text: string; short: string; tone: 'success' | 'warning'; emoji: string }
+	{ text: string; short: string; tone: 'success' | 'warning' | 'primary' | 'tertiary'; emoji: string }
 > = {
+	lav: { text: 'Lav vannføring', short: 'Lavt', tone: 'warning', emoji: '🪨' },
+	bra: { text: 'Bra vannføring', short: 'Bra', tone: 'primary', emoji: '👍' },
 	perfekt: { text: 'Perfekt vannføring', short: 'Perfekt', tone: 'success', emoji: '🤙' },
-	lav: { text: 'Under perfekt-sonen', short: 'Lavt', tone: 'warning', emoji: '🪨' },
-	hoy: { text: 'Over perfekt-sonen', short: 'Høyt', tone: 'warning', emoji: '🌊' }
+	spennende: { text: 'Spennende vannføring', short: 'Spennende', tone: 'tertiary', emoji: '🌊' }
 };
 
 export const formatFlow = (value: number) =>

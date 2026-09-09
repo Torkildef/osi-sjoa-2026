@@ -4,12 +4,10 @@
 	import WaterChart from '$lib/WaterChart.svelte';
 	import WaterNow from '$lib/WaterNow.svelte';
 	import { trip, water as waterConfig } from '$lib/config';
-	import { geometryInfo, riverIsDraft, sections, isTraced } from '$lib/river';
+	import { riverIsDraft, sections } from '$lib/river';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
-
-	const untraced = sections.filter((s) => !isTraced(s));
 </script>
 
 <svelte:head>
@@ -17,10 +15,7 @@
 </svelte:head>
 
 <div class="page-head">
-	<div>
-		<h1 class="headline-large">Elven</h1>
-		<p class="lede">Hvordan Sjoa går akkurat nå, og strekningene vi padler.</p>
-	</div>
+	<h1 class="headline-large">Elven</h1>
 </div>
 
 <section>
@@ -36,10 +31,12 @@
 		<div class="card">
 			<WaterNow readings={data.water.readings} unit={data.water.unit} />
 			<WaterChart readings={data.water.readings} unit={data.water.unit} />
-			<p class="footnote">
-				Siste {waterConfig.hours} timer, målt av NVE ved stasjon {waterConfig.stationId}. Det grønne
-				båndet er vannføringen vi regner som perfekt. Hold pekeren over grafen for enkeltmålinger.
-			</p>
+			<div class="chip-row" style="margin-top: 0.5rem">
+				<span class="chip warning">🪨 Under {waterConfig.good[0]} · lavt</span>
+				<span class="chip primary">👍 {waterConfig.good[0]}–{waterConfig.good[1]} · bra</span>
+				<span class="chip success">🤙 {waterConfig.perfect[0]}–{waterConfig.perfect[1]} · perfekt</span>
+				<span class="chip tertiary">🌊 Over {waterConfig.perfect[1]} · spennende</span>
+			</div>
 		</div>
 	{:else if data.water.status === 'unconfigured'}
 		<div class="empty">
@@ -66,11 +63,6 @@
 			Se alt på kartet
 		</a>
 	</div>
-	<p class="body-medium on-surface-variant" style="margin-bottom: 1rem; max-width: 46rem">
-		Vi padler to strekninger etter hverandre: først Bru-bru gjennom Heidal, så Playrun videre
-		nedover. Take out på den første er put inn på den neste, så det går an å ta begge i ett.
-	</p>
-
 	<div class="stack" style="gap: 1.25rem">
 		{#each sections as section (section.id)}
 			<RiverProfile {section} />
@@ -80,22 +72,7 @@
 	{#if riverIsDraft}
 		<p class="notice" style="margin-top: 1.25rem">
 			<Icon name="edit" size={20} />
-			<span>
-				Gradering og beskrivelser er foreløpige. Stryk, playspots og ting å passe på legges inn i
-				<code>src/lib/river.ts</code> etter hvert som noen har padlet strekningene.
-			</span>
+			<span>Gradering og beskrivelser er foreløpige.</span>
 		</p>
-	{/if}
-
-	{#if untraced.length > 0}
-		<p class="notice" style="margin-top: 0.6rem">
-			<Icon name="info" size={20} />
-			<span>
-				Elveløpet er ikke hentet inn ennå, så kartet tegner strekningene som rette streker. Kjør
-				<code>node scripts/hent-elv.mjs</code> for å hente det fra OpenStreetMap.
-			</span>
-		</p>
-	{:else if geometryInfo.fetched}
-		<p class="footnote">Elveløp fra {geometryInfo.source}, hentet {geometryInfo.fetched}.</p>
 	{/if}
 </section>

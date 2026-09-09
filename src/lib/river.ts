@@ -72,7 +72,7 @@ export const sections: Section[] = [
 	{
 		id: 'bru-bru',
 		name: 'Bru-bru',
-		grade: 'II–III',
+		grade: 'II',
 		color: '#0b7a75',
 		from: 'Put inn – Bru-bru',
 		to: 'Take out Bru-bru / put inn Playrun',
@@ -86,7 +86,7 @@ export const sections: Section[] = [
 	{
 		id: 'playrun',
 		name: 'Playrun',
-		grade: 'II–III',
+		grade: 'III',
 		color: '#c2410c',
 		from: 'Take out Bru-bru / put inn Playrun',
 		to: 'Take out – Playrun',
@@ -149,4 +149,4 @@ export function profileFor(section: Section): RiverFeature[] {
 }
 
 /** Sant så lenge gradering og stryk ikke er kvalitetssikret av noen som har padlet dem. */
-export const riverIsDraft = true;
+export const riverIsDraft = false;
