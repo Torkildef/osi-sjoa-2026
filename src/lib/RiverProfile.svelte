@@ -30,7 +30,12 @@
 	<header class="river-head">
 		<div class="title-row">
 			<h3 class="headline-small">🛶 {section.name}</h3>
-			<span class="grade" title="Gradering">Grad {section.grade}</span>
+			<span class="chip-row">
+				{#each section.tags ?? [] as tag (tag)}
+					<span class="chip warning">{tag}</span>
+				{/each}
+				<span class="grade" title="Gradering">Grad {section.grade}</span>
+			</span>
 		</div>
 		<p class="body-medium on-surface-variant">{section.description}</p>
 		<div class="river-facts">

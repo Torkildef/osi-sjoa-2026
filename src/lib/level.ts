@@ -14,7 +14,7 @@ export const levelInfo: Record<
 	Level,
 	{ text: string; short: string; tone: 'success' | 'warning' | 'primary' | 'tertiary'; emoji: string }
 > = {
-	lav: { text: 'Lav vannføring', short: 'Lavt', tone: 'warning', emoji: '🪨' },
+	lav: { text: 'Hompete vannføring', short: 'Hompete', tone: 'warning', emoji: '🪨' },
 	bra: { text: 'Bra vannføring', short: 'Bra', tone: 'primary', emoji: '👍' },
 	perfekt: { text: 'Perfekt vannføring', short: 'Perfekt', tone: 'success', emoji: '🤙' },
 	spennende: { text: 'Spennende vannføring', short: 'Spennende', tone: 'tertiary', emoji: '🌊' }

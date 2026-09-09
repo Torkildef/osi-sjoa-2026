@@ -53,6 +53,8 @@ export type Section = {
 	from: string;
 	to: string;
 	description: string;
+	/** Korte merkelapper ved graderingen, som «Rullekrav». */
+	tags?: string[];
 	features: RiverFeature[];
 };
 
@@ -76,8 +78,7 @@ export const sections: Section[] = [
 		color: '#0b7a75',
 		from: 'Put inn – Bru-bru',
 		to: 'Take out Bru-bru / put inn Playrun',
-		description:
-			'Fra bru til bru gjennom Heidal. Rolig start, jevn strøm og god plass til å øve på ferger og bakevjer før det blir brattere lenger ned.',
+		description: 'Fra bru til bru gjennom Heidal. Passer for nybegynnere.',
 		features: [
 			// Fyll inn stryk og nøkkelpunkter her etter hvert. Eksempel:
 			// { name: 'Første stryket', kind: 'rapid', grade: 'II+', at: 0.3, coords: null, note: 'Hold høyre.' },
@@ -90,8 +91,8 @@ export const sections: Section[] = [
 		color: '#c2410c',
 		from: 'Take out Bru-bru / put inn Playrun',
 		to: 'Take out – Playrun',
-		description:
-			'Sjoas klassiker. Stryk på rekke og rad med rolige partier imellom, mange bølger og valser å leke i, og lett å komme seg til land.',
+		description: 'Sjoas klassiker. For mer erfarne.',
+		tags: ['Rullekrav'],
 		features: []
 	}
 ];
