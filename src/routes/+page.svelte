@@ -15,8 +15,6 @@
 	const next = schedule[0];
 	const signedUp = confirmed();
 	const maybe = unconfirmed();
-	const seats = fridaySeats();
-	const borrowing = signedUp.filter(borrowsGear).length;
 
 	let heroFailed = $state(false);
 </script>
