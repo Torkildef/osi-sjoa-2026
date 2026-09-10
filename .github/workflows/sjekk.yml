@@ -1,0 +1,37 @@
+name: Sjekk
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  sjekk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Vakten trenger commitene bak for å se hva som er lagt til.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typesjekk
+        run: npm run check
+
+      - name: Bygg
+        run: npm run build
+
+      - name: Vakten – ingen telefonnumre, e-post eller nøkler
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            node scripts/vakt.mjs "${{ github.event.pull_request.base.sha }}" "${{ github.event.pull_request.head.sha }}"
+          elif [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            node scripts/vakt.mjs "${{ github.event.before }}" "${{ github.sha }}"
+          else
+            echo "Ny gren – ingenting å sammenligne med."
+          fi

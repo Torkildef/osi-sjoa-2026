@@ -1188,6 +1188,53 @@ dl.qa dd {
 	white-space: pre-line;
 }
 
+/* ---- Skjema (bare /admin) ---------------------------------------------- */
+
+.admin-form {
+	display: grid;
+	gap: 0.9rem;
+	max-width: 46rem;
+	justify-items: start;
+}
+
+.field {
+	display: grid;
+	gap: 0.3rem;
+	width: 100%;
+}
+
+.field > span {
+	font-size: 0.8rem;
+	font-weight: 700;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--on-surface-variant);
+}
+
+.field input,
+.field textarea {
+	width: 100%;
+	padding: 0.7rem 0.85rem;
+	border-radius: var(--shape-md);
+	border: 1px solid var(--outline);
+	background: var(--surface-container-lowest);
+	color: var(--on-surface);
+	font: inherit;
+	line-height: 1.45;
+}
+
+.field textarea {
+	resize: vertical;
+	min-height: 8rem;
+}
+
+.field input:focus,
+.field textarea:focus {
+	outline: 2px solid var(--primary);
+	outline-offset: 0;
+	border-color: var(--primary);
+}
+
 /* ---- Meldinger ---------------------------------------------------------- */
 
 .notice {

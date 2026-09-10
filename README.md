@@ -192,6 +192,31 @@ Innstillingene ligger i `water` i [`src/lib/config.ts`](src/lib/config.ts):
 mening i m³/s – vannstanden på Sjoa ligger på et par meter. Er det likevel vannstanden
 dere går etter, bytt `parameter` til `1000` og juster `perfect`.
 
+## /admin – prompter til Claude
+
+`/admin` er en skjult side (ikke i menyen, `noindex`, sperret i `robots.txt`) med ett
+tekstfelt. Passordet er `ADMIN_PASSWORD` i Vercel og sjekkes på serveren; den som har
+det, får en signert cookie i 30 dager. Hver prompt blir et GitHub-issue med merkelappen
+`prompt`, opprettet med `GITHUB_TOKEN` – et fine-grained token begrenset til dette
+repoet med *Issues: Read and write*. Tokenet når aldri nettleseren.
+
+En Routine i Claude Code on the web kjører hver hele time på dagtid, leser åpne
+`prompt`-issues, gjør jobben og lukker issuet med en oppsummering. Endringer i
+datafilene (`participants.ts`, `schedule.ts`, `info.ts`, `packing.ts`, `river.ts`,
+`places.ts`, `config.ts`) pushes rett til standardgrenen; alt annet kommer som pull
+request. Prompter som bryter reglene – hemmeligheter, telefonnumre, endringer i
+`/admin` eller CI, sletting, sjikane – avvises med merkelappen `avvist` og en forklaring.
+
+Bremser: maks 2000 tegn og maks 5 prompter i timen. Siden viser de siste ti med status.
+
+### CI-vakten
+
+[`.github/workflows/sjekk.yml`](.github/workflows/sjekk.yml) kjører typesjekk, bygg og
+[`scripts/vakt.mjs`](scripts/vakt.mjs) på hver push og pull request. Vakten leser
+linjene som er lagt til og stopper alt som ligner telefonnummer, e-postadresse eller
+nøkkel. Beskytt standardgrenen i GitHub (Settings → Branches → require status checks)
+så ingenting lander før den er grønn.
+
 ## Personvern
 
 Siden ligger åpent på nettet. Derfor står det ikke telefonnumre eller e-postadresser i
