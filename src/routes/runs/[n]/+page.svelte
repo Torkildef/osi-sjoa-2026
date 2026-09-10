@@ -1,13 +1,13 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
-	import { isRookie, rank, runs } from '$lib/runs';
+	import { isRookie, runs } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
 
 	const run = $derived(data.run);
-	const paddlers = $derived(run.groups.flatMap((g) => [g.lead, ...g.members]));
+	const paddlers = $derived(run.groups.flatMap((g) => g.members));
 	const rookies = $derived(paddlers.filter(isRookie).length);
 	const prev = $derived(runs.find((r) => r.n === run.n - 1));
 	const next = $derived(runs.find((r) => r.n === run.n + 1));
@@ -21,7 +21,7 @@
 <div class="page-head">
 	<div>
 		<a class="chip link" href="/runs"><Icon name="keyboardArrowUp" size={16} /> Hele dagen</a>
-		<h1 class="headline-large" style="margin-top: 0.5rem">{run.title} · {run.time}</h1>
+		<h1 class="headline-large" style="margin-top: 0.5rem">{run.title}</h1>
 	</div>
 	<div class="chip-row">
 		{#if prev}<a class="chip link" href="/runs/{prev.n}">← {prev.title}</a>{/if}
@@ -51,29 +51,19 @@
 <section class="block">
 	<div class="section-head">
 		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> På elva</h2>
-		<span class="body-small on-surface-variant">Leder først, sistemann bakerst</span>
 	</div>
 	<div class="grid">
 		{#each run.groups as group (group.name)}
 			<div class="card">
 				<div class="card-head">
 					<h3 class="title-medium">{group.name}</h3>
-					<span class="tag primary">{1 + group.members.length}</span>
+					<span class="tag primary">{group.members.length}</span>
 				</div>
-				<ol class="crew">
-					<li class="lead">
-						<span class="crew-role">Leder</span>
-						<span class="chip tonal">{group.lead} · {rank(group.lead)}</span>
-					</li>
-					{#each group.members as name, i (name)}
-						<li>
-							<span class="crew-role">{i === group.members.length - 1 ? 'Bakerst' : ''}</span>
-							<span class="chip" class:tonal={!isRookie(name)} class:rookie={isRookie(name)}>
-								{name}{rank(name) ? ` · ${rank(name)}` : ''}
-							</span>
-						</li>
+				<div class="chip-row">
+					{#each group.members as name (name)}
+						<span class="chip" class:tonal={!isRookie(name)} class:rookie={isRookie(name)}>{name}</span>
 					{/each}
-				</ol>
+				</div>
 			</div>
 		{/each}
 	</div>

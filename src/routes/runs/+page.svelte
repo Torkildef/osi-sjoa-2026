@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
-	import { experienced, logic, rank, rookiesRun1, rookiesRun2, runs, timeline } from '$lib/runs';
+	import { experienced, logic, rookiesRun1, rookiesRun2, runs, timeline } from '$lib/runs';
 </script>
 
 <svelte:head>
@@ -21,7 +21,7 @@
 <ol class="timeline">
 	{#each timeline as step, i (i)}
 		<li class="entry">
-			<span class="when">{step.time}</span>
+			<span class="when">Steg {i + 1}</span>
 			<div class="what">
 				<h3 class="title-medium">{step.what}</h3>
 				{#if step.who}<p>{step.who}</p>{/if}
@@ -39,7 +39,7 @@
 			</div>
 			<div class="chip-row">
 				{#each experienced as name (name)}
-					<span class="chip tonal">{name} · {rank(name)}</span>
+					<span class="chip tonal">{name}</span>
 				{/each}
 			</div>
 		</div>
