@@ -1,21 +1,19 @@
 # Sjoa 2026 – OSI Elvepadling
 
-Turside for elvepadlingsturen til Sjoa. Påmelding skjer i et Google-skjema, og siden
-leser svarene rett fra regnearket skjemaet skriver til. Ingen database, ingen
-innlogging, ingen backend.
+Turside for elvepadlingsturen til Sjoa. Deltakere, biler og avreisegrupper ligger som
+data i repoet; vannføringen hentes fra NVE. Ingen database, ingen innlogging.
 
 | Side          | Innhold                                                                  |
 | ------------- | ------------------------------------------------------------------------ |
 | `/`           | Nedtelling, nøkkeltall, vannføring nå, neste punkt på planen og lenker    |
 | `/kart`       | Kart med lagvelger (topo, kart, flyfoto), filter, steder og strekningene  |
 | `/elven`      | Vannføring siste 48 timer, og elveprofil for Bru-bru og Playrun           |
-| `/logistikk`  | Hvem drar når, biler med plasser og utstyr, og deltakerlista             |
+| `/logistikk`  | Hvem drar når, biler, utstyr og hjelmstørrelser, deltakerlista, uavklart og FAQ |
 | `/plan`       | Tidsskjema for helgen, dag for dag                                       |
 
 `/heidal` (det gamle navnet på kartsiden) videresender til `/kart`.
 
-Menyen ligger i [`src/lib/nav.ts`](src/lib/nav.ts). Hver side henter bare det den
-trenger: `/logistikk` og `/` snakker med regnearket, `/elven` og `/` med NVE.
+Menyen ligger i [`src/lib/nav.ts`](src/lib/nav.ts). Bare `/elven` og `/` snakker med NVE.
 
 Stack: SvelteKit + TypeScript på Vercel.
 
@@ -41,7 +39,7 @@ paletter for lys og mørk modus.
 
 ```sh
 npm install
-cp .env.example .env   # fyll inn CSV-lenken
+cp .env.example .env   # fyll inn NVE-nøkkelen
 npm run dev
 ```
 
@@ -53,66 +51,24 @@ npm run build    # produksjonsbygg
 npm run preview  # se på produksjonsbygget lokalt
 ```
 
-## Koble til regnearket
+## Deltakere og biler
 
-1. I skjemaet: **Svar → Koble til regneark**.
-2. I regnearket: **Fil → Del → Publiser på nettet**. Velg fanen med svarene og formatet
-   **CSV**. Kopier lenken.
-3. Legg den inn som `GOOGLE_SHEET_CSV_URL` – i `.env` lokalt, og under **Settings →
-   Environment Variables** i Vercel.
+Alt om hvem som kommer ligger i [`src/lib/participants.ts`](src/lib/participants.ts):
 
-Hentingen skjer på serveren, så regneark-lenken blir ikke synlig i frontend-koden, og
-nettleseren slipper CORS-trøbbel. Siden henter på nytt hvert minutt, og har en
-**Oppdater**-knapp. Merk at Google selv cacher det publiserte arket noen minutter, så et
-ferskt svar kan bruke litt tid på å dukke opp.
+- `people` – én oppføring per person: avreisegruppe, førerkort, om de låner kajakk og
+  vest, hjelmstørrelse, og en merknad. Ingen telefonnumre – siden ligger åpent på nettet.
+- `cars` – bilene, med seter, hengerfeste, takstativ og når de drar. Setene i bilene som
+  drar fredag summeres til kapasiteten på Logistikk-siden.
+- `departureGroups` – torsdag, fredag 16:00, fredag senere og uavklart, med forklaring.
+- `open` – det som ikke er avklart ennå. Fjern punktene etter hvert.
+- `faq` – ofte stilte spørsmål.
 
-## Oversikten
+Tallene på forsiden og Logistikk-siden regnes ut fra dette. Hjelmstørrelsene grupperes
+på første ord («Medium (yellow)» og «Medium» havner sammen), og bare de som låner utstyr
+telles med. Fornavn brukes i lister; er to like, legges initialen i etternavnet til.
 
-Siden er på norsk, også når skjemaet er på engelsk. Den viser:
-
-- **Nøkkeltall** – påmeldte, biler, plasser og hvor mange som låner utstyr.
-- **Biler** – én rad per bileier, med plasser, hengerfeste og takstativ, og en sum nederst.
-- **Deltakere** – en rullbar liste med alle. Klikk et navn for å se når de drar, om de
-  har lappen, hva de låner av utstyr, og når de ikke rekker planlagt avreise. Merkene i
-  lista (Proff, Bil, Låner, Avvik) viser det viktigste uten å klikke.
-
-### Hvordan kolonnene kobles
-
-`fieldPatterns` i [`src/lib/config.ts`](src/lib/config.ts) sier hvilken kolonne som
-fyller hvilken rolle: `name`, `departure`, `professional`, `licence`, `hasCar`, `seats`,
-`towHitch`, `roofRack`, `borrowedGear`, `absence` og `carDeparture`.
-
-Hver rolle tar den **første kolonnen som treffer et av mønstrene sine**, og en kolonne
-kan bare fylle én rolle. Rekkefølgen i lista avgjør, så de presise rollene plukker først.
-Mønstrene dekker norsk og engelsk.
-
-Ett mønster står for seg: `ABSENCE`, brukt både til å velge kolonne og til å gi
-merkelapp. De to må være identiske. «Can you not make the planned departure?» inneholder
-ordet *departure*, og ble uten dette lest som spørsmålet om når man drar.
-
-Finner en rolle ingen kolonne, faller feltet bare bort. Spør skjemaet ikke om når bilen
-drar, brukes sjåførens egen avreisetid. En person regnes som bileier hvis de svarer ja på
-bil-spørsmålet, eller oppgir plasser over null.
-
-### Norske merkelapper
-
-`columnLabels` oversetter spørsmålstekst til norsk merkelapp – første mønster som treffer
-vinner. Treffer ingen, brukes spørsmålsteksten slik den står. Kolonner uten egen rolle
-vises i detaljpanelet med sin norske merkelapp, så ingenting går tapt.
-
-### Kolonner som skjules
-
-`hiddenColumns` fjerner kolonner fra hele siden: e-post, telefon, tidsmerke og
-medlemsspørsmålet. Kontaktopplysninger har ikke noe å gjøre på en åpen side.
-
-### Slik leses cellene
-
-| I regnearket              | På siden      |
-| ------------------------- | ------------- |
-| `Ja`, `Yes`, `True`, `X`  | grønn ✓       |
-| `Nei`, `No`, `False`, `-` | grå ✕         |
-| tom                       | grå –         |
-| alt annet                 | teksten som den står |
+Påmeldingsskjemaet lenkes fortsatt til fra menyen, men svarene leses ikke automatisk.
+Nye påmeldinger legges inn for hånd.
 
 ## Bilder
 
@@ -238,14 +194,13 @@ dere går etter, bytt `parameter` til `1000` og juster `perfect`.
 
 ## Personvern
 
-Et publisert regneark er lesbart for alle som har URL-en, og denne siden ligger åpent på
-nettet. E-post og telefon filtreres derfor bort før dataen sendes til nettleseren – ikke
-bare skjult i visningen, men aldri sendt. Vil du vise dem likevel, tøm `hiddenColumns`.
+Siden ligger åpent på nettet. Derfor står det ikke telefonnumre eller e-postadresser i
+deltakerdataene, bare navn og det som trengs for logistikken.
 
 ## Deploy
 
-Importer repoet i Vercel, legg inn `GOOGLE_SHEET_CSV_URL` og `NVE_API_KEY` under
-**Settings → Environment Variables**, og push til `main`.
+Importer repoet i Vercel, legg inn `NVE_API_KEY` under **Settings → Environment
+Variables**, og push til `main`.
 
 ## Om `supabase/`-mappa
 

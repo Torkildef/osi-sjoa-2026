@@ -4,6 +4,7 @@
 	import WaterNow from '$lib/WaterNow.svelte';
 	import { signupFormUrl, trip } from '$lib/config';
 	import { practical } from '$lib/info';
+	import { borrowsGear, cars, confirmed, fridaySeats, unconfirmed } from '$lib/participants';
 	import { photos } from '$lib/photos';
 	import { pages } from '$lib/nav';
 	import { schedule } from '$lib/schedule';
@@ -11,8 +12,11 @@
 
 	let { data }: { data: PageData } = $props();
 
-	const roster = $derived(data.sheet.status === 'ok' ? data.sheet.roster : null);
 	const next = schedule[0];
+	const signedUp = confirmed();
+	const maybe = unconfirmed();
+	const seats = fridaySeats();
+	const borrowing = signedUp.filter(borrowsGear).length;
 
 	let heroFailed = $state(false);
 </script>
@@ -49,32 +53,26 @@
 	</div>
 </section>
 
-{#if roster && roster.people.length > 0}
-	<section class="block">
-		<div class="stats">
-			<div class="stat accent">
-				<div class="value">{roster.people.length}</div>
-				<div class="label"><Icon name="groups" size={16} /> Påmeldte</div>
-			</div>
-			<div class="stat">
-				<div class="value">{roster.cars.length}</div>
-				<div class="label"><Icon name="directionsCar" size={16} /> {roster.cars.length === 1 ? 'Bil' : 'Biler'}</div>
-			</div>
-			{#if roster.totalSeats !== null}
-				<div class="stat">
-					<div class="value">{roster.totalSeats}</div>
-					<div class="label"><Icon name="person" size={16} /> Plasser i bilene</div>
-				</div>
-			{/if}
-			{#if roster.borrowing !== null}
-				<div class="stat">
-					<div class="value">{roster.borrowing}</div>
-					<div class="label"><Icon name="kayaking" size={16} /> Låner utstyr</div>
-				</div>
-			{/if}
-		</div>
-	</section>
-{/if}
+<section class="block">
+	<div class="stats">
+		<a class="stat accent" href="/logistikk">
+			<div class="value">{signedUp.length}</div>
+			<div class="label"><Icon name="groups" size={16} /> Påmeldte{maybe.length ? ` · +${maybe.length} kanskje` : ''}</div>
+		</a>
+		<a class="stat" href="/logistikk">
+			<div class="value">{cars.length}</div>
+			<div class="label"><Icon name="directionsCar" size={16} /> Biler</div>
+		</a>
+		<a class="stat" href="/logistikk">
+			<div class="value">{seats.seats}{seats.tight > seats.seats ? `–${seats.tight}` : ''}</div>
+			<div class="label"><Icon name="person" size={16} /> Seter fredag</div>
+		</a>
+		<a class="stat" href="/logistikk">
+			<div class="value">{borrowing}</div>
+			<div class="label"><Icon name="kayaking" size={16} /> Låner utstyr</div>
+		</a>
+	</div>
+</section>
 
 <section class="block grid wide">
 	{#if data.water.status === 'ok'}
