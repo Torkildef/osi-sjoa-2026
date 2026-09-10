@@ -31,8 +31,8 @@ export const schedule: ScheduleEntry[] = [
 		day: 'Fredag',
 		time: '19:20',
 		title: 'Maja lander på Gardermoen',
-		note: 'Eskil og Sindre venter, og de tre kjører opp etterpå.',
-		people: ['Eskil', 'Sindre', 'Maja']
+		note: 'Hentes av en snill sjåfør som er villig til å hente henne.',
+		people: ['Maja']
 	},
 	{
 		day: 'Fredag',
@@ -57,7 +57,7 @@ export const schedule: ScheduleEntry[] = [
 	{
 		day: 'Søndag',
 		title: 'Padling og hjemreise',
-		note: 'Vi er vanligvis hjemme i Oslo mellom 19 og 21. Regn med en lang helg.'
+		note: 'Birk, Claudia og Eirik kommer kanskje innom. Vi er vanligvis hjemme i Oslo mellom 19 og 21. Regn med en lang helg.'
 	}
 ];
 
