@@ -43,6 +43,13 @@ export const schedule: ScheduleEntry[] = [
 	},
 	{
 		day: 'Lørdag',
+		time: '08:00',
+		title: '🥞 Frokost',
+		note: 'Før avreise til Bru-bru.',
+		place: 'Kruke gård'
+	},
+	{
+		day: 'Lørdag',
 		time: '09:00',
 		title: '🛶 Avreise til Bru-bru',
 		note: 'Hvem som er med kommer senere.',
@@ -73,7 +80,8 @@ export const schedule: ScheduleEntry[] = [
 	},
 	{
 		day: 'Søndag',
-		title: '🛶 Padling',
+		time: '11:00',
+		title: '🛶 Avreise til elva',
 		note: 'Birk, Claudia og Eirik kommer kanskje innom.'
 	},
 	{
