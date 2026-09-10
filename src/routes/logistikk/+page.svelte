@@ -10,6 +10,8 @@
 		departureGroups,
 		faq,
 		fridaySeats,
+		helmetColor,
+		helmetLabel,
 		helmetSizes,
 		open,
 		people,
@@ -27,7 +29,6 @@
 	const seats = fridaySeats();
 	const friday = byDeparture('fredag');
 	const borrowing = signedUp.filter(borrowsGear);
-	const notBorrowing = signedUp.filter((p) => !borrowsGear(p) && p.kayak !== null);
 	const helmets = helmetSizes();
 	const showRack = cars.some((c) => c.roofRack !== null);
 
@@ -207,18 +208,16 @@
 		{#each helmets as h (h.size)}
 			<div class="card tight">
 				<div class="card-head">
-					<h3 class="title-medium">{h.size}</h3>
+					<h3 class="title-medium">
+						{#if helmetColor(h.size)}<span class="helmet-dot" style="--helmet: {helmetColor(h.size)}"></span>{/if}
+						{helmetLabel(h.size)}
+					</h3>
 					<span class="tag primary">{h.names.length}</span>
 				</div>
 				<p class="body-small on-surface-variant">{h.names.join(', ')}</p>
 			</div>
 		{/each}
 	</div>
-	{#if notBorrowing.length > 0}
-		<p class="footnote">
-			Har eget utstyr: {notBorrowing.map(shortName).join(', ')}.
-		</p>
-	{/if}
 </section>
 
 <section class="block">
@@ -237,9 +236,9 @@
 					onclick={() => (selected = selected === i ? null : i)}
 					aria-expanded={selected === i}
 				>
-					<span class="leading avatar">{initials(person.name)}</span>
+					<span class="leading avatar">{initials(shortName(person))}</span>
 					<span class="content">
-						<span class="headline">{person.name}</span>
+						<span class="headline">{shortName(person)}</span>
 						<span class="supporting">{departureLabel(person)}</span>
 					</span>
 					<span class="trailing">
@@ -278,7 +277,10 @@
 							{#if person.helmet}
 								<div>
 									<dt>Hjelmstørrelse</dt>
-									<dd>{person.helmet}</dd>
+									<dd>
+										{#if helmetColor(person.helmet)}<span class="helmet-dot" style="--helmet: {helmetColor(person.helmet)}"></span>{/if}
+										{helmetLabel(person.helmet)}
+									</dd>
 								</div>
 							{/if}
 							{#if person.earlyReturn}

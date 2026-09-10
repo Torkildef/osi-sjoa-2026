@@ -17,8 +17,7 @@ export const practical: InfoCard[] = [
 		title: 'Oppmøte',
 		lines: [
 			`${trip.meetup.label} ved ${trip.meetup.place.toLowerCase()}`,
-			trip.meetup.address,
-			'Gi beskjed i skjemaet hvis du ikke rekker det, så avtaler vi et annet sted'
+			trip.meetup.address
 		],
 		link: {
 			label: 'Veibeskrivelse',

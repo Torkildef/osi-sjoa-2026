@@ -365,6 +365,21 @@ export function fridaySeats(): { seats: number; tight: number } {
 	return { seats, tight };
 }
 
+/** Fargen på klubbens hjelmer, per størrelse. */
+export const helmetColors: Record<string, string> = {
+	small: '#1f1f1f',
+	medium: '#f2c318',
+	large: '#1e63d0',
+	onesize: '#d32f2f'
+};
+
+/** «Medium (yellow)» → «Medium». Fargen vises som en prikk i stedet. */
+export const helmetLabel = (helmet: string) => helmet.replace(/\s*\(.*\)\s*$/, '');
+
+/** Fargen til en hjelmstørrelse, eller null for svar som «Husker ikke». */
+export const helmetColor = (helmet: string) =>
+	helmetColors[helmet.split(' ')[0].toLowerCase()] ?? null;
+
 /** Hjelmstørrelser med hvem som trenger dem, i rekkefølgen small → onesize. */
 export function helmetSizes(): { size: string; names: string[] }[] {
 	const order = ['small', 'medium', 'large', 'onesize'];

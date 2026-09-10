@@ -1357,6 +1357,19 @@ dl.qa dd {
 	margin-top: 0.3rem;
 }
 
+/* Fargen på hjelmen, som en prikk foran størrelsen. */
+.helmet-dot {
+	display: inline-block;
+	width: 0.85em;
+	height: 0.85em;
+	border-radius: 50%;
+	background: var(--helmet);
+	border: 2px solid var(--surface-container-lowest);
+	box-shadow: 0 0 0 1px var(--outline-variant);
+	vertical-align: -0.08em;
+	margin-right: 0.15em;
+}
+
 /* ---- Ofte stilte spørsmål ----------------------------------------------- */
 
 .faq-card {

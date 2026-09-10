@@ -6,7 +6,6 @@
 	import { practical } from '$lib/info';
 	import { borrowsGear, cars, confirmed, fridaySeats, unconfirmed } from '$lib/participants';
 	import { photos } from '$lib/photos';
-	import { pages } from '$lib/nav';
 	import { schedule } from '$lib/schedule';
 	import type { PageData } from './$types';
 
@@ -131,18 +130,3 @@
 	</div>
 </section>
 
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large">Utforsk</h2>
-	</div>
-	<div class="grid">
-		{#each pages.filter((p) => p.href !== '/') as item (item.href)}
-			<a class="card" href={item.href}>
-				<div class="card-head">
-					<h3 class="title-medium"><Icon name={item.icon} size={22} class="primary-text" /> {item.label}</h3>
-				</div>
-				<p class="body-medium on-surface-variant">{item.blurb}</p>
-			</a>
-		{/each}
-	</div>
-</section>
