@@ -21,6 +21,16 @@
 	<h1 class="headline-large">Plan</h1>
 </div>
 
+{#if scheduleIsDraft}
+	<div class="card tertiary" style="margin-bottom: 1.5rem; display: flex; gap: 0.85rem; align-items: center">
+		<Icon name="warning" size={32} />
+		<div>
+			<div class="title-large">Planen er ikke ferdig</div>
+			<div class="body-medium">Tidene er omtrentlige. Elva bestemmer.</div>
+		</div>
+	</div>
+{/if}
+
 {#each days as group (group.day)}
 	<section class="day">
 		<div class="day-head">
@@ -56,10 +66,3 @@
 		</ol>
 	</section>
 {/each}
-
-{#if scheduleIsDraft}
-	<p class="notice" style="margin-top: 1.5rem">
-		<Icon name="edit" size={20} />
-		<span>Planen er ikke ferdig. Tidene er omtrentlige – elva bestemmer.</span>
-	</p>
-{/if}

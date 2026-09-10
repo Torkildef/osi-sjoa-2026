@@ -89,7 +89,7 @@
 <div class="stats">
 	<div class="stat accent">
 		<div class="value">{signedUp.length}</div>
-		<div class="label"><Icon name="groups" size={16} /> Påmeldte{maybe.length ? ` · +${maybe.length} kanskje` : ''}</div>
+		<div class="label"><Icon name="groups" size={16} /> Kommer{maybe.length ? ` · +${maybe.length} kanskje` : ''}</div>
 	</div>
 	<div class="stat">
 		<div class="value">{cars.length}</div>
@@ -104,6 +104,20 @@
 		<div class="label"><Icon name="kayaking" size={16} /> Låner kajakk og vest</div>
 	</div>
 </div>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="info" size={22} class="primary-text" /> Ofte stilte spørsmål</h2>
+	</div>
+	<div class="grid wide">
+		{#each faq as item (item.q)}
+			<div class="card primary faq-card">
+				<div class="faq-q"><span class="faq-mark">?</span> {item.q}</div>
+				<div class="faq-a">{item.a}</div>
+			</div>
+		{/each}
+	</div>
+</section>
 
 <section class="block">
 	<div class="section-head">
@@ -135,9 +149,6 @@
 		<span>
 			Fredag kl. 16 er det {seats.seats}{seats.tight > seats.seats ? `–${seats.tight}` : ''} seter til
 			{friday.length} personer, så det ser ut til å holde. {returnNote}
-			{#each people.filter((p) => p.earlyReturn) as p (p.name)}
-				{shortName(p)} drar hjem {p.earlyReturn?.toLowerCase()}.
-			{/each}
 		</span>
 	</p>
 </section>
@@ -305,17 +316,3 @@
 		</ul>
 	</section>
 {/if}
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large"><Icon name="info" size={22} class="primary-text" /> Ofte spurt</h2>
-	</div>
-	<div class="grid wide">
-		{#each faq as item (item.q)}
-			<div class="card">
-				<h3 class="title-medium" style="margin-bottom: 0.3rem">{item.q}</h3>
-				<p class="body-medium on-surface-variant">{item.a}</p>
-			</div>
-		{/each}
-	</div>
-</section>

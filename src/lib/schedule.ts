@@ -51,7 +51,7 @@ export const schedule: ScheduleEntry[] = [
 	{
 		day: 'Lørdag',
 		title: 'Grillkveld på Kruke',
-		note: 'Ta med det du vil ha på grillen. Connor drar hjem i løpet av kvelden.',
+		note: 'Ta med det du vil ha på grillen.',
 		place: 'Kruke gård'
 	},
 	{

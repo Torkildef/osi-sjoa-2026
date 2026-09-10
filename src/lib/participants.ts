@@ -73,7 +73,7 @@ export const cars: Car[] = [
 		towHitch: true,
 		roofRack: null,
 		departure: 'fredag',
-		note: 'Leiebil med henger for kajakkene. Hengerens kapasitet er ikke sjekket ennå.'
+		note: 'Leiebil med henger. Hengeren tar 8–10 kajakker.'
 	},
 	{
 		driver: 'Caroline',
@@ -277,8 +277,7 @@ export const people: Person[] = [
 		licence: null,
 		kayak: true,
 		vest: true,
-		helmet: 'Large (blue)',
-		earlyReturn: 'Lørdag kveld'
+		helmet: 'Large (blue)'
 	},
 	{
 		name: 'Lene Myhre Johansson',
@@ -321,7 +320,6 @@ export const people: Person[] = [
 export const open: string[] = [
 	'Hvem er den snille sjåføren som henter Maja på Gardermoen fredag kveld?',
 	'Birk, Claudia og Eirik: kommer kanskje søndag. Bekreftelse, og all øvrig info hvis de blir med.',
-	'Leiebilens hengerfeste er bekreftet, men hvor mange kajakker hengeren tar er ikke sjekket.'
 ];
 
 /** Ofte stilte spørsmål. */

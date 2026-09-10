@@ -57,7 +57,7 @@
 	<div class="stats">
 		<a class="stat accent" href="/logistikk">
 			<div class="value">{signedUp.length}</div>
-			<div class="label"><Icon name="groups" size={16} /> Påmeldte{maybe.length ? ` · +${maybe.length} kanskje` : ''}</div>
+			<div class="label"><Icon name="groups" size={16} /> Kommer{maybe.length ? ` · +${maybe.length} kanskje` : ''}</div>
 		</a>
 		<a class="stat" href="/logistikk">
 			<div class="value">{cars.length}</div>
