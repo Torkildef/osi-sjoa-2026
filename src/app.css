@@ -372,7 +372,8 @@ section.block {
 .top-bar {
 	position: sticky;
 	top: 0;
-	z-index: 20;
+	/* Over Leaflet, som legger kontrollene sine på z-index 1000. */
+	z-index: 1100;
 	background: color-mix(in srgb, var(--surface) 86%, transparent);
 	backdrop-filter: blur(14px);
 	-webkit-backdrop-filter: blur(14px);
@@ -477,7 +478,7 @@ nav.main-nav a .icon {
 	nav.main-nav {
 		position: fixed;
 		inset: auto 0 0 0;
-		z-index: 30;
+		z-index: 1100;
 		justify-content: space-around;
 		gap: 0;
 		padding: 0.5rem 0.25rem calc(0.5rem + env(safe-area-inset-bottom));

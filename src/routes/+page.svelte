@@ -3,7 +3,7 @@
 	import Icon from '$lib/Icon.svelte';
 	import PackingList from '$lib/PackingList.svelte';
 	import WaterNow from '$lib/WaterNow.svelte';
-	import { signupFormUrl, trip } from '$lib/config';
+	import { trip } from '$lib/config';
 	import { practical, warnings } from '$lib/info';
 	import { confirmed, unconfirmed } from '$lib/participants';
 	import { photos } from '$lib/photos';
@@ -42,16 +42,6 @@
 				{signedUp.length} kommer{maybe.length ? ` · ${maybe.length} kanskje` : ''}
 			</a>
 		</div>
-		<div class="hero-actions">
-			<a class="btn btn-filled" href={signupFormUrl} target="_blank" rel="noopener">
-				Lenke til skjema
-				<Icon name="openInNew" size={18} class="trailing" />
-			</a>
-			<a class="btn btn-tonal" href="/plan">
-				<Icon name="calendarMonth" size={18} />
-				Se planen
-			</a>
-		</div>
 	</div>
 </section>
 
@@ -84,7 +74,6 @@
 <section class="block">
 	<div class="section-head">
 		<h2 class="title-large">Pakkeliste</h2>
-		<span class="body-small on-surface-variant">Huskes i nettleseren din</span>
 	</div>
 	<PackingList />
 </section>
