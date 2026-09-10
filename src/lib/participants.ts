@@ -57,13 +57,12 @@ export const departureGroups: { id: DepartureId; label: string; time?: string; n
 	{
 		id: 'fredag-sen',
 		label: 'Fredag, senere',
-		note:
-			'Eskil og Sindre møter kl. 16, men venter med å reise til Maja lander på Gardermoen ca. 19:15–19:20. Eskil kan ta med ekstra utstyr hvis de tre får egen bil.'
+		note: 'Maja lander på Gardermoen ca. 19:20 og hentes av en snill sjåfør som er villig til å hente henne.'
 	},
 	{
 		id: 'uavklart',
 		label: 'Uavklart',
-		note: 'Kommer kanskje – ikke bekreftet.'
+		note: 'Kommer kanskje, i så fall søndag. Ikke bekreftet.'
 	}
 ];
 
@@ -150,12 +149,11 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Sindre Herre Hansen',
-		departure: 'fredag-sen',
+		departure: 'fredag',
 		licence: null,
 		kayak: true,
 		vest: true,
-		helmet: 'Medium (yellow)',
-		note: 'Venter på Maja.'
+		helmet: 'Medium (yellow)'
 	},
 	{
 		name: 'Martha Irene Førde Bondahl',
@@ -175,12 +173,12 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Eskil Linge Glomnes',
-		departure: 'fredag-sen',
+		departure: 'fredag',
 		licence: 'manuell',
 		kayak: true,
 		vest: true,
 		helmet: 'Medium (yellow)',
-		note: 'Venter på Maja. Kan ta med mye ekstra utstyr.'
+		note: 'Kan ta med mye ekstra utstyr.'
 	},
 	{
 		name: 'Vegard Otterlei',
@@ -255,7 +253,7 @@ export const people: Person[] = [
 		kayak: true,
 		vest: true,
 		helmet: 'Small (black)',
-		note: 'Lander på Gardermoen ca. 19:20.'
+		note: 'Lander på Gardermoen ca. 19:20, og hentes av en snill sjåfør som er villig til å hente henne.'
 	},
 	{
 		name: 'Ylva Karoline N. Svartnes',
@@ -291,22 +289,13 @@ export const people: Person[] = [
 		helmet: 'Medium (yellow)'
 	},
 	{
-		name: 'Hedda',
-		departure: 'fredag',
-		licence: 'ukjent',
-		kayak: true,
-		vest: true,
-		helmet: 'Medium',
-		note: 'Ikke i den opprinnelige påmeldingen. Bil og førerkort er ikke avklart.'
-	},
-	{
 		name: 'Birk',
 		departure: 'uavklart',
 		licence: 'ukjent',
 		kayak: null,
 		vest: null,
 		helmet: null,
-		note: 'Kommer kanskje, ikke bekreftet.'
+		note: 'Kommer kanskje søndag.'
 	},
 	{
 		name: 'Claudia',
@@ -315,14 +304,23 @@ export const people: Person[] = [
 		kayak: null,
 		vest: null,
 		helmet: null,
-		note: 'Kommer kanskje, ikke bekreftet.'
+		note: 'Kommer kanskje søndag.'
+	},
+	{
+		name: 'Eirik',
+		departure: 'uavklart',
+		licence: 'ukjent',
+		kayak: null,
+		vest: null,
+		helmet: null,
+		note: 'Kommer kanskje søndag.'
 	}
 ];
 
 /** Ting som ikke er på plass ennå. Fjern punktene etter hvert som de avklares. */
 export const open: string[] = [
-	'Hedda: bil og førerkort er ikke avklart.',
-	'Birk og Claudia: bekreftelse, og all øvrig info hvis de blir med.',
+	'Hvem er den snille sjåføren som henter Maja på Gardermoen fredag kveld?',
+	'Birk, Claudia og Eirik: kommer kanskje søndag. Bekreftelse, og all øvrig info hvis de blir med.',
 	'Leiebilens hengerfeste er bekreftet, men hvor mange kajakker hengeren tar er ikke sjekket.'
 ];
 
