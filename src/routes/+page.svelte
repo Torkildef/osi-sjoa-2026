@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Countdown from '$lib/Countdown.svelte';
 	import Icon from '$lib/Icon.svelte';
+	import PackingList from '$lib/PackingList.svelte';
 	import WaterNow from '$lib/WaterNow.svelte';
 	import { signupFormUrl, trip } from '$lib/config';
 	import { practical, warnings } from '$lib/info';
@@ -140,3 +141,10 @@
 	</div>
 </section>
 
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large">Pakkeliste</h2>
+		<span class="body-small on-surface-variant">Huskes i nettleseren din</span>
+	</div>
+	<PackingList />
+</section>
