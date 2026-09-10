@@ -82,7 +82,6 @@
 						{node.kind === 'putin' || node.kind === 'takeout'
 							? `${featureKinds[node.kind].label} · ${shortName(node.name)}`
 							: node.name}
-						{#if node.grade}<span class="tag primary">{node.grade}</span>{/if}
 						{#if node.kind !== 'putin' && node.kind !== 'takeout' && node.kind !== 'rapid'}
 							<span class="tag">{featureKinds[node.kind].label}</span>
 						{/if}

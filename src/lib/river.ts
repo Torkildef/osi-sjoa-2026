@@ -85,7 +85,7 @@ export const sections: Section[] = [
 		from: 'Put inn – Bru-bru',
 		to: 'Take out Bru-bru / put inn Playrun',
 		description:
-			'Fra bru til bru. Jevn strøm hele veien, aldri vanskeligere enn II+. Ingen stryk har fått navn, for ingen har rukket å bli redde.',
+			'Fra bru til bru. Jevn strøm hele veien, aldri vanskeligere enn II+. Ingen stryk har fått navn, for ingen har rukket å bli reddet.',
 		flowNote: 'Snillere med lite vann. Med mye vann går kilometerne fort.',
 		features: []
 	},
@@ -104,7 +104,6 @@ export const sections: Section[] = [
 			{
 				name: 'Golfstrømmen',
 				kind: 'rapid',
-				grade: 'II+',
 				at: 0.08,
 				coords: null,
 				note: 'Oppkalt etter en Golf som ble tatt av strømmen. Stort hull til venstre – hold deg midt i elva. Bilen holdt ikke linja.'
@@ -112,7 +111,6 @@ export const sections: Section[] = [
 			{
 				name: 'Høystakkene',
 				kind: 'rapid',
-				grade: 'II',
 				at: 0.3,
 				coords: null,
 				note: 'Store, ufarlige bølger. Ren fornøyelse.'
@@ -120,7 +118,6 @@ export const sections: Section[] = [
 			{
 				name: 'Sjokoladejuvet',
 				kind: 'rapid',
-				grade: 'III',
 				at: 0.65,
 				coords: null,
 				note: 'Elva smalner og stryka henger sammen. Hjertet av Playrun.'
@@ -135,7 +132,6 @@ export const sections: Section[] = [
 			{
 				name: 'Kinahullet',
 				kind: 'rapid',
-				grade: 'III',
 				at: 0.86,
 				coords: null,
 				note: 'Rett etter brua. Linja er midt-venstre. Ikke midt, ikke helt venstre.'

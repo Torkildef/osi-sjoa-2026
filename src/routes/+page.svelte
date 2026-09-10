@@ -3,7 +3,7 @@
 	import Icon from '$lib/Icon.svelte';
 	import WaterNow from '$lib/WaterNow.svelte';
 	import { signupFormUrl, trip } from '$lib/config';
-	import { practical } from '$lib/info';
+	import { practical, warnings } from '$lib/info';
 	import { borrowsGear, cars, confirmed, fridaySeats, unconfirmed } from '$lib/participants';
 	import { photos } from '$lib/photos';
 	import { schedule } from '$lib/schedule';
@@ -103,10 +103,20 @@
 		<h2 class="title-large">Praktisk</h2>
 	</div>
 	<div class="grid wide">
+		{#each warnings as w (w.title)}
+			<div class="card warning-card">
+				<span class="info-emoji">{w.emoji}</span>
+				<div>
+					<div class="headline-small">{w.title}</div>
+					<div class="body-medium">{w.text}</div>
+				</div>
+			</div>
+		{/each}
 		{#each practical as card (card.title)}
 			<div class="card info-card">
 				<span class="info-emoji">{card.emoji}</span>
-				<h3 class="title-medium">{card.title}</h3>
+				<div class="overline">{card.title}</div>
+				<div class="info-lead">{card.lead}</div>
 				<ul>
 					{#each card.lines as line (line)}
 						<li>{line}</li>

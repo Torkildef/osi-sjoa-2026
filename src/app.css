@@ -1340,7 +1340,29 @@ dl.qa dd {
 }
 
 .info-card .info-emoji {
-	font-size: 1.6rem;
+	font-size: 1.8rem;
+	line-height: 1;
+}
+
+.info-card .info-lead {
+	font-size: 1.2rem;
+	font-weight: 800;
+	line-height: 1.25;
+	letter-spacing: -0.01em;
+}
+
+.warning-card {
+	grid-column: 1 / -1;
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background: var(--error-container);
+	color: var(--on-error-container);
+	border: 2px solid var(--error);
+}
+
+.warning-card .info-emoji {
+	font-size: 2.4rem;
 	line-height: 1;
 }
 
