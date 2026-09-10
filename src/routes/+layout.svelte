@@ -52,5 +52,4 @@
 <footer class="site-footer">
 	<span>{trip.organiser} · {trip.title}</span>
 	<span>Kart: © OpenStreetMap, Kartverket · Vannføring: NVE</span>
-	<span>Laget av Torkild</span>
 </footer>
