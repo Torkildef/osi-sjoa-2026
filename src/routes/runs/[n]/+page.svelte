@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
-	import { isRookie, runs } from '$lib/runs';
+	import { isRookie, playrunGroups, runs } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -9,6 +9,7 @@
 	const run = $derived(data.run);
 	const paddlers = $derived(run.groups.flatMap((g) => g.members));
 	const rookies = $derived(paddlers.filter(isRookie).length);
+	const playrun = $derived(playrunGroups(run));
 	const prev = $derived(runs.find((r) => r.n === run.n - 1));
 	const next = $derived(runs.find((r) => r.n === run.n + 1));
 </script>
@@ -32,25 +33,25 @@
 <div class="stats">
 	<div class="stat accent">
 		<div class="value">{paddlers.length}</div>
-		<div class="label"><Icon name="kayaking" size={16} /> På elva</div>
+		<div class="label"><Icon name="kayaking" size={16} /> Bru-bru</div>
 	</div>
 	<div class="stat">
 		<div class="value">{paddlers.length - rookies}</div>
-		<div class="label"><Icon name="checkCircle" size={16} /> Erfarne</div>
+		<div class="label"><Icon name="waves" size={16} /> Playrun</div>
 	</div>
 	<div class="stat">
 		<div class="value">{rookies}</div>
 		<div class="label"><Icon name="person" size={16} /> Rookies</div>
 	</div>
 	<div class="stat">
-		<div class="value">{run.shuttle.length}</div>
-		<div class="label"><Icon name="directionsCar" size={16} /> Biler i shuttle</div>
+		<div class="value">{run.before.length}</div>
+		<div class="label"><Icon name="directionsCar" size={16} /> Biler</div>
 	</div>
 </div>
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> På elva</h2>
+		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> Bru-bru</h2>
 	</div>
 	<div class="grid">
 		{#each run.groups as group (group.name)}
@@ -71,33 +72,67 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Shuttle</h2>
+		<h2 class="title-large"><Icon name="waves" size={22} class="primary-text" /> Playrun</h2>
+		<p class="body-small on-surface-variant">Samme grupper, uten rookiene.</p>
+	</div>
+	<div class="grid">
+		{#each playrun as group (group.name)}
+			<div class="card">
+				<div class="card-head">
+					<h3 class="title-medium">{group.name}</h3>
+					<span class="tag primary">{group.members.length}</span>
+				</div>
+				<div class="chip-row">
+					{#each group.members as name (name)}<span class="chip tonal">{name}</span>{/each}
+				</div>
+			</div>
+		{/each}
+	</div>
+</section>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Før: bilene til Kruke</h2>
+		<p class="body-small on-surface-variant">Mens rookiene varmer opp ved put inn.</p>
 	</div>
 	<div class="table-wrap">
 		<table class="data">
 			<thead>
-				<tr>
-					<th scope="col">Bil</th>
-					<th scope="col">Sjåfør</th>
-					<th scope="col">Merknad</th>
-				</tr>
+				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Merknad</th></tr>
 			</thead>
 			<tbody>
-				{#each run.shuttle as s (s.car)}
+				{#each run.before as s (s.car)}
 					<tr>
 						<td class="name">{s.car}</td>
-						<td>
-							{s.driver}
-							{#if s.own}<span class="tag success">Egen bil</span>{/if}
-						</td>
+						<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
 						<td class="wrap">{s.note ?? ''}</td>
 					</tr>
 				{/each}
 			</tbody>
 		</table>
 	</div>
-	<p class="footnote">
-		Sitter på: {run.riders.join(', ')}. Står igjen på put inn: {run.stays.join(', ')}.
-	</p>
-	<p class="footnote">{run.rackNote}</p>
+</section>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Etter Bru-bru</h2>
+		<p class="body-small on-surface-variant">Rookiene i land, de erfarne padler Playrun.</p>
+	</div>
+	<div class="table-wrap">
+		<table class="data">
+			<thead>
+				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Dit</th></tr>
+			</thead>
+			<tbody>
+				{#each run.after as s (s.car)}
+					<tr>
+						<td class="name">{s.car}</td>
+						<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
+						<td class="wrap">{s.note ?? ''}</td>
+					</tr>
+				{/each}
+			</tbody>
+		</table>
+	</div>
+	<p class="footnote">{run.afterNote}</p>
 </section>

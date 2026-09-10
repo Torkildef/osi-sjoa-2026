@@ -2,18 +2,47 @@
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
 	import {
+		everyone,
 		experienced,
 		facts,
-		plans,
+		isRookie,
 		rookiesRun1,
 		rookiesRun2,
 		runs,
+		steps,
+		summaryFor,
 		verdict,
 		waiting
 	} from '$lib/runs';
 
-	/** Får Tiril tak i takstativ? Endrer kajakkregnestykket i alle planene. */
+	const KEY = 'sjoa:meg';
+
+	/** Får Tiril tak i takstativ? Endrer kajakkregnestykket. */
 	let rack = $state(false);
+	/** Hvem som ser på. Huskes i nettleseren. */
+	let me = $state('');
+
+	$effect(() => {
+		try {
+			const saved = localStorage.getItem(KEY);
+			if (saved && everyone.includes(saved)) me = saved;
+		} catch {
+			/* ingen lagring */
+		}
+	});
+
+	const pick = (name: string) => {
+		me = me === name ? '' : name;
+		try {
+			if (me) localStorage.setItem(KEY, me);
+			else localStorage.removeItem(KEY);
+		} catch {
+			/* ingen lagring */
+		}
+	};
+
+	const day = $derived(steps(rack));
+	const mine = $derived(me ? day.map((s, i) => (s.names.includes(me) ? i : -1)).filter((i) => i >= 0) : []);
 </script>
 
 <svelte:head>
@@ -24,7 +53,9 @@
 <div class="page-head">
 	<div>
 		<h1 class="headline-large">Lørdag på elva</h1>
-		<p class="body-medium on-surface-variant">Tre måter å gjøre det på. Grunnplanen er anbefalt.</p>
+		<p class="body-medium on-surface-variant">
+			To runs. Bru-bru for alle, så Playrun for de erfarne. Rookiene padler ett run og kjører på det andre.
+		</p>
 	</div>
 	<div class="chip-row">
 		{#each runs as run (run.n)}
@@ -34,13 +65,46 @@
 </div>
 
 <section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="person" size={22} class="primary-text" /> Velg deg selv</h2>
+	</div>
+	<div class="chip-row">
+		{#each everyone as name (name)}
+			<button
+				type="button"
+				class="chip"
+				class:selected={me === name}
+				class:rookie={me !== name && isRookie(name)}
+				class:tonal={me !== name && !isRookie(name)}
+				aria-pressed={me === name}
+				onclick={() => pick(name)}>{name}</button
+			>
+		{/each}
+	</div>
+	{#if me}
+		<div class="card me-card">
+			<div class="card-head">
+				<h3 class="title-medium">Din dag, {me}</h3>
+				<span class="tag" class:rookie={isRookie(me)} class:primary={!isRookie(me)}>
+					{isRookie(me) ? 'Rookie' : experienced.includes(me) ? 'Erfaren' : 'Med'}
+				</span>
+			</div>
+			<ul class="facts">
+				{#each summaryFor(me) as line, i (i)}<li>{line}</li>{/each}
+			</ul>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">
+				Dine steg er uthevet under: {mine.map((i) => i + 1).join(', ')}.
+			</p>
+		</div>
+	{/if}
+</section>
+
+<section class="block">
 	<div class="card rack-card">
 		<div>
 			<h2 class="title-medium">Får Tiril tak i takstativ?</h2>
 			<p class="body-small on-surface-variant">
-				{rack
-					? 'Ja: 4 kajakker til på Tirils bil. Alle 17 går i én tur.'
-					: 'Nei: 16 kajakkplasser til 17 kajakker. Kajakk 17 hentes fra Kruke underveis.'}
+				{rack ? 'Ja: 4 kajakker til på Tirils bil. Ingen ekstraturer.' : 'Nei: Carolines bil tar to korte ekstraturer.'}
 			</p>
 		</div>
 		<button
@@ -59,63 +123,36 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="info" size={22} class="primary-text" /> Det vi vet</h2>
+		<h2 class="title-large"><Icon name="schedule" size={22} class="primary-text" /> Dagen, steg for steg</h2>
 	</div>
-	<ul class="facts">
-		{#each facts(rack) as line, i (i)}
-			<li>{line}</li>
+	<ol class="timeline" class:filtered={!!me}>
+		{#each day as step, i (i)}
+			<li class="entry" class:mine={me && step.names.includes(me)}>
+				<span class="when">Steg {i + 1}</span>
+				<div class="what">
+					<h3 class="title-medium">{step.what}</h3>
+					{#if step.who}<p>{step.who}</p>{/if}
+				</div>
+			</li>
 		{/each}
-	</ul>
+	</ol>
 </section>
-
-{#each plans as plan, p (plan.id)}
-	<section class="block plan" id={plan.id}>
-		<div class="section-head">
-			<div>
-				<h2 class="title-large">
-					<Icon name="kayaking" size={22} class="primary-text" />
-					{plan.title}
-					{#if p === 0}<span class="tag success">Anbefalt</span>{/if}
-				</h2>
-				<p class="body-medium on-surface-variant">{plan.tagline}</p>
-			</div>
-		</div>
-		<ol class="timeline">
-			{#each plan.steps(rack) as step, i (i)}
-				<li class="entry">
-					<span class="when">Steg {i + 1}</span>
-					<div class="what">
-						<h3 class="title-medium">{step.what}</h3>
-						{#if step.who}<p>{step.who}</p>{/if}
-					</div>
-				</li>
-			{/each}
-		</ol>
-		<div class="grid wide proscons">
-			<div class="card">
-				<h3 class="title-small"><Icon name="checkCircle" size={18} class="primary-text" /> For</h3>
-				<ul class="pros">
-					{#each plan.pros as line, i (i)}<li>{line}</li>{/each}
-				</ul>
-			</div>
-			<div class="card">
-				<h3 class="title-small"><Icon name="warning" size={18} class="warn-text" /> Mot</h3>
-				<ul class="cons">
-					{#each plan.cons as line, i (i)}<li>{line}</li>{/each}
-				</ul>
-			</div>
-		</div>
-	</section>
-{/each}
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="home" size={22} class="primary-text" /> Kruke som venterom</h2>
+		<h2 class="title-large"><Icon name="info" size={22} class="primary-text" /> Det vi vet</h2>
 	</div>
 	<ul class="facts">
-		{#each waiting as line, i (i)}
-			<li>{line}</li>
-		{/each}
+		{#each facts(rack) as line, i (i)}<li>{line}</li>{/each}
+	</ul>
+</section>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="localCafe" size={22} class="primary-text" /> Hvor man venter</h2>
+	</div>
+	<ul class="facts">
+		{#each waiting as line, i (i)}<li>{line}</li>{/each}
 	</ul>
 </section>
 
@@ -124,9 +161,7 @@
 		<h2 class="title-large"><Icon name="explore" size={22} class="primary-text" /> Vurdering</h2>
 	</div>
 	<ol class="logic">
-		{#each verdict as line, i (i)}
-			<li>{line}</li>
-		{/each}
+		{#each verdict as line, i (i)}<li>{line}</li>{/each}
 	</ol>
 </section>
 
@@ -141,9 +176,7 @@
 				<span class="tag primary">{experienced.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each experienced as name (name)}
-					<span class="chip tonal">{name}</span>
-				{/each}
+				{#each experienced as name (name)}<span class="chip tonal">{name}</span>{/each}
 			</div>
 		</div>
 		<div class="card">
@@ -152,11 +185,9 @@
 				<span class="tag rookie">{rookiesRun1.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each rookiesRun1 as name (name)}
-					<span class="chip rookie">{name}</span>
-				{/each}
+				{#each rookiesRun1 as name (name)}<span class="chip rookie">{name}</span>{/each}
 			</div>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Kjører shuttle på run 2.</p>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Kjører på run 2.</p>
 		</div>
 		<div class="card">
 			<div class="card-head">
@@ -164,11 +195,9 @@
 				<span class="tag rookie">{rookiesRun2.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each rookiesRun2 as name (name)}
-					<span class="chip rookie">{name}</span>
-				{/each}
+				{#each rookiesRun2 as name (name)}<span class="chip rookie">{name}</span>{/each}
 			</div>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Kjører shuttle på run 1.</p>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Kjører på run 1.</p>
 		</div>
 	</div>
 </section>

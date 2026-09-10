@@ -1601,6 +1601,24 @@ section.plan .section-head h2 .tag {
 	margin-left: 0.35rem;
 }
 
+.me-card {
+	margin-top: 0.85rem;
+}
+
+ol.timeline.filtered li.entry {
+	opacity: 0.45;
+}
+
+ol.timeline.filtered li.entry.mine {
+	opacity: 1;
+	background: var(--primary-container);
+	color: var(--on-primary-container);
+}
+
+ol.timeline.filtered li.entry.mine .what p {
+	color: var(--on-primary-container);
+}
+
 .proscons {
 	margin-top: 0.75rem;
 }
