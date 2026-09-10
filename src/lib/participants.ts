@@ -335,7 +335,7 @@ export const faq: { q: string; a: string }[] = [
 ];
 
 /** Retur søndag, med forbehold. */
-export const returnNote = 'Vi er vanligvis hjemme søndag mellom 19 og 21. Regn med en lang helg.';
+export const returnNote = 'Vi er hjemme i Oslo søndag ca. 20–21. Regn med en lang helg.';
 
 // ---- Utledet -----------------------------------------------------------------
 

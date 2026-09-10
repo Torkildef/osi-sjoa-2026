@@ -50,14 +50,37 @@ export const schedule: ScheduleEntry[] = [
 	},
 	{
 		day: 'Lørdag',
-		title: 'Grillkveld på Kruke',
+		time: '18:00',
+		title: 'BBQ på Kruke',
 		note: 'Ta med det du vil ha på grillen.',
 		place: 'Kruke gård'
 	},
 	{
+		day: 'Lørdag',
+		time: 'Etterpå',
+		title: 'Booty-seremoni',
+		note: 'Svømte du? Da vet du hva som venter.'
+	},
+	{
+		day: 'Lørdag',
+		time: 'Utover kvelden',
+		title: 'Fest og mingling på Kruke'
+	},
+	{
 		day: 'Søndag',
-		title: 'Padling og hjemreise',
-		note: 'Birk, Claudia og Eirik kommer kanskje innom. Vi er vanligvis hjemme i Oslo mellom 19 og 21. Regn med en lang helg.'
+		time: 'Til 11:00',
+		title: 'Frokost og utvask'
+	},
+	{
+		day: 'Søndag',
+		title: 'Padling',
+		note: 'Birk, Claudia og Eirik kommer kanskje innom.'
+	},
+	{
+		day: 'Søndag',
+		time: 'ca. 20–21',
+		title: 'Hjemme i Oslo',
+		note: 'Regn med en lang helg.'
 	}
 ];
 

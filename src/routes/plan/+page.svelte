@@ -40,7 +40,7 @@
 			{#each group.entries as entry ((entry.time ?? '') + entry.title)}
 				<li class="entry">
 					{#if entry.time}
-						<span class="when">{entry.time}</span>
+						<span class="when" class:vague={!/^\d/.test(entry.time)}>{entry.time}</span>
 					{:else}
 						<span class="when vague">I løpet av dagen</span>
 					{/if}
