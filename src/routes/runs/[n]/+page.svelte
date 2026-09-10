@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
-	import { isRookie, playrunGroups, runs } from '$lib/runs';
+	import { isRookie, runs } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -9,7 +9,6 @@
 	const run = $derived(data.run);
 	const paddlers = $derived(run.groups.flatMap((g) => g.members));
 	const rookies = $derived(paddlers.filter(isRookie).length);
-	const playrun = $derived(playrunGroups(run));
 	const prev = $derived(runs.find((r) => r.n === run.n - 1));
 	const next = $derived(runs.find((r) => r.n === run.n + 1));
 </script>
@@ -45,7 +44,7 @@
 	</div>
 	<div class="stat">
 		<div class="value">{run.before.length}</div>
-		<div class="label"><Icon name="directionsCar" size={16} /> Biler</div>
+		<div class="label"><Icon name="directionsCar" size={16} /> Biler i shuttle</div>
 	</div>
 </div>
 
@@ -72,28 +71,8 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="waves" size={22} class="primary-text" /> Playrun</h2>
-		<p class="body-small on-surface-variant">Samme grupper, uten rookiene.</p>
-	</div>
-	<div class="grid">
-		{#each playrun as group (group.name)}
-			<div class="card">
-				<div class="card-head">
-					<h3 class="title-medium">{group.name}</h3>
-					<span class="tag primary">{group.members.length}</span>
-				</div>
-				<div class="chip-row">
-					{#each group.members as name (name)}<span class="chip tonal">{name}</span>{/each}
-				</div>
-			</div>
-		{/each}
-	</div>
-</section>
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Før: bilene til Kruke</h2>
-		<p class="body-small on-surface-variant">Mens rookiene varmer opp ved put inn.</p>
+		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Shuttle før</h2>
+		<p class="body-small on-surface-variant">De erfarne setter den mens rookiene varmer opp.</p>
 	</div>
 	<div class="table-wrap">
 		<table class="data">

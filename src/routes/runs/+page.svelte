@@ -54,7 +54,7 @@
 	<div>
 		<h1 class="headline-large">Lørdag på elva</h1>
 		<p class="body-medium on-surface-variant">
-			To runs. Bru-bru for alle, så Playrun for de erfarne. Rookiene padler ett run og kjører på det andre.
+			To runs. Bru-bru for alle, så Playrun for de erfarne. Rookiene padler ett run og venter på Kruke på det andre.
 		</p>
 	</div>
 	<div class="chip-row">
@@ -187,7 +187,7 @@
 			<div class="chip-row">
 				{#each rookiesRun1 as name (name)}<span class="chip rookie">{name}</span>{/each}
 			</div>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Kjører på run 2.</p>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 2.</p>
 		</div>
 		<div class="card">
 			<div class="card-head">
@@ -197,7 +197,7 @@
 			<div class="chip-row">
 				{#each rookiesRun2 as name (name)}<span class="chip rookie">{name}</span>{/each}
 			</div>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Kjører på run 1.</p>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 1.</p>
 		</div>
 	</div>
 </section>
