@@ -28,7 +28,7 @@ FOR HVERT ISSUE, eldst først:
 2. Ellers: gjør endringen. Hold deg til det prompten ber om, i samme korte og lekne tone som resten av siden. Kjør `npm ci`, `npm run check` og `npm run build`, og til slutt `node scripts/vakt.mjs <basecommit> HEAD` der basecommit er standardgrenen før dine endringer. Alt må være grønt før du går videre. Feiler noe, fiks det; klarer du ikke, avvis issuet som i punkt 1 og forklar.
 
 3. Lever:
-   - Har du BARE endret datafiler – src/lib/participants.ts, src/lib/schedule.ts, src/lib/info.ts, src/lib/packing.ts, src/lib/river.ts, src/lib/places.ts, src/lib/config.ts, eller filer under static/bilder – commit og push rett til standardgrenen.
+   - Har du BARE endret datafiler – src/lib/participants.ts, src/lib/schedule.ts, src/lib/info.ts, src/lib/packing.ts, src/lib/river.ts, src/lib/places.ts, src/lib/config.ts, src/lib/runs.ts, eller filer under static/bilder – commit og push rett til standardgrenen.
    - Ellers: lag grenen `admin/<issuenummer>`, push, og opprett en pull request mot standardgrenen med en kort beskrivelse. Ikke merge selv.
    Commit-meldinger på norsk, korte, i imperativ.
 

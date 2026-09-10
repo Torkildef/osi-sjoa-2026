@@ -1559,6 +1559,50 @@ ul.packing-list {
 	color: var(--on-surface-variant);
 }
 
+/* ---- Runs --------------------------------------------------------------- */
+
+ol.logic {
+	margin: 0;
+	padding-left: 1.4rem;
+	display: grid;
+	gap: 0.55rem;
+	font-size: 0.95rem;
+	max-width: 46rem;
+}
+
+ol.logic li::marker {
+	font-weight: 800;
+	color: var(--primary);
+}
+
+ol.crew {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.4rem;
+}
+
+ol.crew li {
+	display: grid;
+	grid-template-columns: 4rem 1fr;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.crew-role {
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--on-surface-variant);
+}
+
+ol.crew li.lead .chip {
+	border: 2px solid var(--primary);
+	font-weight: 800;
+}
+
 /* ---- Ofte stilte spørsmål ----------------------------------------------- */
 
 .faq-card {

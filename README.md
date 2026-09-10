@@ -204,7 +204,7 @@ En Routine i Claude Code on the web (oppskrift og prompt i
 [`docs/admin-routine.md`](docs/admin-routine.md)) kjører hver hele time på dagtid, leser åpne
 `prompt`-issues, gjør jobben og lukker issuet med en oppsummering. Endringer i
 datafilene (`participants.ts`, `schedule.ts`, `info.ts`, `packing.ts`, `river.ts`,
-`places.ts`, `config.ts`) pushes rett til standardgrenen; alt annet kommer som pull
+`places.ts`, `config.ts`, `runs.ts`) pushes rett til standardgrenen; alt annet kommer som pull
 request. Prompter som bryter reglene – hemmeligheter, telefonnumre, endringer i
 `/admin` eller CI, sletting, sjikane – avvises med merkelappen `avvist` og en forklaring.
 
