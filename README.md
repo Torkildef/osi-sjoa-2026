@@ -200,7 +200,8 @@ det, får en signert cookie i 30 dager. Hver prompt blir et GitHub-issue med mer
 `prompt`, opprettet med `GITHUB_TOKEN` – et fine-grained token begrenset til dette
 repoet med *Issues: Read and write*. Tokenet når aldri nettleseren.
 
-En Routine i Claude Code on the web kjører hver hele time på dagtid, leser åpne
+En Routine i Claude Code on the web (oppskrift og prompt i
+[`docs/admin-routine.md`](docs/admin-routine.md)) kjører hver hele time på dagtid, leser åpne
 `prompt`-issues, gjør jobben og lukker issuet med en oppsummering. Endringer i
 datafilene (`participants.ts`, `schedule.ts`, `info.ts`, `packing.ts`, `river.ts`,
 `places.ts`, `config.ts`) pushes rett til standardgrenen; alt annet kommer som pull
