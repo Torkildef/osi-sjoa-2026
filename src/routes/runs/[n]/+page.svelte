@@ -99,4 +99,5 @@
 	<p class="footnote">
 		Sitter på: {run.riders.join(', ')}. Står igjen på put inn: {run.stays.join(', ')}.
 	</p>
+	<p class="footnote">{run.rackNote}</p>
 </section>

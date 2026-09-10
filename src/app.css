@@ -1575,32 +1575,63 @@ ol.logic li::marker {
 	color: var(--primary);
 }
 
-ol.crew {
-	list-style: none;
-	margin: 0;
-	padding: 0;
-	display: grid;
-	gap: 0.4rem;
-}
-
-ol.crew li {
-	display: grid;
-	grid-template-columns: 4rem 1fr;
+.rack-card {
+	display: flex;
+	flex-wrap: wrap;
 	align-items: center;
-	gap: 0.5rem;
+	justify-content: space-between;
+	gap: 0.75rem 1rem;
 }
 
-.crew-role {
-	font-size: 0.7rem;
-	font-weight: 700;
-	letter-spacing: 0.06em;
-	text-transform: uppercase;
+ul.facts {
+	margin: 0;
+	padding-left: 1.2rem;
+	display: grid;
+	gap: 0.45rem;
+	font-size: 0.95rem;
+	max-width: 46rem;
+}
+
+ul.facts li::marker {
+	color: var(--primary);
+}
+
+section.plan .section-head h2 .tag {
+	vertical-align: middle;
+	margin-left: 0.35rem;
+}
+
+.proscons {
+	margin-top: 0.75rem;
+}
+
+.proscons h3 {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin-bottom: 0.5rem;
+}
+
+ul.pros,
+ul.cons {
+	margin: 0;
+	padding-left: 1.2rem;
+	display: grid;
+	gap: 0.35rem;
+	font-size: 0.9rem;
 	color: var(--on-surface-variant);
 }
 
-ol.crew li.lead .chip {
-	border: 2px solid var(--primary);
-	font-weight: 800;
+ul.pros li::marker {
+	color: var(--primary);
+}
+
+ul.cons li::marker {
+	color: var(--error);
+}
+
+.warn-text {
+	color: var(--error);
 }
 
 /* ---- Ofte stilte spørsmål ----------------------------------------------- */
