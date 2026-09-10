@@ -17,69 +17,69 @@ export type ScheduleEntry = {
 export const schedule: ScheduleEntry[] = [
 	{
 		day: 'Torsdag',
-		title: 'De første reiser',
+		title: '🚗 De første reiser',
 		note: 'Caroline tar bilen sin. Bru-bru får en dag ekstra.',
 		people: ['Caroline', 'Knut-Erik', 'Maren']
 	},
 	{
 		day: 'Fredag',
 		time: '16:00',
-		title: 'Oppmøte ved kajakkrommet',
+		title: '🛶 Oppmøte ved kajakkrommet',
 		note: 'Rolf E. Stenersens allé 21, Sogn studentby. Leiebilen med hengeren, Wiktor, Helene og Tiril fyller opp og drar samlet.'
 	},
 	{
 		day: 'Fredag',
 		time: '19:20',
-		title: 'Maja lander på Gardermoen',
+		title: '✈️ Maja lander på Gardermoen',
 		note: 'Hentes av en snill sjåfør som er villig til å hente henne.',
 		people: ['Maja']
 	},
 	{
 		day: 'Fredag',
 		time: '21:00',
-		title: 'Ankomst Kruke gård',
+		title: '🏡 Ankomst Kruke gård',
 		note: 'Omtrentlig. Felles samling når alle er fremme.',
 		place: 'Kruke gård'
 	},
 	{
 		day: 'Lørdag',
 		time: '09:00',
-		title: 'Avreise til Bru-bru',
+		title: '🛶 Avreise til Bru-bru',
 		note: 'Hvem som er med kommer senere.',
 		place: 'Put inn – Bru-bru'
 	},
 	{
 		day: 'Lørdag',
 		time: '18:00',
-		title: 'BBQ på Kruke',
+		title: '🍖 BBQ på Kruke',
 		note: 'Ta med det du vil ha på grillen.',
 		place: 'Kruke gård'
 	},
 	{
 		day: 'Lørdag',
 		time: 'Etterpå',
-		title: 'Booty-seremoni',
+		title: '🏆 Booty-seremoni',
 		note: 'Svømte du? Da vet du hva som venter.'
 	},
 	{
 		day: 'Lørdag',
 		time: 'Utover kvelden',
-		title: 'Fest og mingling på Kruke'
+		title: '🎉 Fest og mingling på Kruke'
 	},
 	{
 		day: 'Søndag',
 		time: 'Til 11:00',
-		title: 'Frokost og utvask'
+		title: '🥞 Frokost og utvask'
 	},
 	{
 		day: 'Søndag',
-		title: 'Padling',
+		title: '🛶 Padling',
 		note: 'Birk, Claudia og Eirik kommer kanskje innom.'
 	},
 	{
 		day: 'Søndag',
 		time: 'ca. 20–21',
-		title: 'Hjemme i Oslo',
+		title: '🏠 Hjemme i Oslo',
 		note: 'Regn med en lang helg.'
 	}
 ];
