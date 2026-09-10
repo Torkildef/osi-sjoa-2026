@@ -18,13 +18,21 @@ export const schedule: ScheduleEntry[] = [
 	{
 		day: 'Torsdag',
 		title: 'De første reiser',
-		note: 'Noen drar allerede torsdag. Se hvem under Logistikk.'
+		note: 'Caroline tar bilen sin. Bru-bru får en dag ekstra.',
+		people: ['Caroline', 'Knut-Erik', 'Maren']
 	},
 	{
 		day: 'Fredag',
 		time: '16:00',
 		title: 'Oppmøte ved kajakkrommet',
-		note: 'Rolf E. Stenersens allé 21, Sogn studentby. Bilene fyller opp og drar samlet.'
+		note: 'Rolf E. Stenersens allé 21, Sogn studentby. Leiebilen med hengeren, Wiktor, Helene og Tiril fyller opp og drar samlet.'
+	},
+	{
+		day: 'Fredag',
+		time: '19:20',
+		title: 'Maja lander på Gardermoen',
+		note: 'Eskil og Sindre venter, og de tre kjører opp etterpå.',
+		people: ['Eskil', 'Sindre', 'Maja']
 	},
 	{
 		day: 'Fredag',
@@ -43,13 +51,13 @@ export const schedule: ScheduleEntry[] = [
 	{
 		day: 'Lørdag',
 		title: 'Grillkveld på Kruke',
-		note: 'Ta med det du vil ha på grillen.',
+		note: 'Ta med det du vil ha på grillen. Connor drar hjem i løpet av kvelden.',
 		place: 'Kruke gård'
 	},
 	{
 		day: 'Søndag',
 		title: 'Padling og hjemreise',
-		note: 'Vi er vanligvis hjemme i Oslo mellom 19 og 21.'
+		note: 'Vi er vanligvis hjemme i Oslo mellom 19 og 21. Regn med en lang helg.'
 	}
 ];
 

@@ -30,7 +30,7 @@ export const practical: InfoCard[] = [
 		title: 'Overnatting',
 		lines: [
 			`${trip.base} i ${trip.location}`,
-			'Sengetøy er inkludert, og det er et lite kjøkken',
+			'Sengetøy er inkludert, så la soveposen ligge hjemme. Det er et lite kjøkken',
 			'Vær grei med stedet og verten vår, Pål'
 		],
 		link: { label: 'Vis på kartet', href: `/kart?sted=${encodeURIComponent(trip.base)}` }
