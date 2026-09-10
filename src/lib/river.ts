@@ -85,11 +85,9 @@ export const sections: Section[] = [
 		from: 'Put inn – Bru-bru',
 		to: 'Take out Bru-bru / put inn Playrun',
 		description:
-			'Fra bru til bru, akkurat som navnet lover. Rolig nok til at du rekker å nyte utsikten, og akkurat nok strøm til at du føler deg som en helt når du treffer bakevja. Kajakken flyter stort sett dit den skal.',
-		features: [
-			// Fyll inn stryk og nøkkelpunkter her etter hvert. Eksempel:
-			// { name: 'Første stryket', kind: 'rapid', grade: 'II+', at: 0.3, coords: null, note: 'Hold høyre.' },
-		]
+			'Fra bru til bru. Jevn strøm hele veien, aldri vanskeligere enn II+. Ingen stryk har fått navn, for ingen har rukket å bli redde.',
+		flowNote: 'Snillere med lite vann. Med mye vann går kilometerne fort.',
+		features: []
 	},
 	{
 		id: 'playrun',
@@ -98,80 +96,49 @@ export const sections: Section[] = [
 		color: '#c2410c',
 		from: 'Take out Bru-bru / put inn Playrun',
 		to: 'Take out – Playrun',
-		description:
-			'Sjoas svar på en fornøyelsespark: bølger å surfe på, hull å bli kjent med, og bakevjer der du kan tenke over livsvalgene dine. Rullekrav, fordi elva ikke tar imot unnskyldninger.',
+		description: 'Sjoas klassiker. Bølger, hull og bakevjer på rekke. Rullekrav, for elva tar ikke unnskyldninger.',
 		tags: ['Rullekrav'],
 		lengthKm: 6.5,
-		flowNote: 'Samme linjer fra 25 til 100 m³/s – det blir bare mer av alt.',
-		sourceNote: 'Rekkefølgen stemmer, plasseringen på kartet er omtrentlig til noen padler med GPS.',
+		flowNote: 'Samme linjer fra 25 til 100 m³/s. Det blir bare mer av alt.',
 		features: [
 			{
-				name: 'Golf Stream',
+				name: 'Golfstrømmen',
 				kind: 'rapid',
 				grade: 'II+',
 				at: 0.08,
 				coords: null,
-				note: 'Første stryket. Stort hull til venstre – hold deg midt i elva, med mindre du vil hilse på det.'
+				note: 'Oppkalt etter en Golf som ble tatt av strømmen. Stort hull til venstre – hold deg midt i elva. Bilen holdt ikke linja.'
 			},
 			{
-				name: 'Micro-surf',
-				kind: 'play',
-				at: 0.2,
-				coords: null,
-				note: 'Liten, snill bølge. Perfekt for å late som du kan surfe.'
-			},
-			{
-				name: 'Haystacks',
+				name: 'Høystakkene',
 				kind: 'rapid',
 				grade: 'II',
 				at: 0.3,
 				coords: null,
-				note: 'Store, ufarlige bølger på rekke. Ren fornøyelse.'
+				note: 'Store, ufarlige bølger. Ren fornøyelse.'
 			},
 			{
-				name: 'Grønn bølge',
-				kind: 'play',
-				at: 0.5,
-				coords: null,
-				note: 'Grønn surfebølge på venstre side, omtrent halvveis.'
-			},
-			{
-				name: 'Big Bend / Chocolate Canyon',
+				name: 'Sjokoladejuvet',
 				kind: 'rapid',
 				grade: 'III',
 				at: 0.65,
 				coords: null,
-				note: 'Kort kløft der elva smalner og stryka henger sammen. Hjertet av Playrun.'
+				note: 'Elva smalner og stryka henger sammen. Hjertet av Playrun.'
 			},
 			{
-				name: 'Faukstad-bølga',
-				kind: 'play',
-				at: 0.8,
-				coords: null,
-				note: 'Kjent rodeobølge rett før brua. Lite, men kraftig hull rett nedenfor – det vet hva det driver med.'
-			},
-			{
-				name: 'Brua ved Nedre Heidal',
+				name: 'Strikkehoppbrua',
 				kind: 'bridge',
 				at: 0.83,
 				coords: null,
-				note: 'Den eneste brua på strekningen. Vink til publikum.'
+				note: 'Eneste brua på strekningen. Vink til dem som betaler for å falle.'
 			},
 			{
-				name: 'China Hole',
+				name: 'Kinahullet',
 				kind: 'rapid',
 				grade: 'III',
 				at: 0.86,
 				coords: null,
-				note: 'Rett etter brua. Linja er midt-venstre – ikke midt, ikke helt venstre. Ja, det er så presist det blir.'
-			},
-			{
-				name: 'Øyene',
-				kind: 'rapid',
-				grade: 'II',
-				at: 0.93,
-				coords: null,
-				note: 'Elva åpner seg, og du får velge løp rundt øyene. Alle er riktige. Nesten.'
+				note: 'Rett etter brua. Linja er midt-venstre. Ikke midt, ikke helt venstre.'
 			}
 		]
 	}

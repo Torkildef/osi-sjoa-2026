@@ -100,9 +100,7 @@
 			</li>
 			{#if node.kind === 'putin' && section.features.length === 0}
 				<li class="empty-features">
-					<div class="node-note">
-						Ingen navngitte stryk her. Bare deg, elva og en jevn strøm som gjør jobben for deg.
-					</div>
+					<div class="node-note">Bare deg, elva og jevn strøm hele veien.</div>
 				</li>
 			{/if}
 		{/each}
