@@ -5,7 +5,7 @@
 	import WaterNow from '$lib/WaterNow.svelte';
 	import { signupFormUrl, trip } from '$lib/config';
 	import { practical, warnings } from '$lib/info';
-	import { borrowsGear, cars, confirmed, fridaySeats, unconfirmed } from '$lib/participants';
+	import { confirmed, unconfirmed } from '$lib/participants';
 	import { photos } from '$lib/photos';
 	import { schedule } from '$lib/schedule';
 	import type { PageData } from './$types';
@@ -39,6 +39,10 @@
 			<span><Icon name="event" size={18} /> {trip.dates}</span>
 			<span><Icon name="house" size={18} /> {trip.base}, {trip.location}</span>
 			<span><Icon name="schedule" size={18} /> Avreise {trip.meetup.label.toLowerCase()}</span>
+			<a href="/logistikk" class="hero-count">
+				<Icon name="groups" size={18} />
+				{signedUp.length} kommer{maybe.length ? ` · ${maybe.length} kanskje` : ''}
+			</a>
 		</div>
 		<div class="hero-actions">
 			<a class="btn btn-filled" href={signupFormUrl} target="_blank" rel="noopener">
@@ -50,27 +54,6 @@
 				Se planen
 			</a>
 		</div>
-	</div>
-</section>
-
-<section class="block">
-	<div class="stats">
-		<a class="stat accent" href="/logistikk">
-			<div class="value">{signedUp.length}</div>
-			<div class="label"><Icon name="groups" size={16} /> Kommer{maybe.length ? ` · +${maybe.length} kanskje` : ''}</div>
-		</a>
-		<a class="stat" href="/logistikk">
-			<div class="value">{cars.length}</div>
-			<div class="label"><Icon name="directionsCar" size={16} /> Biler</div>
-		</a>
-		<a class="stat" href="/logistikk">
-			<div class="value">{seats.seats}{seats.tight > seats.seats ? `–${seats.tight}` : ''}</div>
-			<div class="label"><Icon name="person" size={16} /> Seter fredag</div>
-		</a>
-		<a class="stat" href="/logistikk">
-			<div class="value">{borrowing}</div>
-			<div class="label"><Icon name="kayaking" size={16} /> Låner utstyr</div>
-		</a>
 	</div>
 </section>
 
@@ -97,6 +80,15 @@
 			</div>
 		</a>
 	{/if}
+</section>
+
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large">Pakkeliste</h2>
+		<span class="body-small on-surface-variant">Huskes i nettleseren din</span>
+	</div>
+	<PackingList />
 </section>
 
 <section class="block">
@@ -139,12 +131,4 @@
 			</div>
 		{/each}
 	</div>
-</section>
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large">Pakkeliste</h2>
-		<span class="body-small on-surface-variant">Huskes i nettleseren din</span>
-	</div>
-	<PackingList />
 </section>

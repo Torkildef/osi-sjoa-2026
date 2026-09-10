@@ -1308,6 +1308,23 @@ dl.qa dd {
 	align-items: center;
 }
 
+.hero .hero-count {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	color: inherit;
+	background: rgb(255 255 255 / 0.18);
+	border-radius: var(--shape-full);
+	padding: 0.15rem 0.7rem;
+	font-size: 0.9rem;
+	backdrop-filter: blur(8px);
+}
+
+.hero .hero-count:hover {
+	text-decoration: none;
+	background: rgb(255 255 255 / 0.28);
+}
+
 .hero .hero-actions {
 	display: flex;
 	flex-wrap: wrap;
