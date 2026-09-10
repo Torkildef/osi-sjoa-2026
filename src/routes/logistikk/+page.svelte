@@ -242,6 +242,7 @@
 						<span class="supporting">{departureLabel(person)}</span>
 					</span>
 					<span class="trailing">
+						{#if person.rookie}<span class="tag rookie">Rookie</span>{/if}
 						{#if car}<span class="tag tertiary">Bil</span>{/if}
 						{#if person.departure === 'uavklart'}<span class="tag warning">Kanskje</span>{/if}
 						<Icon name="keyboardArrowDown" size={22} class="chevron" />

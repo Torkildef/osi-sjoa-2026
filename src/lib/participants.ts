@@ -25,6 +25,8 @@ export type Person = {
 	extraGear?: string;
 	/** Drar hjem før resten. */
 	earlyReturn?: string;
+	/** Første tur med klubben, eller nesten. Merkes i listene. */
+	rookie?: boolean;
 	note?: string;
 };
 
@@ -116,6 +118,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Maren Navarsetes Aaberg',
+		rookie: true,
 		departure: 'torsdag',
 		licence: 'automat',
 		kayak: true,
@@ -124,15 +127,16 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Anneke Kheim',
+		rookie: true,
 		departure: 'fredag',
 		licence: 'manuell',
 		kayak: true,
 		vest: true,
-		helmet: 'Medium (yellow)',
-		note: 'Nybegynner.'
+		helmet: 'Medium (yellow)'
 	},
 	{
 		name: 'Ludvig Bentzen Stenmark',
+		rookie: true,
 		departure: 'fredag',
 		licence: 'manuell',
 		kayak: true,
@@ -149,6 +153,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Sindre Herre Hansen',
+		rookie: true,
 		departure: 'fredag',
 		licence: null,
 		kayak: true,
@@ -157,6 +162,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Martha Irene Førde Bondahl',
+		rookie: true,
 		departure: 'fredag',
 		licence: 'manuell',
 		kayak: true,
@@ -198,6 +204,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Malin Frank',
+		rookie: true,
 		departure: 'fredag',
 		licence: 'manuell',
 		kayak: true,
@@ -215,6 +222,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Tiril Taugbøl-Hansen',
+		rookie: true,
 		departure: 'fredag',
 		licence: 'automat',
 		kayak: true,
@@ -223,6 +231,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Malin Nordli Bernhardsson',
+		rookie: true,
 		departure: 'fredag',
 		licence: null,
 		kayak: true,
@@ -232,6 +241,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Julia Johanne Lie',
+		rookie: true,
 		departure: 'fredag',
 		licence: null,
 		kayak: true,
@@ -257,6 +267,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Ylva Karoline N. Svartnes',
+		rookie: true,
 		departure: 'fredag',
 		licence: 'manuell',
 		kayak: true,
@@ -281,6 +292,7 @@ export const people: Person[] = [
 	},
 	{
 		name: 'Lene Myhre Johansson',
+		rookie: true,
 		departure: 'fredag',
 		licence: null,
 		kayak: true,
