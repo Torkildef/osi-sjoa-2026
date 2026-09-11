@@ -23,8 +23,6 @@
 	const KEY = 'sjoa:meg';
 	let sending = $state(false);
 
-	/** Får Tiril tak i takstativ? Endrer kajakkregnestykket. */
-	let rack = $state(false);
 	/** Hvem som ser på. Huskes i nettleseren. */
 	let me = $state('');
 
@@ -47,7 +45,7 @@
 		}
 	};
 
-	const day = $derived(steps(rack));
+	const day = steps();
 	const mine = $derived(me ? day.map((s, i) => (s.names.includes(me) ? i : -1)).filter((i) => i >= 0) : []);
 </script>
 
@@ -178,28 +176,6 @@
 
 		{/if}
 	{/if}
-</section>
-
-<section class="block">
-	<div class="card rack-card">
-		<div>
-			<h2 class="title-medium">Får Tiril tak i takstativ?</h2>
-			<p class="body-small on-surface-variant">
-				{rack ? 'Ja: 4 kajakker til på Tiril. Ingen ekstraturer.' : 'Nei: Carolines bil tar to korte ekstraturer.'}
-			</p>
-		</div>
-		<button
-			type="button"
-			class="chip"
-			class:tonal={!rack}
-			class:selected={rack}
-			aria-pressed={rack}
-			onclick={() => (rack = !rack)}
-		>
-			<Icon name={rack ? 'checkCircle' : 'directionsCar'} size={16} />
-			{rack ? 'Med takstativ' : 'Uten takstativ'}
-		</button>
-	</div>
 </section>
 
 <section class="block">

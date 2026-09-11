@@ -161,15 +161,6 @@ export const people: Person[] = [
 		helmet: 'Medium (yellow)'
 	},
 	{
-		name: 'Martha Irene Førde Bondahl',
-		rookie: true,
-		departure: 'fredag',
-		licence: 'manuell',
-		kayak: true,
-		vest: true,
-		helmet: 'Large (blue)'
-	},
-	{
 		name: 'Simon Golombek',
 		departure: 'fredag',
 		licence: null,
