@@ -38,8 +38,8 @@
 				</a>
 			{/each}
 		</nav>
-		<a class="btn btn-tonal btn-small signup" href={signupFormUrl} target="_blank" rel="noopener">
-			Lenke til skjema
+		<a class="btn btn-tonal btn-small signup" href={signupFormUrl} target="_blank" rel="noopener" aria-label="Lenke til skjema">
+			<span class="signup-label">Lenke til skjema</span>
 			<Icon name="openInNew" size={16} class="trailing" />
 		</a>
 	</div>

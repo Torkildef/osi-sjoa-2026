@@ -534,7 +534,7 @@ nav.main-nav a .icon {
 	}
 }
 
-/* Smaleste bredde med toppmeny: uten undertittel og med tettere faner. */
+/* Smaleste bredde med toppmeny: uten undertittel, tettere faner og skjema-knapp som bare ikon. */
 @media (min-width: 48rem) and (max-width: 56rem) {
 	.top-bar .brand-text > span {
 		display: none;
@@ -543,6 +543,18 @@ nav.main-nav a .icon {
 	nav.main-nav a {
 		padding: 0.5rem 0.45rem;
 		gap: 0.3rem;
+	}
+
+	.top-bar .signup .signup-label {
+		display: none;
+	}
+
+	.top-bar .signup {
+		padding-inline: 0.6rem;
+	}
+
+	.top-bar .signup .trailing {
+		margin-left: 0;
 	}
 }
 
