@@ -1693,12 +1693,39 @@ section.plan .section-head h2 .tag {
 	border-left: 4px solid var(--primary);
 }
 
-.plan-part.rookie1 {
-	border-left-color: var(--rookie1-container);
+.plan-part.run1,
+.plan-part.run2 {
+	border-left-color: var(--outline);
 }
 
-.plan-part.rookie2 {
-	border-left-color: var(--rookie2-container);
+.tag.run1 {
+	background: var(--surface-container-highest);
+	color: var(--on-surface);
+}
+
+.tag.run2 {
+	background: color-mix(in srgb, var(--on-surface) 16%, var(--surface));
+	color: var(--on-surface);
+}
+
+.tag.morning {
+	background: var(--surface-container-high);
+	color: var(--on-surface-variant);
+}
+
+.plan-when {
+	display: block;
+	font-size: 0.7rem;
+	font-weight: 700;
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+	color: var(--on-surface-variant);
+	margin-bottom: 0.1rem;
+}
+
+.plan-line.drive .plan-when {
+	color: inherit;
+	opacity: 0.75;
 }
 
 table.data tr.group th {

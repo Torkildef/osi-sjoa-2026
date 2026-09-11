@@ -60,7 +60,7 @@
 	<div>
 		<h1 class="headline-large">Lørdag på elva</h1>
 		<p class="body-medium on-surface-variant">
-			To runs. Bru-bru for alle, så Playrun for de erfarne. Rookiene padler ett run og venter på Kruke på det andre.
+			To runs. Bru-bru for alle, så Playrun for de erfarne. Rookiene padler ett run og har fri på det andre.
 		</p>
 	</div>
 	<div class="chip-row">
@@ -74,10 +74,7 @@
 	<span class="draft-emoji" aria-hidden="true">🚧</span>
 	<div>
 		<div class="title-medium">Foreløpig plan</div>
-		<p class="body-medium">
-			Dette er et utkast og kan endres. Velg deg selv under og skriv hva som bør være annerledes, så
-			oppdateres planen.
-		</p>
+		<p class="body-medium">Kan endres. Velg deg selv og si fra.</p>
 	</div>
 </div>
 
@@ -135,7 +132,7 @@
 							{:else}
 								Mottatt.
 							{/if}
-							Planen oppdateres innen en time hvis det går opp.
+							Inne i planen om ca. 5 minutter hvis det går opp.
 						</span>
 					</p>
 				{/if}
@@ -151,8 +148,7 @@
 					</button>
 				</div>
 				<p class="body-small on-surface-variant">
-					Går rett inn i planen hvis det går opp. Du kan også be om endringer for andre. Ellers får du
-					beskjed.
+					Inne i planen om ca. 5 minutter hvis det går opp. Gjelder også ønsker for andre. Ellers får du beskjed.
 				</p>
 			</form>
 		<div class="card me-card">
@@ -163,12 +159,15 @@
 			<div class="plan-parts">
 				{#each planFor(me) as part (part.title)}
 					<div class="plan-part {part.tone}">
-						<span class="tag {part.tone === 'morning' ? 'primary' : part.tone}">{part.title}</span>
+						<span class="tag {part.tone}">{part.title}</span>
 						<div class="plan-lines">
 							{#each part.lines as line, i (i)}
 								<div class="plan-line {line.kind}">
 									<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
-									<span><Linked text={line.text} /></span>
+									<span>
+										{#if line.when}<span class="plan-when"><Linked text={line.when} /></span>{/if}
+										<Linked text={line.text} />
+									</span>
 								</div>
 							{/each}
 						</div>
@@ -186,7 +185,7 @@
 		<div>
 			<h2 class="title-medium">Får Tiril tak i takstativ?</h2>
 			<p class="body-small on-surface-variant">
-				{rack ? 'Ja: 4 kajakker til på Tirils bil. Ingen ekstraturer.' : 'Nei: Carolines bil tar to korte ekstraturer.'}
+				{rack ? 'Ja: 4 kajakker til på Tiril. Ingen ekstraturer.' : 'Nei: Carolines bil tar to korte ekstraturer.'}
 			</p>
 		</div>
 		<button
@@ -223,7 +222,7 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> Hvem</h2>
+		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> Grupper</h2>
 	</div>
 	<div class="grid wide">
 		<div class="card">
@@ -243,7 +242,7 @@
 			<div class="chip-row">
 				{#each rookiesRun1 as name (name)}<span class="chip rookie1">{shown(name)}</span>{/each}
 			</div>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 2.</p>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Fri på run 2.</p>
 		</div>
 		<div class="card">
 			<div class="card-head">
@@ -253,7 +252,7 @@
 			<div class="chip-row">
 				{#each rookiesRun2 as name (name)}<span class="chip rookie2">{shown(name)}</span>{/each}
 			</div>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 1.</p>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Fri på run 1.</p>
 		</div>
 	</div>
 </section>
