@@ -5,7 +5,7 @@
  *
  * Fornavn som på resten av siden. Endre her; siden følger med.
  *
- * Kajakker: 17 med. De 11 erfarne har hver sin, rookiene deler på 5, og den
+ * Kajakker: 17 med. De 10 erfarne har hver sin, rookiene deler på 6, og den
  * 17. står i reserve på Kruke. Kajakkplass: henger 10, Wiktor 4, Tiril 4,
  * Caroline 2. Før hvert run settes Wiktors og Carolines bil på take out
  * Playrun, så begge kjører hjem derfra. Tirils bil tar rookiene fra take out
@@ -25,12 +25,11 @@ export const experienced = [
 	'Helene',
 	'Eskil',
 	'Connor',
-	'Maja',
-	'Simon'
+	'Maja'
 ];
 
 /** Rookies som padler run 1 og kjører på run 2. */
-export const rookiesRun1 = ['Anneke', 'Ludvig', 'Maren', 'Sindre', 'Ylva'];
+export const rookiesRun1 = ['Anneke', 'Ludvig', 'Maren', 'Sindre', 'Ylva', 'Simon'];
 
 /** Rookies som kjører på run 1 og padler run 2. */
 export const rookiesRun2 = ['Malin F.', 'Tiril', 'Julia', 'Lene', 'Malin N.'];
@@ -159,7 +158,7 @@ export const runs: Run[] = [
 		n: 2,
 		title: 'Run 2',
 		groups: [
-			{ name: 'Gruppe 1', members: ['Dani', 'Caroline', 'Vegard', 'Simon', 'Julia'] },
+			{ name: 'Gruppe 1', members: ['Dani', 'Caroline', 'Vegard', 'Julia'] },
 			{ name: 'Gruppe 2', members: ['Wiktor', 'Helene', 'Eskil', 'Maja', 'Malin F.', 'Lene'] },
 			{ name: 'Gruppe 3', members: ['Torkild', 'Knut', 'Connor', 'Malin N.', 'Tiril'] }
 		],
