@@ -35,6 +35,12 @@ export const rookies = [...rookiesRun1, ...rookiesRun2];
 
 export const everyone = [...experienced, ...rookies];
 
+/** Pynt ved navnet, om noen har bedt om det. F.eks. { Caroline: '🌸' }. */
+export const flair: Record<string, string> = {};
+
+/** Navn med eventuell pynt. */
+export const shown = (first: string) => (flair[first] ? `${first} ${flair[first]}` : first);
+
 /** Fornavn slik de står i deltakerlista, der kortformen over avviker. */
 const alias: Record<string, string> = { Dani: 'Danielle', Knut: 'Knut-Erik' };
 

@@ -1,6 +1,5 @@
-import { createHmac, timingSafeEqual } from 'node:crypto';
-import { env } from '$env/dynamic/private';
 import { fail, type Actions } from '@sveltejs/kit';
+import { cookieOk, cookieToken, passwordConfigured, passwordOk } from '$lib/server/adminAuth';
 import {
 	createPromptIssue,
 	githubConfigured,
@@ -24,19 +23,11 @@ const COOKIE = 'sjoa_admin';
 const MAX_PROMPT = 2000;
 const MAX_PER_HOUR = 5;
 
-/** Cookie-verdien: HMAC av en fast streng med passordet som nøkkel. */
-const token = () => createHmac('sha256', env.ADMIN_PASSWORD ?? '').update('sjoa-admin-v1').digest('hex');
+const SCOPE = 'admin';
 
-function safeEqual(a: string, b: string): boolean {
-	const x = Buffer.from(a);
-	const y = Buffer.from(b);
-	return x.length === y.length && timingSafeEqual(x, y);
-}
+const configured = () => passwordConfigured() && githubConfigured();
 
-const configured = () => Boolean(env.ADMIN_PASSWORD) && githubConfigured();
-
-const loggedIn = (cookie: string | undefined) =>
-	Boolean(env.ADMIN_PASSWORD) && cookie !== undefined && safeEqual(cookie, token());
+const loggedIn = (cookie: string | undefined) => cookieOk(SCOPE, cookie);
 
 export const load: PageServerLoad = async ({ cookies, setHeaders }) => {
 	setHeaders({ 'cache-control': 'no-store' });
@@ -58,10 +49,10 @@ export const actions: Actions = {
 		if (!configured()) return fail(503, { error: 'Admin er ikke satt opp ennå.', name: '', prompt: '' });
 		const form = await request.formData();
 		const password = String(form.get('password') ?? '');
-		if (!password || !safeEqual(password, env.ADMIN_PASSWORD ?? '')) {
+		if (!passwordOk(password)) {
 			return fail(401, { error: 'Feil passord.', name: '', prompt: '' });
 		}
-		cookies.set(COOKIE, token(), {
+		cookies.set(COOKIE, cookieToken(SCOPE), {
 			path: '/admin',
 			httpOnly: true,
 			secure: true,

@@ -95,6 +95,10 @@
 	--on-rookie1-container: #eaf7ea;
 	--rookie2-container: #c5e8c4;
 	--on-rookie2-container: #143d17;
+
+	/* Dempet sandfarge for kjøreoppgaver og «foreløpig plan». */
+	--drive-container: #f1e9d6;
+	--on-drive-container: #4a3d1f;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -156,6 +160,9 @@
 		--on-rookie1-container: #d3efd2;
 		--rookie2-container: #6fae6e;
 		--on-rookie2-container: #0b2a0d;
+
+		--drive-container: #3b3426;
+		--on-drive-container: #e6dcc5;
 	}
 }
 
@@ -1725,9 +1732,9 @@ table.data tr.group th a {
 	padding: 1rem 1.25rem;
 	margin-bottom: 1.5rem;
 	border-radius: var(--shape-lg);
-	background: var(--warning-container);
-	color: var(--on-warning-container);
-	border: 2px solid color-mix(in srgb, var(--on-warning-container) 35%, transparent);
+	background: var(--drive-container);
+	color: var(--on-drive-container);
+	border: 1.5px solid color-mix(in srgb, var(--on-drive-container) 25%, transparent);
 }
 
 .draft-banner .draft-emoji {
@@ -1741,6 +1748,16 @@ table.data tr.group th a {
 
 .change-form {
 	margin-top: 0.85rem;
+	margin-bottom: 0.85rem;
+}
+
+.change-form .field.inline {
+	max-width: 14rem;
+}
+
+.change-form .field-title strong {
+	font-weight: 800;
+	color: var(--primary);
 }
 
 .change-form .honey {
@@ -1754,7 +1771,7 @@ table.data tr.group th a {
 .change-form .form-row {
 	display: flex;
 	flex-wrap: wrap;
-	align-items: center;
+	align-items: flex-end;
 	gap: 0.75rem;
 }
 
@@ -1781,8 +1798,8 @@ table.data tr.group th a {
 }
 
 .plan-line.drive {
-	background: var(--warning-container);
-	color: var(--on-warning-container);
+	background: var(--drive-container);
+	color: var(--on-drive-container);
 	font-weight: 600;
 }
 
@@ -1791,8 +1808,8 @@ table.data tr.group th a {
 }
 
 .tag.drive {
-	background: var(--warning-container);
-	color: var(--on-warning-container);
+	background: var(--drive-container);
+	color: var(--on-drive-container);
 	margin-top: 0.3rem;
 	justify-self: start;
 }

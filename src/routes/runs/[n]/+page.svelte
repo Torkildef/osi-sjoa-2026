@@ -2,7 +2,7 @@
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
 	import Linked from '$lib/Linked.svelte';
-	import { allLegs, isRookie, legsOf, runs, teamOf } from '$lib/runs';
+	import { allLegs, isRookie, legsOf, runs, shown, teamOf } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -62,7 +62,7 @@
 				</div>
 				<div class="chip-row">
 					{#each group.members as name (name)}
-						<span class="chip {teamOf(name)}">{name}</span>
+						<span class="chip {teamOf(name)}">{shown(name)}</span>
 					{/each}
 				</div>
 			</div>

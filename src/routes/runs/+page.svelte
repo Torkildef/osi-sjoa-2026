@@ -12,6 +12,7 @@
 		steps,
 		planFor,
 		planIcon,
+		shown,
 		teamLabel,
 		teamOf
 	} from '$lib/runs';
@@ -92,33 +93,11 @@
 				aria-pressed={me === name}
 				onclick={() => pick(name)}
 			>
-				{#if me === name}<Icon name="check" size={16} />{/if}{name}
+				{#if me === name}<Icon name="check" size={16} />{/if}{shown(name)}
 			</button>
 		{/each}
 	</div>
 	{#if me}
-		<div class="card me-card">
-			<div class="card-head">
-				<h3 class="title-medium"><Icon name="person" size={20} /> Din plan, {me}</h3>
-				<span class="tag {teamOf(me) === 'none' ? 'primary' : teamOf(me)}">{teamLabel[teamOf(me)]}</span>
-			</div>
-			<div class="plan-parts">
-				{#each planFor(me) as part (part.title)}
-					<div class="plan-part {part.tone}">
-						<span class="tag {part.tone === 'morning' ? 'primary' : part.tone}">{part.title}</span>
-						<div class="plan-lines">
-							{#each part.lines as line, i (i)}
-								<div class="plan-line {line.kind}">
-									<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
-									<span><Linked text={line.text} /></span>
-								</div>
-							{/each}
-						</div>
-					</div>
-				{/each}
-			</div>
-		</div>
-
 		{#if data.configured}
 			<form
 				method="POST"
@@ -135,12 +114,12 @@
 				<input type="hidden" name="name" value={me} />
 				<input type="text" name="nettside" tabindex="-1" autocomplete="off" class="honey" aria-hidden="true" />
 				<label class="field">
-					<span>Noe som bør endres, {me}?</span>
+					<span class="field-title">Noe som bør endres, <strong>{me}</strong>?</span>
 					<textarea
 						name="text"
 						rows="3"
 						maxlength="500"
-						placeholder="F.eks. «Jeg vil ikke padle run 2», «Jeg vil helst ikke kjøre med henger» eller «Caroline sa hun ikke vil padle Playrun»"
+						placeholder="F.eks. «Jeg vil ikke padle run 2», «Jeg vil helst ikke kjøre med henger», «Bytt Caroline og Helene til gruppe 3» eller «Gi meg en blomsteremoji»"
 						required>{form?.ok ? '' : (form?.text ?? '')}</textarea
 					>
 				</label>
@@ -161,14 +140,43 @@
 					</p>
 				{/if}
 				<div class="form-row">
+					{#if !data.loggedIn}
+						<label class="field inline">
+							<span>Passord</span>
+							<input type="password" name="password" autocomplete="current-password" required />
+						</label>
+					{/if}
 					<button type="submit" class="btn btn-filled" disabled={sending}>
 						{sending ? 'Sender …' : 'Send inn'}
 					</button>
-					<span class="body-small on-surface-variant">
-						Går rett inn i planen hvis det ikke er noe rart med det. Ellers får du beskjed.
-					</span>
 				</div>
+				<p class="body-small on-surface-variant">
+					Går rett inn i planen hvis det går opp. Du kan også be om endringer for andre. Ellers får du
+					beskjed.
+				</p>
 			</form>
+		<div class="card me-card">
+			<div class="card-head">
+				<h3 class="title-medium"><Icon name="person" size={20} /> Din plan, {shown(me)}</h3>
+				<span class="tag {teamOf(me) === 'none' ? 'primary' : teamOf(me)}">{teamLabel[teamOf(me)]}</span>
+			</div>
+			<div class="plan-parts">
+				{#each planFor(me) as part (part.title)}
+					<div class="plan-part {part.tone}">
+						<span class="tag {part.tone === 'morning' ? 'primary' : part.tone}">{part.title}</span>
+						<div class="plan-lines">
+							{#each part.lines as line, i (i)}
+								<div class="plan-line {line.kind}">
+									<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
+									<span><Linked text={line.text} /></span>
+								</div>
+							{/each}
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+
 		{/if}
 	{/if}
 </section>
@@ -224,7 +232,7 @@
 				<span class="tag exp">{experienced.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each experienced as name (name)}<span class="chip exp">{name}</span>{/each}
+				{#each experienced as name (name)}<span class="chip exp">{shown(name)}</span>{/each}
 			</div>
 		</div>
 		<div class="card">
@@ -233,7 +241,7 @@
 				<span class="tag rookie1">{rookiesRun1.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each rookiesRun1 as name (name)}<span class="chip rookie1">{name}</span>{/each}
+				{#each rookiesRun1 as name (name)}<span class="chip rookie1">{shown(name)}</span>{/each}
 			</div>
 			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 2.</p>
 		</div>
@@ -243,7 +251,7 @@
 				<span class="tag rookie2">{rookiesRun2.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each rookiesRun2 as name (name)}<span class="chip rookie2">{name}</span>{/each}
+				{#each rookiesRun2 as name (name)}<span class="chip rookie2">{shown(name)}</span>{/each}
 			</div>
 			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 1.</p>
 		</div>
