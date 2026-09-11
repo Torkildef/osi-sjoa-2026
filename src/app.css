@@ -1935,6 +1935,11 @@ table.data tr.group th a {
 	color: inherit;
 }
 
+.entry-flag {
+	vertical-align: middle;
+	margin-left: 0.35rem;
+}
+
 .tag.drive {
 	background: var(--drive-container);
 	color: var(--on-drive-container);

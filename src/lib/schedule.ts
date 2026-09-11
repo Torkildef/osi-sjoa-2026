@@ -12,6 +12,8 @@ export type ScheduleEntry = {
 	note?: string;
 	place?: string;
 	people?: string[];
+	/** Kort merkelapp som skal synes, f.eks. «Litt forsinket». */
+	flag?: string;
 };
 
 export const schedule: ScheduleEntry[] = [
@@ -36,10 +38,11 @@ export const schedule: ScheduleEntry[] = [
 	},
 	{
 		day: 'Fredag',
-		time: '21:00',
-		title: '🏡 Ankomst Kruke gård',
-		note: 'Omtrentlig. Felles samling når alle er fremme.',
-		place: 'Kruke gård'
+		time: '22:30',
+		title: '🏡 9-seteren ankommer Kruke gård',
+		note: 'Litt forsinket, så regn med 22:30 heller enn 21. Felles samling når alle er fremme.',
+		place: 'Kruke gård',
+		flag: 'Litt forsinket'
 	},
 	{
 		day: 'Lørdag',

@@ -45,7 +45,10 @@
 						<span class="when vague">I løpet av dagen</span>
 					{/if}
 					<div class="what">
-						<h3 class="title-medium">{entry.title}</h3>
+						<h3 class="title-medium">
+							{entry.title}
+							{#if entry.flag}<span class="tag drive entry-flag">⏰ {entry.flag}</span>{/if}
+						</h3>
 						{#if entry.note}<p>{entry.note}</p>{/if}
 						{#if (entry.people && entry.people.length > 0) || placeByName(entry.place ?? '')}
 							<div class="entry-meta">
