@@ -126,7 +126,7 @@ export const runs: Run[] = [
 		before: [
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander' },
 			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til take out Bru-bru, så den står klar når run 1 lander' },
-			{ car: LEIEBIL, driver: 'Torkild', note: 'Henter de to opp igjen' }
+			{ car: LEIEBIL, driver: 'Torkild', note: 'Til take out Bru-bru og take out Playrun, henter Caroline og Wiktor opp igjen' }
 		],
 		launch: [{ car: LEIEBIL, driver: 'Malin F.', note: 'Til Kruke, der rookies run 2 venter' }],
 		toTakeOut: [
@@ -157,7 +157,7 @@ export const runs: Run[] = [
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander' },
 			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til take out Bru-bru, så den står klar når run 2 lander' },
 			{ car: TIRIL, driver: 'Helene', note: 'Til take out Bru-bru, så den står klar når run 2 lander' },
-			{ car: LEIEBIL, driver: 'Torkild', note: 'Henter de tre opp igjen' }
+			{ car: LEIEBIL, driver: 'Torkild', note: 'Til take out Bru-bru og take out Playrun, henter Caroline, Helene og Wiktor opp igjen' }
 		],
 		launch: [{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke, der rookies run 1 venter' }],
 		toTakeOut: [{ car: LEIEBIL, driver: 'Ludvig', note: 'Henter rookies run 2' }],
@@ -306,9 +306,6 @@ const driveLine = (sh: Shuttle) =>
 	sh.note?.startsWith('Til ')
 		? `Du kjører ${car(sh)} ${sh.note[0].toLowerCase()}${sh.note.slice(1)}.`
 		: `Du kjører ${car(sh)}. ${sh.note ?? ''}`.trim();
-const names = (list: string[]) =>
-	list.length > 1 ? `${list.slice(0, -1).join(', ')} og ${list[list.length - 1]}` : (list[0] ?? '');
-
 /** Planen for én person, kronologisk: morgen, run 1, run 2. */
 export const planFor = (name: string): PlanPart[] => {
 	const team = teamOf(name);
@@ -326,15 +323,12 @@ export const planFor = (name: string): PlanPart[] => {
 
 		if (team === 'exp') {
 			const b = drives(run.before, name);
-			const others = run.before.filter((sh) => sh.driver !== name && sh.car !== LEIEBIL).map((sh) => sh.driver);
 			if (b.length) {
 				for (const sh of b) {
 					push(
 						'drive',
 						`Mens run ${run.n} varmer opp ved put inn Bru-bru`,
-						sh.car === LEIEBIL
-							? `Du følger ${names(others)} i 9-seteren og henter dem opp igjen.`
-							: `${driveLine(sh)} Torkild henter deg i 9-seteren.`
+						sh.car === LEIEBIL ? driveLine(sh) : `${driveLine(sh)} Torkild henter deg i 9-seteren.`
 					);
 				}
 			} else {
