@@ -10,6 +10,7 @@
 		rookiesRun2,
 		runs,
 		steps,
+		carPlans,
 		planFor,
 		planIcon,
 		shown,
@@ -194,6 +195,38 @@
 			</li>
 		{/each}
 	</ol>
+</section>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Bil for bil</h2>
+	</div>
+	<div class="grid wide">
+		{#each carPlans() as plan (plan.car)}
+			<div class="card car-card">
+				<div class="card-head">
+					<h3 class="title-medium">{plan.car}</h3>
+					<span class="tag primary">{plan.legs.length} {plan.legs.length === 1 ? 'etappe' : 'etapper'}</span>
+				</div>
+				{#if plan.idle}
+					<p class="body-medium on-surface-variant">{plan.idle}</p>
+				{:else}
+					<ol class="car-legs">
+						{#each plan.legs as leg, i (i)}
+							<li class="car-leg">
+								<span class="car-when"><span class="tag run{leg.run}">Run {leg.run}</span> <Linked text={leg.when} /></span>
+								<span class="car-driver">
+									<span class="chip {teamOf(leg.driver)} small">🚗 {leg.driver}</span>
+									{#if leg.own}<span class="tag success">Egen bil</span>{/if}
+								</span>
+								{#if leg.note}<span class="car-note"><Linked text={leg.note} /></span>{/if}
+							</li>
+						{/each}
+					</ol>
+				{/if}
+			</div>
+		{/each}
+	</div>
 </section>
 
 <section class="block">

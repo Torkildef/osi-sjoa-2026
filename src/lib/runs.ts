@@ -188,6 +188,25 @@ export const legsOf = (run: Run): { when: string; legs: Shuttle[] }[] => [
 /** Alle kjørelegg i et run, flatt. */
 export const allLegs = (run: Run): Shuttle[] => legsOf(run).flatMap((b) => b.legs);
 
+export type CarLeg = { run: number; when: string; driver: string; own?: boolean; note?: string };
+export type CarPlan = { car: string; legs: CarLeg[]; idle?: string };
+
+/** Dagen sett fra hver bil: etappene i rekkefølge, med sjåfør. */
+export const carPlans = (): CarPlan[] => {
+	const cars = [LEIEBIL, WIKTOR, CAROLINE, TIRIL, 'Helenes bil'];
+	return cars.map((car) => {
+		const legs: CarLeg[] = [];
+		for (const run of runs) {
+			for (const block of legsOf(run)) {
+				for (const sh of block.legs) {
+					if (sh.car === car) legs.push({ run: run.n, when: block.when, driver: sh.driver, own: sh.own, note: sh.note });
+				}
+			}
+		}
+		return { car, legs, idle: legs.length ? undefined : 'Står på Kruke hele dagen. Noen må jo.' };
+	});
+};
+
 export type Step = {
 	what: string;
 	who?: string;

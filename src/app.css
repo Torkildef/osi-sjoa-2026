@@ -1713,6 +1713,57 @@ section.plan .section-head h2 .tag {
 	color: var(--on-surface-variant);
 }
 
+.car-legs {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.55rem;
+}
+
+.car-leg {
+	display: grid;
+	gap: 0.25rem;
+	padding: 0.5rem 0.65rem;
+	border-radius: var(--shape-sm);
+	background: var(--surface-container-low);
+}
+
+.car-leg .car-when {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	text-transform: uppercase;
+	color: var(--on-surface-variant);
+}
+
+.car-leg .car-when .tag {
+	text-transform: none;
+	letter-spacing: 0;
+}
+
+.car-leg .car-driver {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+}
+
+.chip.small {
+	min-height: 1.6rem;
+	padding: 0 0.6rem;
+	font-size: 0.78rem;
+}
+
+.car-leg .car-note {
+	font-size: 0.9rem;
+	color: var(--on-surface-variant);
+}
+
 .plan-when {
 	display: block;
 	font-size: 0.7rem;
