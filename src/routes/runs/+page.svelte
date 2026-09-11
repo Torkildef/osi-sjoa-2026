@@ -4,15 +4,13 @@
 	import {
 		everyone,
 		experienced,
-		facts,
-		isRookie,
 		rookiesRun1,
 		rookiesRun2,
 		runs,
 		steps,
 		summaryFor,
-		verdict,
-		waiting
+		teamLabel,
+		teamOf
 	} from '$lib/runs';
 
 	const KEY = 'sjoa:meg';
@@ -72,28 +70,25 @@
 		{#each everyone as name (name)}
 			<button
 				type="button"
-				class="chip"
-				class:selected={me === name}
-				class:rookie={me !== name && isRookie(name)}
-				class:tonal={me !== name && !isRookie(name)}
+				class="chip {me === name ? 'me' : teamOf(name) === 'none' ? 'tonal' : teamOf(name)}"
 				aria-pressed={me === name}
-				onclick={() => pick(name)}>{name}</button
+				onclick={() => pick(name)}
 			>
+				{#if me === name}<Icon name="check" size={16} />{/if}{name}
+			</button>
 		{/each}
 	</div>
 	{#if me}
 		<div class="card me-card">
 			<div class="card-head">
-				<h3 class="title-medium">Din dag, {me}</h3>
-				<span class="tag" class:rookie={isRookie(me)} class:primary={!isRookie(me)}>
-					{isRookie(me) ? 'Rookie' : experienced.includes(me) ? 'Erfaren' : 'Med'}
-				</span>
+				<h3 class="title-medium"><Icon name="person" size={20} /> Din plan, {me}</h3>
+				<span class="tag {teamOf(me) === 'none' ? 'primary' : teamOf(me)}">{teamLabel[teamOf(me)]}</span>
 			</div>
 			<ul class="facts">
 				{#each summaryFor(me) as line, i (i)}<li>{line}</li>{/each}
 			</ul>
 			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">
-				Dine steg er uthevet under: {mine.map((i) => i + 1).join(', ')}.
+				Dine steg er uthevet under: {mine.map((i) => i + 1).join(', ')}. Trykk på navnet igjen for å nullstille.
 			</p>
 		</div>
 	{/if}
@@ -140,62 +135,35 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="info" size={22} class="primary-text" /> Det vi vet</h2>
-	</div>
-	<ul class="facts">
-		{#each facts(rack) as line, i (i)}<li>{line}</li>{/each}
-	</ul>
-</section>
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large"><Icon name="localCafe" size={22} class="primary-text" /> Hvor man venter</h2>
-	</div>
-	<ul class="facts">
-		{#each waiting as line, i (i)}<li>{line}</li>{/each}
-	</ul>
-</section>
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large"><Icon name="explore" size={22} class="primary-text" /> Vurdering</h2>
-	</div>
-	<ol class="logic">
-		{#each verdict as line, i (i)}<li>{line}</li>{/each}
-	</ol>
-</section>
-
-<section class="block">
-	<div class="section-head">
 		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> Hvem</h2>
 	</div>
 	<div class="grid wide">
 		<div class="card">
 			<div class="card-head">
 				<h3 class="title-medium">Erfarne · begge runs</h3>
-				<span class="tag primary">{experienced.length}</span>
+				<span class="tag exp">{experienced.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each experienced as name (name)}<span class="chip tonal">{name}</span>{/each}
+				{#each experienced as name (name)}<span class="chip exp">{name}</span>{/each}
 			</div>
 		</div>
 		<div class="card">
 			<div class="card-head">
 				<h3 class="title-medium">Rookies · run 1</h3>
-				<span class="tag rookie">{rookiesRun1.length}</span>
+				<span class="tag rookie1">{rookiesRun1.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each rookiesRun1 as name (name)}<span class="chip rookie">{name}</span>{/each}
+				{#each rookiesRun1 as name (name)}<span class="chip rookie1">{name}</span>{/each}
 			</div>
 			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 2.</p>
 		</div>
 		<div class="card">
 			<div class="card-head">
 				<h3 class="title-medium">Rookies · run 2</h3>
-				<span class="tag rookie">{rookiesRun2.length}</span>
+				<span class="tag rookie2">{rookiesRun2.length}</span>
 			</div>
 			<div class="chip-row">
-				{#each rookiesRun2 as name (name)}<span class="chip rookie">{name}</span>{/each}
+				{#each rookiesRun2 as name (name)}<span class="chip rookie2">{name}</span>{/each}
 			</div>
 			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Venter på Kruke på run 1.</p>
 		</div>

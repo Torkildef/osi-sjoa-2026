@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
-	import { isRookie, runs } from '$lib/runs';
+	import { isRookie, runs, teamOf } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -61,7 +61,7 @@
 				</div>
 				<div class="chip-row">
 					{#each group.members as name (name)}
-						<span class="chip" class:tonal={!isRookie(name)} class:rookie={isRookie(name)}>{name}</span>
+						<span class="chip {teamOf(name)}">{name}</span>
 					{/each}
 				</div>
 			</div>
@@ -80,7 +80,7 @@
 				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Merknad</th></tr>
 			</thead>
 			<tbody>
-				{#each run.before as s (s.car)}
+				{#each run.before as s, i (i)}
 					<tr>
 						<td class="name">{s.car}</td>
 						<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
@@ -103,7 +103,7 @@
 				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Dit</th></tr>
 			</thead>
 			<tbody>
-				{#each run.after as s (s.car)}
+				{#each run.after as s, i (i)}
 					<tr>
 						<td class="name">{s.car}</td>
 						<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>

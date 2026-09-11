@@ -87,6 +87,14 @@
 	/* Rookie-merket – egen farge så det skiller seg fra alt annet. */
 	--rookie-container: #e9ddff;
 	--on-rookie-container: #22005d;
+
+	/* Lagfarger på /runs: erfarne, rookies run 1, rookies run 2. */
+	--exp-container: #c9ece8;
+	--on-exp-container: #00403c;
+	--rookie1-container: #e9ddff;
+	--on-rookie1-container: #22005d;
+	--rookie2-container: #ffd8ec;
+	--on-rookie2-container: #3e0021;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -141,6 +149,13 @@
 
 		--rookie-container: #4f378a;
 		--on-rookie-container: #e9ddff;
+
+		--exp-container: #0f5450;
+		--on-exp-container: #b2ece6;
+		--rookie1-container: #4f378a;
+		--on-rookie1-container: #e9ddff;
+		--rookie2-container: #7a2d5c;
+		--on-rookie2-container: #ffd8ec;
 	}
 }
 
@@ -734,6 +749,54 @@ button.chip:hover {
 	background: var(--error-container);
 	color: var(--on-error-container);
 	border-color: transparent;
+}
+
+.chip.exp,
+.tag.exp {
+	background: var(--exp-container);
+	color: var(--on-exp-container);
+	border-color: transparent;
+}
+
+.chip.rookie1,
+.tag.rookie1 {
+	background: var(--rookie1-container);
+	color: var(--on-rookie1-container);
+	border-color: transparent;
+}
+
+.chip.rookie2,
+.tag.rookie2 {
+	background: var(--rookie2-container);
+	color: var(--on-rookie2-container);
+	border-color: transparent;
+}
+
+.chip.me,
+button.chip.me:hover {
+	background: var(--primary);
+	color: var(--on-primary);
+	border-color: transparent;
+	box-shadow: 0 0 0 3px var(--primary-container);
+	font-weight: 800;
+}
+
+button.chip.exp:hover,
+button.chip.rookie1:hover,
+button.chip.rookie2:hover {
+	filter: brightness(1.08);
+}
+
+button.chip.exp:hover {
+	background: var(--exp-container);
+}
+
+button.chip.rookie1:hover {
+	background: var(--rookie1-container);
+}
+
+button.chip.rookie2:hover {
+	background: var(--rookie2-container);
 }
 
 .chip.rookie,
@@ -1603,6 +1666,18 @@ section.plan .section-head h2 .tag {
 
 .me-card {
 	margin-top: 0.85rem;
+	background: var(--primary-container);
+	color: var(--on-primary-container);
+	border: 2px solid var(--primary);
+}
+
+.me-card .on-surface-variant,
+.me-card ul.facts {
+	color: var(--on-primary-container);
+}
+
+.me-card ul.facts li::marker {
+	color: var(--on-primary-container);
 }
 
 ol.timeline.filtered li.entry {
