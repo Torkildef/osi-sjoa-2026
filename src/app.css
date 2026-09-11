@@ -89,12 +89,12 @@
 	--on-rookie-container: #22005d;
 
 	/* Lagfarger på /runs: erfarne, rookies run 1, rookies run 2. */
-	--exp-container: #c9ece8;
-	--on-exp-container: #00403c;
-	--rookie1-container: #e9ddff;
-	--on-rookie1-container: #22005d;
-	--rookie2-container: #ffd8ec;
-	--on-rookie2-container: #3e0021;
+	--exp-container: #e1e6ec;
+	--on-exp-container: #2c3640;
+	--rookie1-container: #2e7d32;
+	--on-rookie1-container: #eaf7ea;
+	--rookie2-container: #c5e8c4;
+	--on-rookie2-container: #143d17;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -150,12 +150,12 @@
 		--rookie-container: #4f378a;
 		--on-rookie-container: #e9ddff;
 
-		--exp-container: #0f5450;
-		--on-exp-container: #b2ece6;
-		--rookie1-container: #4f378a;
-		--on-rookie1-container: #e9ddff;
-		--rookie2-container: #7a2d5c;
-		--on-rookie2-container: #ffd8ec;
+		--exp-container: #3a4652;
+		--on-exp-container: #dfe6ee;
+		--rookie1-container: #1f5a25;
+		--on-rookie1-container: #d3efd2;
+		--rookie2-container: #6fae6e;
+		--on-rookie2-container: #0b2a0d;
 	}
 }
 
@@ -1687,11 +1687,31 @@ section.plan .section-head h2 .tag {
 }
 
 .plan-part.rookie1 {
-	border-left-color: var(--on-rookie1-container);
+	border-left-color: var(--rookie1-container);
 }
 
 .plan-part.rookie2 {
-	border-left-color: var(--on-rookie2-container);
+	border-left-color: var(--rookie2-container);
+}
+
+table.data tr.group th {
+	padding-top: 1.1rem;
+	padding-bottom: 0.35rem;
+	font-size: 0.8rem;
+	font-weight: 800;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--primary);
+	background: transparent;
+	border-top: 0;
+}
+
+table.data tr.group:first-child th {
+	padding-top: 0.5rem;
+}
+
+table.data tr.group th a {
+	color: inherit;
 }
 
 .plan-part .tag {

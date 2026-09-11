@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
+	import Linked from '$lib/Linked.svelte';
 	import { isRookie, legsOf, runs, teamOf } from '$lib/runs';
 	import type { PageData } from './$types';
 
@@ -76,16 +77,16 @@
 	<div class="table-wrap">
 		<table class="data">
 			<thead>
-				<tr><th scope="col">Når</th><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Dit</th></tr>
+				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Dit</th></tr>
 			</thead>
 			<tbody>
 				{#each legsOf(run) as block (block.when)}
+					<tr class="group"><th scope="rowgroup" colspan="3"><Linked text={block.when} /></th></tr>
 					{#each block.legs as s, i (i)}
 						<tr>
-							<td class="wrap">{i === 0 ? block.when : ''}</td>
 							<td class="name">{s.car}</td>
 							<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
-							<td class="wrap">{s.note ?? ''}</td>
+							<td class="wrap">{#if s.note}<Linked text={s.note} />{/if}</td>
 						</tr>
 					{/each}
 				{/each}

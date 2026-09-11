@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
+	import Linked from '$lib/Linked.svelte';
 	import { trip } from '$lib/config';
 	import {
 		everyone,
@@ -89,7 +90,7 @@
 					<div class="plan-part {part.tone}">
 						<span class="tag {part.tone === 'morning' ? 'primary' : part.tone}">{part.title}</span>
 						<ul class="facts">
-							{#each part.lines as line, i (i)}<li>{line}</li>{/each}
+							{#each part.lines as line, i (i)}<li><Linked text={line} /></li>{/each}
 						</ul>
 					</div>
 				{/each}
@@ -129,8 +130,8 @@
 			<li class="entry" class:mine={me && step.names.includes(me)}>
 				<span class="when">Steg {i + 1}</span>
 				<div class="what">
-					<h3 class="title-medium">{step.what}</h3>
-					{#if step.who}<p>{step.who}</p>{/if}
+					<h3 class="title-medium"><Linked text={step.what} /></h3>
+					{#if step.who}<p><Linked text={step.who} /></p>{/if}
 				</div>
 			</li>
 		{/each}
