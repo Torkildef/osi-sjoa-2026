@@ -85,6 +85,8 @@ export type Shuttle = {
 	alt?: string[];
 	/** Bilen står. Ingen kjører. */
 	parked?: boolean;
+	/** Overstyrer hvor etappen starter, når et kjørelegg er delt i to. */
+	from?: string;
 };
 
 export type Run = {
@@ -140,11 +142,12 @@ export const runs: Run[] = [
 			{ car: TIRIL, driver: 'Tiril', own: true, note: 'Henter rookies run 1' }
 		],
 		after: [
-			{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke med rookies run 1, så til take out Playrun for å hente de erfarne. Én rookie-kajakk på hengeren', alt: ['Anneke', 'Ylva'] },
+			{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke med rookies run 1', alt: ['Anneke', 'Ylva'] },
+			{ car: LEIEBIL, driver: 'Ludvig', from: 'Fra Kruke', note: 'Til take out Playrun, henter de erfarne', alt: ['Anneke', 'Ylva'] },
 			{ car: TIRIL, driver: 'Tiril', own: true, note: 'Til put inn Bru-bru med rookies run 2 og 4 kajakker', alt: ['Malin F.'] }
 		],
 		home: [
-			{ car: LEIEBIL, driver: 'Torkild', note: 'Til put inn Bru-bru med de erfarne og den femte rookie-kajakken', alt: ['Knut', 'Vegard', 'Eskil'] },
+			{ car: LEIEBIL, driver: 'Torkild', note: 'Til put inn Bru-bru med de erfarne', alt: ['Knut', 'Vegard', 'Eskil'] },
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til put inn Bru-bru med de erfarne', alt: ['Eskil', 'Vegard'] }
 		],
 		paddlerRide: 'Sitter på til Kruke i 9-seteren.',
@@ -167,7 +170,8 @@ export const runs: Run[] = [
 		launch: [{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke, der rookies run 1 venter', alt: ['Anneke', 'Ylva'] }],
 		toTakeOut: [{ car: LEIEBIL, driver: 'Ludvig', note: 'Henter rookies run 2', alt: ['Anneke', 'Ylva'] }],
 		after: [
-			{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke med de som ikke får plass, så til take out Playrun for å hente de erfarne', alt: ['Anneke', 'Ylva'] },
+			{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke med de som ikke får plass', alt: ['Anneke', 'Ylva'] },
+			{ car: LEIEBIL, driver: 'Ludvig', from: 'Fra Kruke', note: 'Til take out Playrun, henter de erfarne', alt: ['Anneke', 'Ylva'] },
 			{ car: TIRIL, driver: 'Tiril', own: true, note: 'Til Kruke med rookies run 2 og kajakkene' },
 			{ car: CAROLINE, driver: 'Malin F.', note: 'Til Kruke med rookies run 2 og kajakkene' }
 		],
@@ -208,7 +212,7 @@ export const carPlans = (): CarPlan[] => {
 		for (const run of runs) {
 			for (const block of legsOf(run)) {
 				for (const sh of block.legs) {
-					if (sh.car === car) legs.push({ run: run.n, when: block.when, driver: sh.driver, own: sh.own, note: sh.note, alt: sh.alt, parked: sh.parked });
+					if (sh.car === car) legs.push({ run: run.n, when: sh.from ?? block.when, driver: sh.driver, own: sh.own, note: sh.note, alt: sh.alt, parked: sh.parked });
 				}
 			}
 		}
@@ -256,7 +260,7 @@ export const steps = (): Step[] => [
 	},
 	{
 		what: 'Ludvig (9-seter) setter av rookies run 1 på Kruke og kjører videre til take out Playrun, der Wiktors bil står. Tiril kjører rookies run 2 til put inn Bru-bru.',
-		who: 'Rookie-kajakkene: 4 på Tiril, den femte på hengeren. Den kommer med de erfarne.',
+		who: 'Rookie-kajakkene: 4 på Tiril, resten på hengeren.',
 		names: rookies,
 		drivers: ['Ludvig', 'Tiril']
 	},
@@ -346,7 +350,7 @@ export const planFor = (name: string): PlanPart[] => {
 		} else if (group) {
 			push('paddle', 'Put inn Bru-bru', `Oppvarming, så Bru-bru i ${group}.`);
 			const d = drives(run.after, name);
-			if (d.length) for (const sh of d) push('drive', 'Take out Bru-bru', driveLine(sh));
+			if (d.length) for (const sh of d) push('drive', sh.from?.replace(/^Fra /, '') ?? 'Take out Bru-bru', driveLine(sh));
 			else push('ride', 'Take out Bru-bru', run.paddlerRide);
 			if (d.some((sh) => sh.note?.includes('take out Playrun'))) push('ride', 'Take out Playrun', `Sitter på til ${dest}.`);
 		} else {
@@ -360,7 +364,7 @@ export const planFor = (name: string): PlanPart[] => {
 				push('wait', 'Kruke', 'Fritid.');
 				for (const sh of t) push('drive', 'Kruke → take out Bru-bru', `Du kjører ${car(sh)} dit. ${sh.note ?? ''}`.trim() + (sh.note ? '.' : ''));
 				if (!t.length) push('ride', 'Kruke → take out Bru-bru', 'Sitter på.');
-				for (const sh of d) push('drive', `Når run ${run.n} lander`, driveLine(sh));
+				for (const sh of d) push('drive', sh.from?.replace(/^Fra /, '') ?? `Når run ${run.n} lander`, driveLine(sh));
 				if (!d.length) push('ride', `Når run ${run.n} lander`, `Sitter på til ${dest}.`);
 			}
 		}

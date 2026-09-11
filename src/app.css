@@ -1727,14 +1727,25 @@ section.plan .section-head h2 .tag {
 	border-left-color: var(--run2-container);
 }
 
-.tag.run1 {
+.tag.run1,
+.chip.run1,
+.chip.link.run1:hover {
 	background: var(--run1-container);
 	color: var(--on-run1-container);
+	border-color: transparent;
 }
 
-.tag.run2 {
+.tag.run2,
+.chip.run2,
+.chip.link.run2:hover {
 	background: var(--run2-container);
 	color: var(--on-run2-container);
+	border-color: transparent;
+}
+
+.chip.link.run1:hover,
+.chip.link.run2:hover {
+	filter: brightness(0.96);
 }
 
 .tag.morning {

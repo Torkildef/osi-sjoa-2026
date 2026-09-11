@@ -66,7 +66,7 @@
 	</div>
 	<div class="chip-row">
 		{#each runs as run (run.n)}
-			<a class="chip link" href="/runs/{run.n}"><Icon name="kayaking" size={16} /> {run.title}</a>
+			<a class="chip link run{run.n}" href="/runs/{run.n}"><Icon name="kayaking" size={16} /> {run.title}</a>
 		{/each}
 	</div>
 </div>

@@ -84,7 +84,7 @@
 					<tr class="group"><th scope="rowgroup" colspan="3"><Linked text={block.when} /></th></tr>
 					{#each block.legs as s, i (i)}
 						<tr>
-							<td class="name">{s.car}</td>
+							<td class="name">{s.car}{#if s.from}<div class="car-alt">{s.from}</div>{/if}</td>
 							<td>
 								{#if s.parked}<span class="tag car">🅿️ Står</span>{:else}{s.driver}{/if}
 								{#if s.own}<span class="tag success">Egen bil</span>{/if}
