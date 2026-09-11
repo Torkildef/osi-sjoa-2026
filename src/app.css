@@ -1671,6 +1671,38 @@ section.plan .section-head h2 .tag {
 	border: 2px solid var(--primary);
 }
 
+.plan-parts {
+	display: grid;
+	gap: 0.75rem;
+}
+
+.plan-part {
+	display: grid;
+	gap: 0.4rem;
+	padding: 0.7rem 0.85rem;
+	border-radius: var(--shape-md);
+	background: var(--surface);
+	color: var(--on-surface);
+	border-left: 4px solid var(--primary);
+}
+
+.plan-part.rookie1 {
+	border-left-color: var(--on-rookie1-container);
+}
+
+.plan-part.rookie2 {
+	border-left-color: var(--on-rookie2-container);
+}
+
+.plan-part .tag {
+	justify-self: start;
+}
+
+.me-card .plan-part ul.facts,
+.me-card .plan-part ul.facts li::marker {
+	color: var(--on-surface);
+}
+
 .me-card .on-surface-variant,
 .me-card ul.facts {
 	color: var(--on-primary-container);

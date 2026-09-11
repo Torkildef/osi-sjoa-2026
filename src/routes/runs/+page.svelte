@@ -8,7 +8,7 @@
 		rookiesRun2,
 		runs,
 		steps,
-		summaryFor,
+		planFor,
 		teamLabel,
 		teamOf
 	} from '$lib/runs';
@@ -84,12 +84,16 @@
 				<h3 class="title-medium"><Icon name="person" size={20} /> Din plan, {me}</h3>
 				<span class="tag {teamOf(me) === 'none' ? 'primary' : teamOf(me)}">{teamLabel[teamOf(me)]}</span>
 			</div>
-			<ul class="facts">
-				{#each summaryFor(me) as line, i (i)}<li>{line}</li>{/each}
-			</ul>
-			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">
-				Dine steg er uthevet under: {mine.map((i) => i + 1).join(', ')}. Trykk på navnet igjen for å nullstille.
-			</p>
+			<div class="plan-parts">
+				{#each planFor(me) as part (part.title)}
+					<div class="plan-part {part.tone}">
+						<span class="tag {part.tone === 'morning' ? 'primary' : part.tone}">{part.title}</span>
+						<ul class="facts">
+							{#each part.lines as line, i (i)}<li>{line}</li>{/each}
+						</ul>
+					</div>
+				{/each}
+			</div>
 		</div>
 	{/if}
 </section>

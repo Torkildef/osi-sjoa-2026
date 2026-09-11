@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
-	import { isRookie, runs, teamOf } from '$lib/runs';
+	import { isRookie, legsOf, runs, teamOf } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -43,8 +43,8 @@
 		<div class="label"><Icon name="person" size={16} /> Rookies</div>
 	</div>
 	<div class="stat">
-		<div class="value">{run.before.length}</div>
-		<div class="label"><Icon name="directionsCar" size={16} /> Biler i shuttle</div>
+		<div class="value">{run.before.length + run.toTakeOut.length + run.after.length + run.home.length}</div>
+		<div class="label"><Icon name="directionsCar" size={16} /> Kjørelegg</div>
 	</div>
 </div>
 
@@ -71,47 +71,25 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Shuttle før</h2>
-		<p class="body-small on-surface-variant">De erfarne setter den mens rookiene varmer opp.</p>
+		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Bilene</h2>
 	</div>
 	<div class="table-wrap">
 		<table class="data">
 			<thead>
-				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Merknad</th></tr>
+				<tr><th scope="col">Når</th><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Dit</th></tr>
 			</thead>
 			<tbody>
-				{#each run.before as s, i (i)}
-					<tr>
-						<td class="name">{s.car}</td>
-						<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
-						<td class="wrap">{s.note ?? ''}</td>
-					</tr>
+				{#each legsOf(run) as block (block.when)}
+					{#each block.legs as s, i (i)}
+						<tr>
+							<td class="wrap">{i === 0 ? block.when : ''}</td>
+							<td class="name">{s.car}</td>
+							<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
+							<td class="wrap">{s.note ?? ''}</td>
+						</tr>
+					{/each}
 				{/each}
 			</tbody>
 		</table>
 	</div>
-</section>
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Etter Bru-bru</h2>
-		<p class="body-small on-surface-variant">Rookiene i land, de erfarne padler Playrun.</p>
-	</div>
-	<div class="table-wrap">
-		<table class="data">
-			<thead>
-				<tr><th scope="col">Bil</th><th scope="col">Sjåfør</th><th scope="col">Dit</th></tr>
-			</thead>
-			<tbody>
-				{#each run.after as s, i (i)}
-					<tr>
-						<td class="name">{s.car}</td>
-						<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
-						<td class="wrap">{s.note ?? ''}</td>
-					</tr>
-				{/each}
-			</tbody>
-		</table>
-	</div>
-	<p class="footnote">{run.afterNote}</p>
 </section>
