@@ -27,7 +27,7 @@ export const schedule: ScheduleEntry[] = [
 		day: 'Fredag',
 		time: '16:00',
 		title: '🛶 Oppmøte ved kajakkrommet',
-		note: 'Rolf E. Stenersens allé 21, Sogn studentby. Leiebilen med hengeren, Wiktor, Helene og Tiril fyller opp og drar samlet.'
+		note: 'Rolf E. Stenersens allé 21, Sogn studentby. 9-seteren med hengeren, Wiktor og Helene fyller opp og drar samlet.'
 	},
 	{
 		day: 'Fredag',

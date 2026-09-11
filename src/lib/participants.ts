@@ -93,8 +93,7 @@ export const cars: Car[] = [
 		towHitch: false,
 		roofRack: false,
 		departure: 'fredag'
-	},
-	{ driver: 'Tiril', seats: 5, towHitch: true, roofRack: true, departure: 'fredag', note: 'Takstativ, tar 4 kajakker.' }
+	}
 ];
 
 export const people: Person[] = [
@@ -210,15 +209,6 @@ export const people: Person[] = [
 		kayak: true,
 		vest: true,
 		helmet: 'Medium (yellow)'
-	},
-	{
-		name: 'Tiril Taugbøl-Hansen',
-		rookie: true,
-		departure: 'fredag',
-		licence: 'automat',
-		kayak: true,
-		vest: true,
-		helmet: 'Large (blue)'
 	},
 	{
 		name: 'Malin Nordli Bernhardsson',
