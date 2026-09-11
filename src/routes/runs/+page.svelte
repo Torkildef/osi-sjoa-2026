@@ -135,6 +135,31 @@
 			{/if}
 		</div>
 	{:else if me}
+		<div class="card me-card">
+			<div class="card-head">
+				<h3 class="title-medium"><Icon name="person" size={20} /> Din plan, {shown(me)}</h3>
+				<span class="tag {teamOf(me) === 'none' ? 'primary' : teamOf(me)}">{teamLabel[teamOf(me)]}</span>
+			</div>
+			<div class="plan-parts">
+				{#each planFor(me) as part (part.title)}
+					<div class="plan-part {part.tone}">
+						<span class="tag {part.tone}">{part.title}</span>
+						<div class="plan-lines">
+							{#each part.lines as line, i (i)}
+								<div class="plan-line {line.kind}">
+									<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
+									<span>
+										{#if line.when}<span class="plan-when"><Linked text={line.when} /></span>{/if}
+										<Linked text={line.text} />
+									</span>
+								</div>
+							{/each}
+						</div>
+					</div>
+				{/each}
+			</div>
+		</div>
+
 		{#if data.configured}
 			<form
 				method="POST"
@@ -191,31 +216,6 @@
 					Inne i planen om ca. 5 minutter hvis det går opp. Gjelder også ønsker for andre. Ellers får du beskjed.
 				</p>
 			</form>
-		<div class="card me-card">
-			<div class="card-head">
-				<h3 class="title-medium"><Icon name="person" size={20} /> Din plan, {shown(me)}</h3>
-				<span class="tag {teamOf(me) === 'none' ? 'primary' : teamOf(me)}">{teamLabel[teamOf(me)]}</span>
-			</div>
-			<div class="plan-parts">
-				{#each planFor(me) as part (part.title)}
-					<div class="plan-part {part.tone}">
-						<span class="tag {part.tone}">{part.title}</span>
-						<div class="plan-lines">
-							{#each part.lines as line, i (i)}
-								<div class="plan-line {line.kind}">
-									<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
-									<span>
-										{#if line.when}<span class="plan-when"><Linked text={line.when} /></span>{/if}
-										<Linked text={line.text} />
-									</span>
-								</div>
-							{/each}
-						</div>
-					</div>
-				{/each}
-			</div>
-		</div>
-
 		{/if}
 	{/if}
 </section>
