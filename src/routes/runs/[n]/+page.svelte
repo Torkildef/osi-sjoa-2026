@@ -85,7 +85,11 @@
 					{#each block.legs as s, i (i)}
 						<tr>
 							<td class="name">{s.car}</td>
-							<td>{s.driver} {#if s.own}<span class="tag success">Egen bil</span>{/if}</td>
+							<td>
+								{#if s.parked}<span class="tag car">🅿️ Står</span>{:else}{s.driver}{/if}
+								{#if s.own}<span class="tag success">Egen bil</span>{/if}
+								{#if s.alt?.length}<div class="car-alt">kan også: {s.alt.join(', ')}</div>{/if}
+							</td>
 							<td class="wrap">{#if s.note}<Linked text={s.note} />{/if}</td>
 						</tr>
 					{/each}

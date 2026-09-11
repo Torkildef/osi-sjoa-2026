@@ -1793,6 +1793,11 @@ section.plan .section-head h2 .tag {
 	font-size: 0.78rem;
 }
 
+.car-alt {
+	font-size: 0.78rem;
+	color: var(--on-surface-variant);
+}
+
 .car-leg .car-note {
 	font-size: 0.9rem;
 	color: var(--on-surface-variant);

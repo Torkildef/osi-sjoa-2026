@@ -120,8 +120,13 @@
 						<li class="car-leg">
 							<span class="car-when"><span class="tag run{leg.run}">Run {leg.run}</span> <Linked text={leg.when} /></span>
 							<span class="car-driver">
-								<span class="chip {teamOf(leg.driver)} small">🚗 {leg.driver}</span>
-								{#if leg.own}<span class="tag success">Egen bil</span>{/if}
+								{#if leg.parked}
+									<span class="tag car">🅿️ Står</span>
+								{:else}
+									<span class="chip {teamOf(leg.driver)} small">🚗 {leg.driver}</span>
+									{#if leg.own}<span class="tag success">Egen bil</span>{/if}
+									{#if leg.alt?.length}<span class="car-alt">kan også: {leg.alt.join(', ')}</span>{/if}
+								{/if}
 							</span>
 							{#if leg.note}<span class="car-note"><Linked text={leg.note} /></span>{/if}
 						</li>
