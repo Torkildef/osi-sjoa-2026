@@ -227,6 +227,7 @@
 			<div class="chip-row">
 				{#each experienced as name (name)}<span class="chip exp">{shown(name)}</span>{/each}
 			</div>
+			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Simon padler Bru-bru begge runs, kanskje Playrun på run 2.</p>
 		</div>
 		<div class="card">
 			<div class="card-head">
