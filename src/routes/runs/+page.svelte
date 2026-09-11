@@ -10,6 +10,7 @@
 		runs,
 		steps,
 		planFor,
+		planIcon,
 		teamLabel,
 		teamOf
 	} from '$lib/runs';
@@ -71,7 +72,7 @@
 		{#each everyone as name (name)}
 			<button
 				type="button"
-				class="chip {me === name ? 'me' : teamOf(name) === 'none' ? 'tonal' : teamOf(name)}"
+				class="chip {me === name ? 'me' : teamOf(name)}"
 				aria-pressed={me === name}
 				onclick={() => pick(name)}
 			>
@@ -89,9 +90,14 @@
 				{#each planFor(me) as part (part.title)}
 					<div class="plan-part {part.tone}">
 						<span class="tag {part.tone === 'morning' ? 'primary' : part.tone}">{part.title}</span>
-						<ul class="facts">
-							{#each part.lines as line, i (i)}<li><Linked text={line} /></li>{/each}
-						</ul>
+						<div class="plan-lines">
+							{#each part.lines as line, i (i)}
+								<div class="plan-line {line.kind}">
+									<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
+									<span><Linked text={line.text} /></span>
+								</div>
+							{/each}
+						</div>
 					</div>
 				{/each}
 			</div>
@@ -132,6 +138,7 @@
 				<div class="what">
 					<h3 class="title-medium"><Linked text={step.what} /></h3>
 					{#if step.who}<p><Linked text={step.who} /></p>{/if}
+					{#if me && step.drivers?.includes(me)}<span class="tag drive">🚗 Du kjører</span>{/if}
 				</div>
 			</li>
 		{/each}

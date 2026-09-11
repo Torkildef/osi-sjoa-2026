@@ -1718,9 +1718,54 @@ table.data tr.group th a {
 	justify-self: start;
 }
 
-.me-card .plan-part ul.facts,
-.me-card .plan-part ul.facts li::marker {
-	color: var(--on-surface);
+.plan-lines {
+	display: grid;
+	gap: 0.3rem;
+}
+
+.plan-line {
+	display: grid;
+	grid-template-columns: 1.6rem 1fr;
+	align-items: start;
+	gap: 0.45rem;
+	padding: 0.4rem 0.6rem;
+	border-radius: var(--shape-sm);
+	font-size: 0.95rem;
+	line-height: 1.4;
+}
+
+.plan-line .plan-icon {
+	font-size: 1.05rem;
+	line-height: 1.3;
+	text-align: center;
+}
+
+.plan-line.drive {
+	background: var(--warning-container);
+	color: var(--on-warning-container);
+	font-weight: 600;
+}
+
+.plan-line.drive a.place {
+	color: inherit;
+}
+
+.tag.drive {
+	background: var(--warning-container);
+	color: var(--on-warning-container);
+	margin-top: 0.3rem;
+	justify-self: start;
+}
+
+a.place {
+	text-decoration: underline;
+	text-decoration-thickness: 1.5px;
+	text-decoration-color: color-mix(in srgb, currentColor 45%, transparent);
+	text-underline-offset: 3px;
+}
+
+a.place:hover {
+	text-decoration-color: currentColor;
 }
 
 .me-card .on-surface-variant,

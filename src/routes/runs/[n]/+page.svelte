@@ -2,7 +2,7 @@
 	import Icon from '$lib/Icon.svelte';
 	import { trip } from '$lib/config';
 	import Linked from '$lib/Linked.svelte';
-	import { isRookie, legsOf, runs, teamOf } from '$lib/runs';
+	import { allLegs, isRookie, legsOf, runs, teamOf } from '$lib/runs';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -44,7 +44,7 @@
 		<div class="label"><Icon name="person" size={16} /> Rookies</div>
 	</div>
 	<div class="stat">
-		<div class="value">{run.before.length + run.toTakeOut.length + run.after.length + run.home.length}</div>
+		<div class="value">{allLegs(run).length}</div>
 		<div class="label"><Icon name="directionsCar" size={16} /> Kjørelegg</div>
 	</div>
 </div>
