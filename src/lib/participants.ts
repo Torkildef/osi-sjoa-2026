@@ -93,6 +93,14 @@ export const cars: Car[] = [
 		towHitch: false,
 		roofRack: false,
 		departure: 'fredag'
+	},
+	{
+		driver: 'Tiril',
+		seats: 5,
+		towHitch: true,
+		roofRack: true,
+		departure: 'fredag',
+		note: 'Tiril dro hjem, men bilen er med. Automat. Takstativ, tar 4 kajakker.'
 	}
 ];
 
