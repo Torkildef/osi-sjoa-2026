@@ -514,6 +514,38 @@ nav.main-nav a .icon {
 	height: 20px;
 }
 
+/* Mellomstore skjermer: seks faner må få plass ved siden av logoen. */
+@media (min-width: 48rem) and (max-width: 66rem) {
+	.top-bar .brand-text {
+		white-space: nowrap;
+	}
+
+	nav.main-nav {
+		gap: 0;
+	}
+
+	nav.main-nav a {
+		padding: 0.5rem 0.6rem;
+		font-size: 0.85rem;
+	}
+
+	.top-bar .btn {
+		padding-inline: 0.8rem;
+	}
+}
+
+/* Smaleste bredde med toppmeny: uten undertittel og med tettere faner. */
+@media (min-width: 48rem) and (max-width: 56rem) {
+	.top-bar .brand-text > span {
+		display: none;
+	}
+
+	nav.main-nav a {
+		padding: 0.5rem 0.45rem;
+		gap: 0.3rem;
+	}
+}
+
 @media (max-width: 47.99rem) {
 	nav.main-nav {
 		position: fixed;
