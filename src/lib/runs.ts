@@ -5,9 +5,10 @@
  *
  * Fornavn som på resten av siden. Endre her; siden følger med.
  *
- * Kajakker: de 11 erfarne har hver sin, rookiene deler på 5 (en sjette står
- * i reserve på Kruke). 16 på elva, og henger 10 + Wiktor 4 + Caroline 2 tar
- * akkurat 16. Helenes bil står på Kruke hele dagen.
+ * Kajakker: 17 med. De 11 erfarne har hver sin, rookiene deler på 5, og den
+ * 17. er reserve. Kajakkplass: henger 10, Wiktor 4, Tiril 4, Caroline 2.
+ * Om morgenen står Tirils bil på Kruke, så 16 kajakker drar, og Tiril tar
+ * med reserven når hun kjører til take out. Helenes bil står på Kruke hele dagen.
  */
 import { people, shortName, type Person } from './participants';
 
@@ -130,7 +131,7 @@ export const runs: Run[] = [
 		launch: [{ car: LEIEBIL, driver: 'Malin F.', note: 'Til Kruke' }],
 		toTakeOut: [
 			{ car: LEIEBIL, driver: 'Malin F.' },
-			{ car: TIRIL, driver: 'Tiril', own: true }
+			{ car: TIRIL, driver: 'Tiril', own: true, note: 'Med reservekajakken' }
 		],
 		after: [
 			{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke med rookies run 1, så til take out Playrun' },
@@ -203,7 +204,7 @@ const run2 = [...experienced, ...rookiesRun2];
 export const steps = (): Step[] => [
 	{
 		what: 'Kruke → put inn Bru-bru: erfarne, rookies run 1 og Malin F. 16 kajakker.',
-		who: 'Torkild (9-seter), Wiktor og Caroline kjører. Rookies run 2 sover videre på Kruke.',
+		who: 'Torkild (9-seter), Wiktor og Caroline kjører. Rookies run 2 sover videre på Kruke, med reservekajakken.',
 		names: [...run1, 'Malin F.'],
 		drivers: ['Torkild', 'Wiktor', 'Caroline']
 	},
@@ -219,13 +220,13 @@ export const steps = (): Step[] => [
 	},
 	{
 		what: 'Rookies run 2 står på take out Bru-bru til avtalt tid. Rookiene i land, erfarne rett videre ned Playrun.',
-		who: 'Malin F. (9-seter), Tiril (egen).',
+		who: 'Malin F. (9-seter), Tiril (egen, med reservekajakken).',
 		names: [...run1, ...rookiesRun2],
 		drivers: ['Malin F.', 'Tiril']
 	},
 	{
 		what: 'Ludvig (9-seter) setter av rookies run 1 på Kruke og kjører videre til take out Playrun, der Wiktors bil står. Tiril og Malin F. (Carolines) til put inn Bru-bru med rookies run 2.',
-		who: '5 rookie-kajakker: 2 på Caroline, 3 på hengeren. Hengeren er innom put inn på veien uansett.',
+		who: 'Rookie-kajakkene: 4 på Tiril, 2 på Caroline.',
 		names: rookies,
 		drivers: ['Ludvig', 'Tiril', 'Malin F.']
 	},

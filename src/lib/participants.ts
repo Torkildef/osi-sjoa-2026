@@ -94,7 +94,7 @@ export const cars: Car[] = [
 		roofRack: false,
 		departure: 'fredag'
 	},
-	{ driver: 'Tiril', seats: 5, towHitch: true, roofRack: false, departure: 'fredag' }
+	{ driver: 'Tiril', seats: 5, towHitch: true, roofRack: true, departure: 'fredag', note: 'Takstativ, tar 4 kajakker.' }
 ];
 
 export const people: Person[] = [
