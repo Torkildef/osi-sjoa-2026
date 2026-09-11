@@ -40,7 +40,7 @@ export const rookies = [...rookiesRun1, ...rookiesRun2];
 export const everyone = [...experienced, ...rookies];
 
 /** Pynt ved navnet, om noen har bedt om det. F.eks. { Caroline: '🌸' }. */
-export const flair: Record<string, string> = {};
+export const flair: Record<string, string> = { Vegard: '🌸' };
 
 /** Navn med eventuell pynt. */
 export const shown = (first: string) => (flair[first] ? `${first} ${flair[first]}` : first);
