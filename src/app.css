@@ -1476,11 +1476,27 @@ dl.qa dd {
 	margin-top: 0.25rem;
 }
 
-.hero .countdown {
+.countdown {
 	display: grid;
 	gap: 0.4rem;
 	justify-items: start;
 	margin-top: 0.25rem;
+}
+
+/* Nedtelling utenfor hero: eget mørkt kort med samme glassfliser. */
+.count-card {
+	margin-bottom: 1.25rem;
+	padding: 1.1rem 1.25rem;
+	border-radius: var(--shape-xl);
+	color: #fff;
+	background:
+		radial-gradient(120% 140% at 100% 0%, rgb(255 255 255 / 0.18), transparent 55%),
+		linear-gradient(135deg, var(--primary), color-mix(in srgb, var(--primary) 55%, #0b2540));
+	box-shadow: var(--elevation-2);
+}
+
+.count-card .countdown {
+	margin-top: 0;
 }
 
 .count-label {

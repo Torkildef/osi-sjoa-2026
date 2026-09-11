@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import Countdown from '$lib/Countdown.svelte';
 	import Icon from '$lib/Icon.svelte';
 	import Linked from '$lib/Linked.svelte';
 	import { trip } from '$lib/config';
@@ -69,6 +70,16 @@
 			<a class="chip link run{run.n}" href="/runs/{run.n}"><Icon name="kayaking" size={16} /> {run.title}</a>
 		{/each}
 	</div>
+</div>
+
+<div class="count-card">
+	<Countdown
+		to="2026-09-12T09:00:00+02:00"
+		label="Padling om"
+		on="Vi padler! 🛶"
+		done="Ferdig padlet. Grillen! 🍖"
+		until="2026-09-12T18:00:00+02:00"
+	/>
 </div>
 
 <div class="draft-banner">

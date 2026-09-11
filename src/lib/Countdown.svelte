@@ -1,7 +1,18 @@
 <script lang="ts">
-	import { trip, tripIsOn } from '$lib/config';
+	import { trip } from '$lib/config';
 
-	/** Nedtelling til felles avreise, sekund for sekund mens siden er åpen. */
+	/**
+	 * Nedtelling, sekund for sekund mens siden er åpen.
+	 * Uten props teller den til felles avreise. Send inn `to` for noe annet.
+	 */
+	let {
+		to = trip.meetup.time,
+		label = 'Avreise om',
+		on = 'Vi er på elva! 🌊',
+		done = 'Takk for turen! 🛶',
+		until = `${trip.end}T23:59:59+02:00`
+	}: { to?: string; label?: string; on?: string; done?: string; until?: string } = $props();
+
 	let now = $state(new Date());
 
 	$effect(() => {
@@ -9,9 +20,8 @@
 		return () => clearInterval(timer);
 	});
 
-	const target = new Date(trip.meetup.time).getTime();
-	const tripEnd = new Date(`${trip.end}T23:59:59+02:00`).getTime();
-
+	const target = $derived(new Date(to).getTime());
+	const end = $derived(new Date(until).getTime());
 	const left = $derived(Math.max(0, target - now.getTime()));
 	const parts = $derived.by(() => {
 		const total = Math.floor(left / 1000);
@@ -22,16 +32,13 @@
 			{ label: 'sek', value: total % 60 }
 		];
 	});
-
-	const phase = $derived(
-		left > 0 ? 'before' : tripIsOn(now) ? 'on' : now.getTime() < tripEnd ? 'soon' : 'after'
-	);
+	const phase = $derived(left > 0 ? 'before' : now.getTime() < end ? 'on' : 'after');
 	const pad = (n: number) => String(n).padStart(2, '0');
 </script>
 
 <div class="countdown" role="timer" aria-live="off">
 	{#if phase === 'before'}
-		<div class="count-label">Avreise om</div>
+		<div class="count-label">{label}</div>
 		<div class="count-tiles">
 			{#each parts as part (part.label)}
 				<div class="count-tile">
@@ -43,10 +50,8 @@
 			{/each}
 		</div>
 	{:else if phase === 'on'}
-		<div class="count-live"><span class="count-dot"></span> Vi er på elva! 🌊</div>
-	{:else if phase === 'soon'}
-		<div class="count-live"><span class="count-dot"></span> God tur! 🛶</div>
+		<div class="count-live"><span class="count-dot"></span> {on}</div>
 	{:else}
-		<div class="count-live">Takk for turen! 🛶</div>
+		<div class="count-live">{done}</div>
 	{/if}
 </div>
