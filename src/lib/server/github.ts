@@ -9,6 +9,7 @@ import { env } from '$env/dynamic/private';
  */
 
 export const PROMPT_LABEL = 'prompt';
+export const LOGISTICS_LABEL = 'logistikk';
 export const REJECTED_LABEL = 'avvist';
 
 export type PromptIssue = {
@@ -56,25 +57,45 @@ export async function createPromptIssue(
 ): Promise<{ number: number; url: string }> {
 	await ensureLabel(PROMPT_LABEL, '0e8a16', 'Prompt fra /admin, tas av Claude');
 	await ensureLabel(REJECTED_LABEL, 'b60205', 'Avvist av Claude – se kommentaren');
+	return createIssue(PROMPT_LABEL, name, prompt, '/admin', 'Prompt');
+}
 
-	const firstLine = prompt.split('\n').find((l) => l.trim()) ?? prompt;
-	const title = firstLine.length > 70 ? `${firstLine.slice(0, 67).trim()}…` : firstLine.trim();
+/** Oppretter et issue med et endringsønske til lørdagsplanen fra /runs. */
+export async function createLogisticsIssue(
+	name: string,
+	text: string
+): Promise<{ number: number; url: string }> {
+	await ensureLabel(LOGISTICS_LABEL, '1d76db', 'Endringsønske til lørdagsplanen fra /runs');
+	await ensureLabel(REJECTED_LABEL, 'b60205', 'Avvist av Claude – se kommentaren');
+	return createIssue(LOGISTICS_LABEL, name, text, '/runs', 'Ønske');
+}
+
+async function createIssue(
+	label: string,
+	name: string,
+	text: string,
+	source: string,
+	heading: string
+): Promise<{ number: number; url: string }> {
+	const firstLine = text.split('\n').find((l) => l.trim()) ?? text;
+	const short = firstLine.length > 70 ? `${firstLine.slice(0, 67).trim()}…` : firstLine.trim();
+	const title = label === LOGISTICS_LABEL ? `${name}: ${short}` : short;
 
 	const res = await api('/issues', {
 		method: 'POST',
 		body: JSON.stringify({
 			title,
-			labels: [PROMPT_LABEL],
+			labels: [label],
 			body: [
 				`**Fra:** ${name}`,
 				`**Sendt:** ${new Date().toLocaleString('nb-NO', { timeZone: 'Europe/Oslo' })}`,
 				'',
-				'## Prompt',
+				`## ${heading}`,
 				'',
-				prompt,
+				text,
 				'',
 				'---',
-				'_Sendt inn via /admin. Claude tar den ved neste kjøring._'
+				`_Sendt inn via ${source}. Claude tar den ved neste kjøring._`
 			].join('\n')
 		})
 	});
@@ -84,9 +105,9 @@ export async function createPromptIssue(
 }
 
 /** De siste promptene, nyeste først. */
-export async function listPromptIssues(limit = 10): Promise<PromptIssue[]> {
+export async function listPromptIssues(limit = 10, label = PROMPT_LABEL): Promise<PromptIssue[]> {
 	const res = await api(
-		`/issues?labels=${PROMPT_LABEL}&state=all&sort=created&direction=desc&per_page=${limit}`
+		`/issues?labels=${label}&state=all&sort=created&direction=desc&per_page=${limit}`
 	);
 	if (!res.ok) throw new Error(`GitHub svarte ${res.status} da promptene skulle hentes.`);
 	const data = (await res.json()) as {
@@ -110,9 +131,9 @@ export async function listPromptIssues(limit = 10): Promise<PromptIssue[]> {
 		}));
 }
 
-/** Hvor mange prompter som er sendt inn den siste timen – bremsen mot spam. */
-export async function promptsLastHour(): Promise<number> {
+/** Hvor mange som er sendt inn den siste timen – bremsen mot spam. */
+export async function promptsLastHour(label = PROMPT_LABEL): Promise<number> {
 	const since = new Date(Date.now() - 3600_000);
-	const issues = await listPromptIssues(30);
+	const issues = await listPromptIssues(30, label);
 	return issues.filter((i) => new Date(i.createdAt) > since).length;
 }

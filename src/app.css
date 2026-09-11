@@ -1718,6 +1718,46 @@ table.data tr.group th a {
 	justify-self: start;
 }
 
+.draft-banner {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem 1.25rem;
+	margin-bottom: 1.5rem;
+	border-radius: var(--shape-lg);
+	background: var(--warning-container);
+	color: var(--on-warning-container);
+	border: 2px solid color-mix(in srgb, var(--on-warning-container) 35%, transparent);
+}
+
+.draft-banner .draft-emoji {
+	font-size: 2.2rem;
+	line-height: 1;
+}
+
+.draft-banner p {
+	margin: 0.15rem 0 0;
+}
+
+.change-form {
+	margin-top: 0.85rem;
+}
+
+.change-form .honey {
+	position: absolute;
+	left: -9999px;
+	width: 1px;
+	height: 1px;
+	opacity: 0;
+}
+
+.change-form .form-row {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+}
+
 .plan-lines {
 	display: grid;
 	gap: 0.3rem;

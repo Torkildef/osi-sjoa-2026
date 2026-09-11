@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { enhance } from '$app/forms';
 	import Icon from '$lib/Icon.svelte';
 	import Linked from '$lib/Linked.svelte';
 	import { trip } from '$lib/config';
@@ -14,8 +15,12 @@
 		teamLabel,
 		teamOf
 	} from '$lib/runs';
+	import type { ActionData, PageData } from './$types';
+
+	let { data, form }: { data: PageData; form: ActionData } = $props();
 
 	const KEY = 'sjoa:meg';
+	let sending = $state(false);
 
 	/** Får Tiril tak i takstativ? Endrer kajakkregnestykket. */
 	let rack = $state(false);
@@ -64,6 +69,17 @@
 	</div>
 </div>
 
+<div class="draft-banner">
+	<span class="draft-emoji" aria-hidden="true">🚧</span>
+	<div>
+		<div class="title-medium">Foreløpig plan</div>
+		<p class="body-medium">
+			Dette er et utkast og kan endres. Velg deg selv under og skriv hva som bør være annerledes, så
+			oppdateres planen.
+		</p>
+	</div>
+</div>
+
 <section class="block">
 	<div class="section-head">
 		<h2 class="title-large"><Icon name="person" size={22} class="primary-text" /> Velg deg selv</h2>
@@ -102,6 +118,58 @@
 				{/each}
 			</div>
 		</div>
+
+		{#if data.configured}
+			<form
+				method="POST"
+				action="?/submit"
+				class="card admin-form change-form"
+				use:enhance={() => {
+					sending = true;
+					return async ({ update }) => {
+						await update({ reset: true });
+						sending = false;
+					};
+				}}
+			>
+				<input type="hidden" name="name" value={me} />
+				<input type="text" name="nettside" tabindex="-1" autocomplete="off" class="honey" aria-hidden="true" />
+				<label class="field">
+					<span>Noe som bør endres, {me}?</span>
+					<textarea
+						name="text"
+						rows="3"
+						maxlength="500"
+						placeholder="F.eks. «Jeg vil ikke padle run 2», «Jeg vil helst ikke kjøre med henger» eller «Caroline sa hun ikke vil padle Playrun»"
+						required>{form?.ok ? '' : (form?.text ?? '')}</textarea
+					>
+				</label>
+				{#if form?.error}
+					<p class="notice error"><Icon name="error" size={20} /> {form.error}</p>
+				{/if}
+				{#if form?.ok}
+					<p class="notice info">
+						<Icon name="checkCircle" size={20} />
+						<span>
+							{#if form.issue}
+								Mottatt som <a href={form.issue.url} target="_blank" rel="noopener">#{form.issue.number}</a>.
+							{:else}
+								Mottatt.
+							{/if}
+							Planen oppdateres innen en time hvis det går opp.
+						</span>
+					</p>
+				{/if}
+				<div class="form-row">
+					<button type="submit" class="btn btn-filled" disabled={sending}>
+						{sending ? 'Sender …' : 'Send inn'}
+					</button>
+					<span class="body-small on-surface-variant">
+						Går rett inn i planen hvis det ikke er noe rart med det. Ellers får du beskjed.
+					</span>
+				</div>
+			</form>
+		{/if}
 	{/if}
 </section>
 
