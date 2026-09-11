@@ -6,7 +6,8 @@
  * Fornavn som på resten av siden. Endre her; siden følger med.
  *
  * Kajakker: 17 med. De 11 erfarne har hver sin, rookiene deler på 5, og den
- * 17. er reserve. Kajakkplass: henger 10, Wiktor 4, Tiril 4, Caroline 2.
+ * 17. er reserve. Kajakkplass: henger 10, Wiktor 2 (tar 4 om det må), Tiril 4,
+ * Caroline 2.
  * Før hvert run settes Wiktors og Carolines bil på take out Playrun, så begge
  * kjører hjem derfra, og Tirils bil på take out Bru-bru, så den tar rookiene
  * videre med 4 kajakker. Tiril dro hjem, men bilen er med: Helene og Ludvig
@@ -134,9 +135,9 @@ export const runs: Run[] = [
 		],
 		morning: [
 			{ car: LEIEBIL, driver: 'Torkild', note: 'Til put inn Bru-bru med 10 kajakker', alt: ['Knut', 'Vegard', 'Eskil'] },
-			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til put inn Bru-bru med 4 kajakker', alt: ['Eskil', 'Vegard'] },
+			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til put inn Bru-bru med 2 kajakker', alt: ['Eskil', 'Vegard'] },
 			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til put inn Bru-bru med 2 kajakker', alt: ['Maja', 'Dani'] },
-			{ car: TIRIL, driver: 'Helene', note: 'Til put inn Bru-bru med reservekajakken', alt: ['Maja', 'Dani'] }
+			{ car: TIRIL, driver: 'Helene', note: 'Til put inn Bru-bru med 3 kajakker, reserven er en av dem', alt: ['Maja', 'Dani'] }
 		],
 		before: [
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander', alt: ['Eskil', 'Vegard'] },
@@ -244,7 +245,7 @@ const run2 = [...experienced, ...rookiesRun2];
 /** Hele dagen, steg for steg. */
 export const steps = (): Step[] => [
 	{
-		what: 'Kruke → put inn Bru-bru: erfarne, rookies run 1 og Malin F. Alle 17 kajakker.',
+		what: 'Kruke → put inn Bru-bru: erfarne, rookies run 1 og Malin F. Alle 17 kajakker: 10 på hengeren, 3 på Tirils bil, 2 på Wiktors, 2 på Carolines.',
 		who: 'Torkild (9-seter), Wiktor, Caroline og Helene (Tirils bil) kjører. Rookies run 2 sover videre på Kruke.',
 		names: [...run1, 'Malin F.'],
 		drivers: ['Torkild', 'Wiktor', 'Caroline', 'Helene']

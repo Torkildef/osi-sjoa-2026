@@ -85,7 +85,14 @@ export const cars: Car[] = [
 		departure: 'torsdag',
 		note: 'Racks langt fra hverandre. Drar torsdag, så bilen er ikke med i fredagskonvoien.'
 	},
-	{ driver: 'Wiktor', seats: 5, towHitch: true, roofRack: true, departure: 'fredag' },
+	{
+		driver: 'Wiktor',
+		seats: 5,
+		towHitch: true,
+		roofRack: true,
+		departure: 'fredag',
+		note: 'Takstativ med 2 kajakker til shuttling, tar opptil 4.'
+	},
 	{
 		driver: 'Helene',
 		seats: 4,
