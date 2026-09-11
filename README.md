@@ -204,7 +204,7 @@ En Routine i Claude Code on the web (oppskrift og prompt i
 [`docs/admin-routine.md`](docs/admin-routine.md)) kjører hver hele time på dagtid, leser åpne
 `prompt`-issues, gjør jobben og lukker issuet med en oppsummering. Endringer i
 datafilene (`participants.ts`, `schedule.ts`, `info.ts`, `packing.ts`, `river.ts`,
-`places.ts`, `config.ts`, `runs.ts`) pushes rett til standardgrenen; alt annet kommer som pull
+`places.ts`, `config.ts`, `runs.ts`, `rooms.ts`) pushes rett til standardgrenen; alt annet kommer som pull
 request. Prompter som bryter reglene – hemmeligheter, telefonnumre, endringer i
 `/admin` eller CI, sletting, sjikane – avvises med merkelappen `avvist` og en forklaring.
 
@@ -217,7 +217,7 @@ bør endres i lørdagsplanen («Jeg vil ikke padle run 2», «Jeg vil helst ikke
 Ingen passord. Navnet må være et deltakernavn, teksten maks 500 tegn, maks 10 i timen, pluss en
 honningkrukke mot roboter. Man kan også be om endringer for andre, og om pynt ved navnet
 (`flair` i `runs.ts`). Hvert ønske blir et issue med merkelappen `logistikk`. Samme
-Routine tar dem, endrer bare `src/lib/runs.ts`, sjekker at kajakker, seter og førerkort
+Routine tar dem, endrer bare `src/lib/runs.ts` (og `rooms.ts` for romønsker), sjekker at kajakker, seter og førerkort
 fortsatt går opp, og pusher rett til standardgrenen. Er ønsket uklart eller går det ikke opp,
 avvises det med en forklaring. Trenger bare `GITHUB_TOKEN`.
 

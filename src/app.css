@@ -1956,6 +1956,59 @@ section.plan .section-head h2 .tag {
 	color: var(--on-surface-variant);
 }
 
+/* ---- Soveplasser ------------------------------------------------------- */
+
+ul.rooms {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.5rem;
+}
+
+.room {
+	display: grid;
+	gap: 0.35rem;
+	padding: 0.55rem 0.7rem;
+	border-radius: var(--shape-sm);
+	background: var(--surface-container-low);
+}
+
+.room-head {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.4rem;
+}
+
+.room-name {
+	font-weight: 700;
+}
+
+.room-beds {
+	display: inline-flex;
+	gap: 0.25rem;
+	font-size: 0.95rem;
+}
+
+.room-beds .bed.double {
+	letter-spacing: -0.35em;
+	margin-right: 0.35em;
+}
+
+.room-meta {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem;
+}
+
+.room-note {
+	font-size: 0.82rem;
+	color: var(--on-surface-variant);
+}
+
 .plan-when {
 	display: block;
 	font-size: 0.7rem;

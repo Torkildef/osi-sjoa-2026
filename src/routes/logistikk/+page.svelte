@@ -1,6 +1,7 @@
 <script lang="ts">
 	import Icon from '$lib/Icon.svelte';
 	import { signupFormUrl, trip } from '$lib/config';
+	import { buildings, capacity, free, totalCapacity } from '$lib/rooms';
 	import {
 		borrowsGear,
 		byDeparture,
@@ -194,6 +195,47 @@
 				</tr>
 			</tfoot>
 		</table>
+	</div>
+</section>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="house" size={22} class="primary-text" /> Soveplasser</h2>
+		<p class="body-small on-surface-variant">{totalCapacity()} plasser på Kruke. Dobbeltseng teller to.</p>
+	</div>
+	<div class="grid wide">
+		{#each buildings as building (building.name)}
+			<div class="card">
+				<div class="card-head">
+					<h3 class="title-medium">{building.name}</h3>
+					<span class="tag primary">{building.rooms.reduce((n, r) => n + capacity(r), 0)}</span>
+				</div>
+				<ul class="rooms">
+					{#each building.rooms as room (room.name)}
+						<li class="room">
+							<div class="room-head">
+								<span class="room-name">{room.name}</span>
+								<span class="room-beds" aria-label="{capacity(room)} plasser">
+									{#each room.beds as bed, i (i)}
+										<span class="bed" class:double={bed === 'dobbel'} title={bed}>{bed === 'dobbel' ? '🛏️🛏️' : '🛏️'}</span>
+									{/each}
+								</span>
+							</div>
+							<div class="room-meta">
+								{#if room.taken?.length}
+									{#each room.taken as name (name)}<span class="chip tonal small">{name}</span>{/each}
+								{/if}
+								{#if room.wish?.length}
+									<span class="tag car">ønsker: {room.wish.join(' og ')}</span>
+								{/if}
+								<span class="tag {free(room) > 0 ? 'success' : 'primary'}">{free(room)} ledig</span>
+							</div>
+							{#if room.note}<p class="room-note">{room.note}</p>{/if}
+						</li>
+					{/each}
+				</ul>
+			</div>
+		{/each}
 	</div>
 </section>
 
