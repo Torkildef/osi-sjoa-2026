@@ -27,7 +27,6 @@
 	{#if !heroFailed}
 		<img src={photos.kruke.src} alt={photos.kruke.alt} onerror={() => (heroFailed = true)} />
 	{/if}
-	<Countdown />
 	<div class="hero-body">
 		<div>
 			<div class="overline" style="color: rgb(255 255 255 / 0.8)">{trip.organiser}</div>
@@ -42,6 +41,7 @@
 				{signedUp.length} kommer{maybe.length ? ` · ${maybe.length} kanskje` : ''}
 			</a>
 		</div>
+		<Countdown />
 	</div>
 </section>
 
