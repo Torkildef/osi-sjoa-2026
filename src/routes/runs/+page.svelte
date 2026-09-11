@@ -75,7 +75,7 @@
 	<span class="draft-emoji" aria-hidden="true">🚧</span>
 	<div>
 		<div class="title-medium">Foreløpig plan</div>
-		<p class="body-medium">Kan endres. Velg deg selv og si fra.</p>
+		<p class="body-medium">Kan endres.</p>
 	</div>
 </div>
 
@@ -202,12 +202,6 @@
 					</p>
 				{/if}
 				<div class="form-row">
-					{#if !data.loggedIn}
-						<label class="field inline">
-							<span>Passord</span>
-							<input type="password" name="password" autocomplete="current-password" required />
-						</label>
-					{/if}
 					<button type="submit" class="btn btn-filled" disabled={sending}>
 						{sending ? 'Sender …' : 'Send inn'}
 					</button>

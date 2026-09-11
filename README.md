@@ -214,12 +214,12 @@ Bremser: maks 2000 tegn og maks 5 prompter i timen. Siden viser de siste ti med 
 
 `/runs` (også skjult og `noindex`) har et felt der deltakerne velger seg selv og skriver hva som
 bør endres i lørdagsplanen («Jeg vil ikke padle run 2», «Jeg vil helst ikke kjøre med henger»).
-Samme passord som `/admin` (huskes i en egen cookie for `/runs` i 30 dager). Navnet må være et
-deltakernavn, teksten maks 500 tegn, maks 10 i timen, pluss en honningkrukke mot roboter. Med
-passordet kan man også be om endringer for andre, og om pynt ved navnet (`flair` i `runs.ts`). Hvert ønske blir et issue med merkelappen `logistikk`. Samme
+Ingen passord. Navnet må være et deltakernavn, teksten maks 500 tegn, maks 10 i timen, pluss en
+honningkrukke mot roboter. Man kan også be om endringer for andre, og om pynt ved navnet
+(`flair` i `runs.ts`). Hvert ønske blir et issue med merkelappen `logistikk`. Samme
 Routine tar dem, endrer bare `src/lib/runs.ts`, sjekker at kajakker, seter og førerkort
 fortsatt går opp, og pusher rett til standardgrenen. Er ønsket uklart eller går det ikke opp,
-avvises det med en forklaring. Trenger `ADMIN_PASSWORD` og `GITHUB_TOKEN`.
+avvises det med en forklaring. Trenger bare `GITHUB_TOKEN`.
 
 ### CI-vakten
 
