@@ -217,24 +217,6 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="schedule" size={22} class="primary-text" /> Dagen, steg for steg</h2>
-	</div>
-	<ol class="timeline" class:filtered={!!me && !car}>
-		{#each day as step, i (i)}
-			<li class="entry" class:mine={me && step.names.includes(me)}>
-				<span class="when">Steg {i + 1}</span>
-				<div class="what">
-					<h3 class="title-medium"><Linked text={step.what} /></h3>
-					{#if step.who}<p><Linked text={step.who} /></p>{/if}
-					{#if me && step.drivers?.includes(me)}<span class="tag drive">🚗 Du kjører</span>{/if}
-				</div>
-			</li>
-		{/each}
-	</ol>
-</section>
-
-<section class="block">
-	<div class="section-head">
 		<h2 class="title-large"><Icon name="groups" size={22} class="primary-text" /> Grupper</h2>
 	</div>
 	<div class="grid wide">
@@ -268,4 +250,22 @@
 			<p class="body-small on-surface-variant" style="margin-top: 0.6rem">Fri på run 1.</p>
 		</div>
 	</div>
+</section>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="schedule" size={22} class="primary-text" /> Dagen, steg for steg</h2>
+	</div>
+	<ol class="timeline" class:filtered={!!me && !car}>
+		{#each day as step, i (i)}
+			<li class="entry" class:mine={me && step.names.includes(me)}>
+				<span class="when">Steg {i + 1}</span>
+				<div class="what">
+					<h3 class="title-medium"><Linked text={step.what} /></h3>
+					{#if step.who}<p><Linked text={step.who} /></p>{/if}
+					{#if me && step.drivers?.includes(me)}<span class="tag drive">🚗 Du kjører</span>{/if}
+				</div>
+			</li>
+		{/each}
+	</ol>
 </section>

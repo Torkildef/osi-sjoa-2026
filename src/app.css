@@ -103,6 +103,12 @@
 	/* Bilene i velgeren. */
 	--car-container: #d7e3f4;
 	--on-car-container: #1b3654;
+
+	/* Svake farger for run 1 og run 2. */
+	--run1-container: #e4ecf6;
+	--on-run1-container: #24384f;
+	--run2-container: #efe7f6;
+	--on-run2-container: #3b2a50;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -170,6 +176,11 @@
 
 		--car-container: #2f4a6c;
 		--on-car-container: #d7e3f4;
+
+		--run1-container: #2a3a4d;
+		--on-run1-container: #dbe6f3;
+		--run2-container: #3a2e4d;
+		--on-run2-container: #e8dcf3;
 	}
 }
 
@@ -1708,19 +1719,22 @@ section.plan .section-head h2 .tag {
 	border-left: 4px solid var(--primary);
 }
 
-.plan-part.run1,
+.plan-part.run1 {
+	border-left-color: var(--run1-container);
+}
+
 .plan-part.run2 {
-	border-left-color: var(--outline);
+	border-left-color: var(--run2-container);
 }
 
 .tag.run1 {
-	background: var(--surface-container-highest);
-	color: var(--on-surface);
+	background: var(--run1-container);
+	color: var(--on-run1-container);
 }
 
 .tag.run2 {
-	background: color-mix(in srgb, var(--on-surface) 16%, var(--surface));
-	color: var(--on-surface);
+	background: var(--run2-container);
+	color: var(--on-run2-container);
 }
 
 .tag.morning {
