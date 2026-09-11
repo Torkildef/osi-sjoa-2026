@@ -10,7 +10,9 @@
 		rookiesRun2,
 		runs,
 		steps,
-		carPlans,
+		carNames,
+		carPlan,
+		isCar,
 		planFor,
 		planIcon,
 		shown,
@@ -30,7 +32,7 @@
 	$effect(() => {
 		try {
 			const saved = localStorage.getItem(KEY);
-			if (saved && everyone.includes(saved)) me = saved;
+			if (saved && (everyone.includes(saved) || isCar(saved))) me = saved;
 		} catch {
 			/* ingen lagring */
 		}
@@ -47,7 +49,7 @@
 	};
 
 	const day = steps();
-	const mine = $derived(me ? day.map((s, i) => (s.names.includes(me) ? i : -1)).filter((i) => i >= 0) : []);
+	const car = $derived(me && isCar(me) ? carPlan(me) : undefined);
 </script>
 
 <svelte:head>
@@ -79,7 +81,7 @@
 
 <section class="block">
 	<div class="section-head">
-		<h2 class="title-large"><Icon name="person" size={22} class="primary-text" /> Velg deg selv</h2>
+		<h2 class="title-large"><Icon name="person" size={22} class="primary-text" /> Velg deg selv, eller en bil</h2>
 	</div>
 	<div class="chip-row">
 		{#each everyone as name (name)}
@@ -92,8 +94,42 @@
 				{#if me === name}<Icon name="check" size={16} />{/if}{shown(name)}
 			</button>
 		{/each}
+		{#each carNames as name (name)}
+			<button
+				type="button"
+				class="chip {me === name ? 'me' : 'car'}"
+				aria-pressed={me === name}
+				onclick={() => pick(name)}
+			>
+				{#if me === name}<Icon name="check" size={16} />{:else}🚗{/if}
+				{name}
+			</button>
+		{/each}
 	</div>
-	{#if me}
+	{#if car}
+		<div class="card me-card">
+			<div class="card-head">
+				<h3 class="title-medium"><Icon name="directionsCar" size={20} /> {car.car}</h3>
+				<span class="tag car">{car.legs.length} {car.legs.length === 1 ? 'etappe' : 'etapper'}</span>
+			</div>
+			{#if car.idle}
+				<p class="body-medium">{car.idle}</p>
+			{:else}
+				<ol class="car-legs">
+					{#each car.legs as leg, i (i)}
+						<li class="car-leg">
+							<span class="car-when"><span class="tag run{leg.run}">Run {leg.run}</span> <Linked text={leg.when} /></span>
+							<span class="car-driver">
+								<span class="chip {teamOf(leg.driver)} small">🚗 {leg.driver}</span>
+								{#if leg.own}<span class="tag success">Egen bil</span>{/if}
+							</span>
+							{#if leg.note}<span class="car-note"><Linked text={leg.note} /></span>{/if}
+						</li>
+					{/each}
+				</ol>
+			{/if}
+		</div>
+	{:else if me}
 		{#if data.configured}
 			<form
 				method="POST"
@@ -183,7 +219,7 @@
 	<div class="section-head">
 		<h2 class="title-large"><Icon name="schedule" size={22} class="primary-text" /> Dagen, steg for steg</h2>
 	</div>
-	<ol class="timeline" class:filtered={!!me}>
+	<ol class="timeline" class:filtered={!!me && !car}>
 		{#each day as step, i (i)}
 			<li class="entry" class:mine={me && step.names.includes(me)}>
 				<span class="when">Steg {i + 1}</span>
@@ -195,38 +231,6 @@
 			</li>
 		{/each}
 	</ol>
-</section>
-
-<section class="block">
-	<div class="section-head">
-		<h2 class="title-large"><Icon name="directionsCar" size={22} class="primary-text" /> Bil for bil</h2>
-	</div>
-	<div class="grid wide">
-		{#each carPlans() as plan (plan.car)}
-			<div class="card car-card">
-				<div class="card-head">
-					<h3 class="title-medium">{plan.car}</h3>
-					<span class="tag primary">{plan.legs.length} {plan.legs.length === 1 ? 'etappe' : 'etapper'}</span>
-				</div>
-				{#if plan.idle}
-					<p class="body-medium on-surface-variant">{plan.idle}</p>
-				{:else}
-					<ol class="car-legs">
-						{#each plan.legs as leg, i (i)}
-							<li class="car-leg">
-								<span class="car-when"><span class="tag run{leg.run}">Run {leg.run}</span> <Linked text={leg.when} /></span>
-								<span class="car-driver">
-									<span class="chip {teamOf(leg.driver)} small">🚗 {leg.driver}</span>
-									{#if leg.own}<span class="tag success">Egen bil</span>{/if}
-								</span>
-								{#if leg.note}<span class="car-note"><Linked text={leg.note} /></span>{/if}
-							</li>
-						{/each}
-					</ol>
-				{/if}
-			</div>
-		{/each}
-	</div>
 </section>
 
 <section class="block">

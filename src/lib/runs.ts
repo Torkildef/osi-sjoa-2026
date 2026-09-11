@@ -191,10 +191,14 @@ export const allLegs = (run: Run): Shuttle[] => legsOf(run).flatMap((b) => b.leg
 export type CarLeg = { run: number; when: string; driver: string; own?: boolean; note?: string };
 export type CarPlan = { car: string; legs: CarLeg[]; idle?: string };
 
+/** Bilene, i den rekkefølgen de vises. */
+export const carNames = [LEIEBIL, WIKTOR, CAROLINE, TIRIL, 'Helenes bil'];
+
+export const isCar = (name: string) => carNames.includes(name);
+
 /** Dagen sett fra hver bil: etappene i rekkefølge, med sjåfør. */
 export const carPlans = (): CarPlan[] => {
-	const cars = [LEIEBIL, WIKTOR, CAROLINE, TIRIL, 'Helenes bil'];
-	return cars.map((car) => {
+	return carNames.map((car) => {
 		const legs: CarLeg[] = [];
 		for (const run of runs) {
 			for (const block of legsOf(run)) {
@@ -206,6 +210,8 @@ export const carPlans = (): CarPlan[] => {
 		return { car, legs, idle: legs.length ? undefined : 'Står på Kruke hele dagen. Noen må jo.' };
 	});
 };
+
+export const carPlan = (car: string): CarPlan | undefined => carPlans().find((c) => c.car === car);
 
 export type Step = {
 	what: string;

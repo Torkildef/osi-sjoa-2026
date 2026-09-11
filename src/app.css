@@ -99,6 +99,10 @@
 	/* Dempet sandfarge for kjøreoppgaver og «foreløpig plan». */
 	--drive-container: #f1e9d6;
 	--on-drive-container: #4a3d1f;
+
+	/* Bilene i velgeren. */
+	--car-container: #d7e3f4;
+	--on-car-container: #1b3654;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -163,6 +167,9 @@
 
 		--drive-container: #3b3426;
 		--on-drive-container: #e6dcc5;
+
+		--car-container: #2f4a6c;
+		--on-car-container: #d7e3f4;
 	}
 }
 
@@ -776,6 +783,14 @@ button.chip:hover {
 .tag.rookie2 {
 	background: var(--rookie2-container);
 	color: var(--on-rookie2-container);
+	border-color: transparent;
+}
+
+.chip.car,
+.tag.car,
+button.chip.car:hover {
+	background: var(--car-container);
+	color: var(--on-car-container);
 	border-color: transparent;
 }
 
@@ -1726,7 +1741,12 @@ section.plan .section-head h2 .tag {
 	gap: 0.25rem;
 	padding: 0.5rem 0.65rem;
 	border-radius: var(--shape-sm);
-	background: var(--surface-container-low);
+	background: var(--surface);
+	color: var(--on-surface);
+}
+
+.me-card .car-legs {
+	margin-top: 0.25rem;
 }
 
 .car-leg .car-when {
