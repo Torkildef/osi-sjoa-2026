@@ -309,6 +309,36 @@ export type PlanKind = 'go' | 'paddle' | 'drive' | 'wait' | 'ride';
 export type PlanLine = { kind: PlanKind; when?: string; text: string };
 export type PlanPart = { title: string; tone: 'morning' | 'run1' | 'run2'; lines: PlanLine[] };
 
+/** Kort versjon av dagen, den som leses høyt ved frokosten. Detaljene ligger i runs og steps. */
+export const shortPlan: PlanPart[] = [
+	{
+		title: 'Runde 1',
+		tone: 'run1',
+		lines: [
+			{ kind: 'go', text: 'Kl. 09:00: de som padler først, pluss Malin F. på shuttle, kjører til put inn Bru-bru.' },
+			{ kind: 'go', text: 'Alle bilene settes på take out Playrun.' },
+			{
+				kind: 'go',
+				text: 'De som ikke padler Playrun ordner shuttle med 9-seteren fra take out Bru-bru: de som har padlet til Kruke, rookies run 2 til put inn Bru-bru.'
+			},
+			{ kind: 'ride', text: 'Til slutt hentes Playrun-gjengen på take out Playrun av 9-seteren.' }
+		]
+	},
+	{
+		title: 'Runde 2',
+		tone: 'run2',
+		lines: [{ kind: 'paddle', text: 'Samme igjen. Ludvig hjelper til med shuttlen.' }]
+	},
+	{
+		title: 'Generelt',
+		tone: 'morning',
+		lines: [
+			{ kind: 'wait', text: 'Legg tørre klær og mat der du trenger dem. Bilene står på ulike steder, så tenk deg om.' },
+			{ kind: 'ride', text: 'Litt våte klær i 9-seteren går fint. Den har sett verre.' }
+		]
+	}
+];
+
 export const planIcon: Record<PlanKind, string> = {
 	go: '🚙',
 	paddle: '🛶',

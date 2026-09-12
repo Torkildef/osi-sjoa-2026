@@ -55,7 +55,7 @@ export const schedule: ScheduleEntry[] = [
 		day: 'Lørdag',
 		time: '09:00',
 		title: '🛶 Avreise til Bru-bru',
-		note: 'Hvem som er med kommer senere.',
+		note: 'Erfarne, rookies run 1 og Malin F. Rookies run 2 sover videre. Se Runs.',
 		place: 'Put inn – Bru-bru'
 	},
 	{

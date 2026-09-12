@@ -15,6 +15,7 @@
 		isCar,
 		planFor,
 		planIcon,
+		shortPlan,
 		shown,
 		teamLabel,
 		teamOf
@@ -78,6 +79,29 @@
 		<p class="body-medium">Kan endres.</p>
 	</div>
 </div>
+
+<section class="block">
+	<div class="section-head">
+		<h2 class="title-large"><Icon name="schedule" size={22} class="primary-text" /> Kort versjon</h2>
+	</div>
+	<div class="card me-card">
+		<div class="plan-parts">
+			{#each shortPlan as part (part.title)}
+				<div class="plan-part {part.tone}">
+					<span class="tag {part.tone}">{part.title}</span>
+					<div class="plan-lines">
+						{#each part.lines as line, i (i)}
+							<div class="plan-line {line.kind}">
+								<span class="plan-icon" aria-hidden="true">{planIcon[line.kind]}</span>
+								<span><Linked text={line.text} /></span>
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/each}
+		</div>
+	</div>
+</section>
 
 <section class="block">
 	<div class="section-head">
