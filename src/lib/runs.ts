@@ -5,10 +5,10 @@
  *
  * Fornavn som på resten av siden. Endre her; siden følger med.
  *
- * Kajakker: 17 med. De 11 erfarne har hver sin, rookiene deler på 5, og den
- * 17. er reserve. Kajakkplass: henger 10, Wiktor 2 (tar 4 om det må), Tiril 4,
- * Caroline 2.
- * Før hvert run settes Wiktors og Carolines bil på take out Playrun, så begge
+ * Kajakker: 18 med. De 12 erfarne har hver sin, rookiene deler på 5, og den
+ * 18. er reserve. Kajakkplass: henger 10, Wiktor 2 (tar 4 om det må), Tiril 4,
+ * Adrian 4, Caroline 2. Adrian er med på lørdagen med egen bil og kajakk.
+ * Før hvert run settes Wiktors, Carolines og Adrians bil på take out Playrun, så alle
  * kjører hjem derfra, og Tirils bil på take out Bru-bru, så den tar rookiene
  * videre med 4 kajakker. Tiril dro hjem, men bilen er med: Helene og Ludvig
  * kjører den. Helenes bil står på Kruke.
@@ -28,7 +28,8 @@ export const experienced = [
 	'Eskil',
 	'Connor',
 	'Maja',
-	'Simon'
+	'Simon',
+	'Adrian'
 ];
 
 /** Rookies som padler run 1 og kjører på run 2. */
@@ -123,6 +124,7 @@ const LEIEBIL = '9-seteren + hengeren';
 const WIKTOR = 'Wiktors bil';
 const CAROLINE = 'Carolines bil';
 const TIRIL = 'Tirils bil';
+const ADRIAN = 'Adrians bil';
 
 export const runs: Run[] = [
 	{
@@ -131,19 +133,21 @@ export const runs: Run[] = [
 		groups: [
 			{ name: 'Gruppe 1', members: ['Dani', 'Caroline', 'Vegard', 'Simon', 'Anneke', 'Sindre'] },
 			{ name: 'Gruppe 2', members: ['Wiktor', 'Helene', 'Eskil', 'Maja', 'Ludvig', 'Ylva'] },
-			{ name: 'Gruppe 3', members: ['Torkild', 'Knut', 'Connor', 'Maren'] }
+			{ name: 'Gruppe 3', members: ['Torkild', 'Knut', 'Connor', 'Adrian', 'Maren'] }
 		],
 		morning: [
 			{ car: LEIEBIL, driver: 'Torkild', note: 'Til put inn Bru-bru med 10 kajakker', alt: ['Knut', 'Vegard', 'Eskil'] },
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til put inn Bru-bru med 2 kajakker', alt: ['Eskil', 'Vegard'] },
 			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til put inn Bru-bru med 2 kajakker', alt: ['Maja', 'Dani'] },
-			{ car: TIRIL, driver: 'Helene', note: 'Til put inn Bru-bru med 3 kajakker, reserven er en av dem', alt: ['Maja', 'Dani'] }
+			{ car: TIRIL, driver: 'Helene', note: 'Til put inn Bru-bru med 3 kajakker, reserven er en av dem', alt: ['Maja', 'Dani'] },
+			{ car: ADRIAN, driver: 'Adrian', own: true, note: 'Til put inn Bru-bru med egen kajakk. Plass til 4' }
 		],
 		before: [
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander', alt: ['Eskil', 'Vegard'] },
 			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander', alt: ['Maja', 'Dani'] },
+			{ car: ADRIAN, driver: 'Adrian', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander' },
 			{ car: TIRIL, driver: 'Helene', note: 'Til take out Bru-bru, så den står klar når run 1 lander', alt: ['Maja', 'Dani'] },
-			{ car: LEIEBIL, driver: 'Torkild', note: 'Til take out Bru-bru og take out Playrun, henter Helene, Caroline og Wiktor opp igjen', alt: ['Knut', 'Vegard'] }
+			{ car: LEIEBIL, driver: 'Torkild', note: 'Til take out Bru-bru og take out Playrun, henter Helene, Caroline, Wiktor og Adrian opp igjen', alt: ['Knut', 'Vegard'] }
 		],
 		launch: [{ car: LEIEBIL, driver: 'Malin F.', note: 'Til Kruke, der rookies run 2 venter' }],
 		toTakeOut: [{ car: LEIEBIL, driver: 'Malin F.', note: 'Henter rookies run 1. Rookies run 2 sitter på' }],
@@ -155,7 +159,8 @@ export const runs: Run[] = [
 		home: [
 			{ car: LEIEBIL, driver: 'Torkild', note: 'Til put inn Bru-bru med de erfarne', alt: ['Knut', 'Vegard', 'Eskil'] },
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til put inn Bru-bru med de erfarne', alt: ['Eskil', 'Vegard'] },
-			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til put inn Bru-bru med de erfarne', alt: ['Maja', 'Dani'] }
+			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til put inn Bru-bru med de erfarne', alt: ['Maja', 'Dani'] },
+			{ car: ADRIAN, driver: 'Adrian', own: true, note: 'Til put inn Bru-bru med de erfarne' }
 		],
 		paddlerRide: 'Sitter på til Kruke i 9-seteren.',
 		waiterRide: 'Sitter på til take out Bru-bru når run 1 lander, og videre til put inn Bru-bru i Tirils bil med Ludvig.',
@@ -167,13 +172,14 @@ export const runs: Run[] = [
 		groups: [
 			{ name: 'Gruppe 1', members: ['Dani', 'Caroline', 'Vegard', 'Simon', 'Julia'] },
 			{ name: 'Gruppe 2', members: ['Wiktor', 'Helene', 'Eskil', 'Maja', 'Malin F.', 'Lene'] },
-			{ name: 'Gruppe 3', members: ['Torkild', 'Knut', 'Connor', 'Malin N.'] }
+			{ name: 'Gruppe 3', members: ['Torkild', 'Knut', 'Connor', 'Adrian', 'Malin N.'] }
 		],
 		before: [
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander', alt: ['Eskil', 'Vegard'] },
 			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander', alt: ['Maja', 'Dani'] },
+			{ car: ADRIAN, driver: 'Adrian', own: true, note: 'Til take out Playrun, så den står klar når Playrun lander' },
 			{ car: TIRIL, driver: 'Helene', note: 'Til take out Bru-bru, så den står klar når run 2 lander', alt: ['Maja', 'Dani', 'Eskil'] },
-			{ car: LEIEBIL, driver: 'Torkild', note: 'Til take out Bru-bru og take out Playrun, henter Helene, Caroline og Wiktor opp igjen', alt: ['Knut', 'Vegard'] }
+			{ car: LEIEBIL, driver: 'Torkild', note: 'Til take out Bru-bru og take out Playrun, henter Helene, Caroline, Wiktor og Adrian opp igjen', alt: ['Knut', 'Vegard'] }
 		],
 		launch: [{ car: LEIEBIL, driver: 'Ludvig', note: 'Til Kruke, der rookies run 1 venter', alt: ['Anneke', 'Ylva'] }],
 		toTakeOut: [{ car: LEIEBIL, driver: 'Ludvig', note: 'Henter rookies run 2', alt: ['Anneke', 'Ylva'] }],
@@ -184,7 +190,8 @@ export const runs: Run[] = [
 		home: [
 			{ car: LEIEBIL, driver: 'Torkild', note: 'Til Kruke med de erfarne', alt: ['Knut', 'Vegard', 'Eskil'] },
 			{ car: WIKTOR, driver: 'Wiktor', own: true, note: 'Til Kruke med de erfarne', alt: ['Eskil', 'Vegard'] },
-			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til Kruke med de erfarne', alt: ['Maja', 'Dani'] }
+			{ car: CAROLINE, driver: 'Caroline', own: true, note: 'Til Kruke med de erfarne', alt: ['Maja', 'Dani'] },
+			{ car: ADRIAN, driver: 'Adrian', own: true, note: 'Til Kruke med de erfarne' }
 		],
 		paddlerRide: 'Sitter på til Kruke i Tirils bil med Ludvig.',
 		waiterRide: 'Fritid på Kruke. Grillen tenner seg ikke selv.',
@@ -209,7 +216,7 @@ export type CarLeg = { run: number; when: string; driver: string; own?: boolean;
 export type CarPlan = { car: string; legs: CarLeg[]; idle?: string };
 
 /** Bilene, i den rekkefølgen de vises. */
-export const carNames = [LEIEBIL, WIKTOR, CAROLINE, TIRIL, 'Helenes bil'];
+export const carNames = [LEIEBIL, WIKTOR, CAROLINE, TIRIL, ADRIAN, 'Helenes bil'];
 
 export const isCar = (name: string) => carNames.includes(name);
 
@@ -245,15 +252,15 @@ const run2 = [...experienced, ...rookiesRun2];
 /** Hele dagen, steg for steg. */
 export const steps = (): Step[] => [
 	{
-		what: 'Kruke → put inn Bru-bru: erfarne, rookies run 1 og Malin F. Alle 17 kajakker: 10 på hengeren, 3 på Tirils bil, 2 på Wiktors, 2 på Carolines.',
-		who: 'Torkild (9-seter), Wiktor, Caroline og Helene (Tirils bil) kjører. Rookies run 2 sover videre på Kruke.',
+		what: 'Kruke → put inn Bru-bru: erfarne, rookies run 1 og Malin F. Alle 18 kajakker: 10 på hengeren, 3 på Tirils bil, 2 på Wiktors, 2 på Carolines, Adrians egen på hans.',
+		who: 'Torkild (9-seter), Wiktor, Caroline, Adrian og Helene (Tirils bil) kjører. Rookies run 2 sover videre på Kruke.',
 		names: [...run1, 'Malin F.'],
-		drivers: ['Torkild', 'Wiktor', 'Caroline', 'Helene']
+		drivers: ['Torkild', 'Wiktor', 'Caroline', 'Adrian', 'Helene']
 	},
 	{
-		what: 'Run 1 varmer opp. Wiktor og Caroline setter bilene på take out Playrun, Helene setter Tirils bil på take out Bru-bru. Torkild henter dem i 9-seteren.',
-		names: [...rookiesRun1, 'Wiktor', 'Caroline', 'Helene', 'Torkild'],
-		drivers: ['Wiktor', 'Caroline', 'Helene', 'Torkild']
+		what: 'Run 1 varmer opp. Wiktor, Caroline og Adrian setter bilene på take out Playrun, Helene setter Tirils bil på take out Bru-bru. Torkild henter dem i 9-seteren.',
+		names: [...rookiesRun1, 'Wiktor', 'Caroline', 'Adrian', 'Helene', 'Torkild'],
+		drivers: ['Wiktor', 'Caroline', 'Adrian', 'Helene', 'Torkild']
 	},
 	{
 		what: 'Run 1: Bru-bru. Malin F. kjører 9-seteren til Kruke.',
@@ -267,20 +274,20 @@ export const steps = (): Step[] => [
 		drivers: ['Malin F.']
 	},
 	{
-		what: 'Malin F. (9-seter) setter av rookies run 1 på Kruke og kjører videre til take out Playrun, der Wiktors og Carolines bil står. Ludvig kjører rookies run 2 og Simon til put inn Bru-bru i Tirils bil.',
+		what: 'Malin F. (9-seter) setter av rookies run 1 på Kruke og kjører videre til take out Playrun, der Wiktors, Carolines og Adrians bil står. Ludvig kjører rookies run 2 og Simon til put inn Bru-bru i Tirils bil.',
 		who: 'Rookie-kajakkene: 4 på Tirils bil, resten på hengeren.',
 		names: rookies,
 		drivers: ['Malin F.', 'Ludvig']
 	},
 	{
-		what: 'Playrun i land. Torkild (9-seter), Wiktor og Caroline kjører alle til put inn Bru-bru.',
+		what: 'Playrun i land. Torkild (9-seter), Wiktor, Caroline og Adrian kjører alle til put inn Bru-bru.',
 		names: [...experienced, 'Malin F.'],
-		drivers: ['Torkild', 'Wiktor', 'Caroline']
+		drivers: ['Torkild', 'Wiktor', 'Caroline', 'Adrian']
 	},
 	{
-		what: 'Run 2 varmer opp. Wiktor og Caroline setter bilene på take out Playrun, Helene setter Tirils bil på take out Bru-bru. Torkild henter dem i 9-seteren.',
-		names: [...rookiesRun2, 'Wiktor', 'Caroline', 'Helene', 'Torkild'],
-		drivers: ['Wiktor', 'Caroline', 'Helene', 'Torkild']
+		what: 'Run 2 varmer opp. Wiktor, Caroline og Adrian setter bilene på take out Playrun, Helene setter Tirils bil på take out Bru-bru. Torkild henter dem i 9-seteren.',
+		names: [...rookiesRun2, 'Wiktor', 'Caroline', 'Adrian', 'Helene', 'Torkild'],
+		drivers: ['Wiktor', 'Caroline', 'Adrian', 'Helene', 'Torkild']
 	},
 	{
 		what: 'Run 2: Bru-bru. Ludvig kjører 9-seteren til Kruke.',
@@ -299,9 +306,9 @@ export const steps = (): Step[] => [
 		drivers: ['Ludvig', 'Malin F.']
 	},
 	{
-		what: 'Playrun i land. Torkild (9-seter), Wiktor og Caroline kjører alle til Kruke. Grillen venter.',
+		what: 'Playrun i land. Torkild (9-seter), Wiktor, Caroline og Adrian kjører alle til Kruke. Grillen venter.',
 		names: [...experienced, 'Malin F.'],
-		drivers: ['Torkild', 'Wiktor', 'Caroline']
+		drivers: ['Torkild', 'Wiktor', 'Caroline', 'Adrian']
 	}
 ];
 
