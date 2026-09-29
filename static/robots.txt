@@ -1,3 +1,4 @@
 User-agent: *
 Disallow: /admin
 Disallow: /runs
+Disallow: /faglig-innlegg
